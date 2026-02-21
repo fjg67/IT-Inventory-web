@@ -159,36 +159,55 @@ const mountRoutes = async (): Promise<void> => {
 
 const serveFrontend = (): void => {
   if (process.env.NODE_ENV === 'production') {
-    // Le build:prod copie frontend/dist dans dist/public (même dossier que le JS compilé)
-    const frontendPath = path.join(__dirname, 'public');
+    // Chercher le frontend dans plusieurs chemins possibles
+    const candidates = [
+      path.join(__dirname, 'public'),
+      path.join(__dirname, '..', 'public'),
+      path.join(process.cwd(), 'dist', 'public'),
+      path.join(process.cwd(), 'public'),
+      path.join(process.cwd(), '..', 'frontend', 'dist'),
+    ];
 
-    logger.info(`__dirname: ${__dirname}`);
-    logger.info(`process.cwd(): ${process.cwd()}`);
-    logger.info(`Frontend path: ${frontendPath}`);
-    logger.info(`Frontend exists: ${fs.existsSync(frontendPath)}`);
+    const frontendPath = candidates.find((p) => {
+      const indexExists = fs.existsSync(path.join(p, 'index.html'));
+      logger.info(`Checking ${p}/index.html -> ${indexExists}`);
+      return indexExists;
+    });
 
-    if (fs.existsSync(frontendPath)) {
-      const files = fs.readdirSync(frontendPath);
-      logger.info(`Frontend contenu: ${files.join(', ')}`);
+    if (frontendPath) {
+      logger.info(`Frontend servi depuis : ${frontendPath}`);
+      
+      if (fs.existsSync(path.join(frontendPath, 'assets'))) {
+        const assets = fs.readdirSync(path.join(frontendPath, 'assets'));
+        logger.info(`Assets trouvés (${assets.length}): ${assets.slice(0, 5).join(', ')}...`);
+      }
 
+      // Servir les fichiers statiques
       app.use(express.static(frontendPath));
       
-      // Toutes les routes non-API renvoient index.html (SPA routing)
-      app.get('*', (_req: Request, res: Response) => {
-        const indexPath = path.join(frontendPath, 'index.html');
-        if (fs.existsSync(indexPath)) {
-          res.sendFile(indexPath);
-        } else {
-          res.status(500).send('index.html not found');
+      // SPA catch-all : SEULEMENT pour les routes qui ne sont PAS /api/* et pas des fichiers statiques
+      app.get('*', (req: Request, res: Response, next: NextFunction) => {
+        // Si c'est une requête API, laisser passer au handler 404
+        if (req.path.startsWith('/api/') || req.path.startsWith('/uploads/')) {
+          return next();
         }
+        // Si c'est une requête pour un fichier (avec extension), ne pas servir index.html
+        if (path.extname(req.path)) {
+          return next();
+        }
+        // Sinon, c'est une route SPA -> servir index.html
+        res.sendFile(path.join(frontendPath, 'index.html'));
       });
       
       logger.info('Frontend configuré avec succès');
     } else {
-      logger.error(`Dossier frontend introuvable: ${frontendPath}`);
+      logger.error('Frontend introuvable ! Chemins testés :');
+      candidates.forEach((p) => logger.error(`  - ${p}`));
       // Lister le contenu de __dirname pour debug
-      const dirFiles = fs.readdirSync(__dirname);
-      logger.error(`Contenu de ${__dirname}: ${dirFiles.join(', ')}`);
+      try {
+        const dirFiles = fs.readdirSync(__dirname);
+        logger.error(`Contenu de ${__dirname}: ${dirFiles.join(', ')}`);
+      } catch (_e) { /* ignore */ }
     }
   }
 };
