@@ -25,19 +25,27 @@ app.use(helmet({
 }));
 
 // Configuration CORS depuis la variable d'environnement
-const corsOrigins = process.env.CORS_ORIGINS
-  ? process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim())
+const corsOrigins = process.env.CORS_ORIGINS && process.env.CORS_ORIGINS.trim()
+  ? process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim()).filter(Boolean)
   : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:8081'];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Autoriser les requêtes sans origin (app mobile, Postman, etc.)
-      if (!origin || corsOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error(`Origine non autorisée par CORS: ${origin}`));
+      // Autoriser les requêtes sans origin (app mobile, Postman, same-origin, etc.)
+      if (!origin) {
+        return callback(null, true);
       }
+      // Autoriser les origines configurées
+      if (corsOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      // En production, autoriser les requêtes same-origin (le frontend est servi par le même serveur)
+      if (process.env.NODE_ENV === 'production') {
+        return callback(null, true);
+      }
+      // En dev, rejeter les origines non autorisées (sans provoquer d'erreur 500)
+      callback(null, false);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
