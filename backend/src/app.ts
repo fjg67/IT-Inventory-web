@@ -87,6 +87,42 @@ app.get('/api/health', (_req: Request, res: Response) => {
   });
 });
 
+// --- Debug: voir la structure de fichiers (à supprimer après) ---
+app.get('/api/debug/fs', (_req: Request, res: Response) => {
+  const info: Record<string, unknown> = {
+    __dirname,
+    cwd: process.cwd(),
+    nodeEnv: process.env.NODE_ENV,
+  };
+
+  const dirsToCheck = [
+    __dirname,
+    path.join(__dirname, 'public'),
+    path.join(__dirname, 'public', 'assets'),
+    path.join(__dirname, '..'),
+    path.join(__dirname, '..', 'public'),
+    path.join(process.cwd()),
+    path.join(process.cwd(), 'public'),
+    path.join(process.cwd(), 'dist'),
+    path.join(process.cwd(), 'dist', 'public'),
+    path.join(process.cwd(), '..', 'frontend', 'dist'),
+  ];
+
+  dirsToCheck.forEach((dir) => {
+    try {
+      if (fs.existsSync(dir)) {
+        info[dir] = fs.readdirSync(dir);
+      } else {
+        info[dir] = 'NOT FOUND';
+      }
+    } catch (e) {
+      info[dir] = `ERROR: ${(e as Error).message}`;
+    }
+  });
+
+  res.json(info);
+});
+
 // --- Montage des routes API ---
 
 const mountRoutes = async (): Promise<void> => {
