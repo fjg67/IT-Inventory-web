@@ -1,11 +1,6 @@
 # render.yaml — Blueprint de déploiement Render
 # Déploie automatiquement l'application IT-Inventory depuis GitHub
-
-databases:
-  - name: it-inventory-db
-    plan: free
-    databaseName: it_inventory
-    user: it_inventory_user
+# La base de données Supabase est partagée entre l'app web et mobile
 
 services:
   - type: web
@@ -22,9 +17,9 @@ services:
       - key: PORT
         value: "3001"
       - key: DATABASE_URL
-        fromDatabase:
-          name: it-inventory-db
-          property: connectionString
+        sync: false  # À configurer manuellement avec l'URL Supabase
+      - key: DIRECT_URL
+        sync: false  # À configurer manuellement avec l'URL Supabase
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
