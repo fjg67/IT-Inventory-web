@@ -131,6 +131,38 @@ app.get('/api/debug/fs', (_req: Request, res: Response) => {
   res.json(info);
 });
 
+// --- Debug: tester la connexion DB ---
+app.get('/api/debug/db', async (_req: Request, res: Response) => {
+  try {
+    const hasDbUrl = !!process.env.DATABASE_URL;
+    const dbUrlPrefix = process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 30) + '...' : 'NOT SET';
+    
+    // Try to import and query prisma
+    const prisma = (await import('./utils/prisma')).default;
+    const userCount = await prisma.user.count();
+    const users = await prisma.user.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true, role: true },
+    });
+    
+    res.json({
+      success: true,
+      hasDbUrl,
+      dbUrlPrefix,
+      userCount,
+      users,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      hasDbUrl: !!process.env.DATABASE_URL,
+      dbUrlPrefix: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 30) + '...' : 'NOT SET',
+      error: (error as Error).message,
+      stack: (error as Error).stack?.split('\n').slice(0, 5),
+    });
+  }
+});
+
 // --- Montage des routes API ---
 
 const mountRoutes = async (): Promise<void> => {
