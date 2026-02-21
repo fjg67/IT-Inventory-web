@@ -32,7 +32,10 @@ export function useAuth() {
           storeLogout()
         }
       } catch {
+        // Silencieux : pas de toast, c'est normal s'il n'y a pas de session
         storeLogout()
+      } finally {
+        setLoading(false)
       }
     }
 

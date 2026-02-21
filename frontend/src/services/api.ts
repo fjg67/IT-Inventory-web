@@ -53,7 +53,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       // Ne pas essayer de rafraîchir si c'est déjà la route refresh
       if (originalRequest.url === '/auth/refresh') {
-        useAuthStore.getState().logout()
+        // Silencieux : pas de logout ni toast, c'est normal au premier chargement
         return Promise.reject(error)
       }
 
