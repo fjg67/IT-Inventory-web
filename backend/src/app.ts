@@ -123,40 +123,36 @@ const mountRoutes = async (): Promise<void> => {
 
 const serveFrontend = (): void => {
   if (process.env.NODE_ENV === 'production') {
-    // Le build:prod copie le frontend dans backend/public
-    const possiblePaths = [
-      path.join(__dirname, '..', 'public'),
-      path.join(process.cwd(), 'public'),
-      path.join(__dirname, '..', '..', 'frontend', 'dist'),
-      path.join(process.cwd(), '..', 'frontend', 'dist'),
-    ];
+    // Le build:prod copie frontend/dist dans dist/public (même dossier que le JS compilé)
+    const frontendPath = path.join(__dirname, 'public');
 
-    const frontendPath = possiblePaths.find((p) => {
-      const exists = fs.existsSync(p);
-      logger.info(`Vérification chemin frontend: ${p} -> ${exists}`);
-      return exists;
-    });
+    logger.info(`__dirname: ${__dirname}`);
+    logger.info(`process.cwd(): ${process.cwd()}`);
+    logger.info(`Frontend path: ${frontendPath}`);
+    logger.info(`Frontend exists: ${fs.existsSync(frontendPath)}`);
 
-    if (frontendPath) {
-      logger.info(`Frontend servi depuis : ${frontendPath}`);
-      
-      // Servir les assets statiques avec cache
-      app.use(express.static(frontendPath, {
-        maxAge: '1d',
-        setHeaders: (res, filePath) => {
-          if (filePath.endsWith('.html')) {
-            res.setHeader('Cache-Control', 'no-cache');
-          }
-        },
-      }));
+    if (fs.existsSync(frontendPath)) {
+      const files = fs.readdirSync(frontendPath);
+      logger.info(`Frontend contenu: ${files.join(', ')}`);
+
+      app.use(express.static(frontendPath));
       
       // Toutes les routes non-API renvoient index.html (SPA routing)
       app.get('*', (_req: Request, res: Response) => {
-        res.sendFile(path.join(frontendPath, 'index.html'));
+        const indexPath = path.join(frontendPath, 'index.html');
+        if (fs.existsSync(indexPath)) {
+          res.sendFile(indexPath);
+        } else {
+          res.status(500).send('index.html not found');
+        }
       });
+      
+      logger.info('Frontend configuré avec succès');
     } else {
-      logger.error('Dossier frontend introuvable !');
-      possiblePaths.forEach((p) => logger.error(`  - ${p}`));
+      logger.error(`Dossier frontend introuvable: ${frontendPath}`);
+      // Lister le contenu de __dirname pour debug
+      const dirFiles = fs.readdirSync(__dirname);
+      logger.error(`Contenu de ${__dirname}: ${dirFiles.join(', ')}`);
     }
   }
 };
