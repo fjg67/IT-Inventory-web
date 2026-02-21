@@ -123,27 +123,40 @@ const mountRoutes = async (): Promise<void> => {
 
 const serveFrontend = (): void => {
   if (process.env.NODE_ENV === 'production') {
-    // Essayer plusieurs chemins possibles pour trouver le frontend
+    // Le build:prod copie le frontend dans backend/public
     const possiblePaths = [
+      path.join(__dirname, '..', 'public'),
+      path.join(process.cwd(), 'public'),
       path.join(__dirname, '..', '..', 'frontend', 'dist'),
       path.join(process.cwd(), '..', 'frontend', 'dist'),
-      path.join(process.cwd(), 'frontend', 'dist'),
     ];
 
-    const frontendPath = possiblePaths.find((p) => fs.existsSync(p));
+    const frontendPath = possiblePaths.find((p) => {
+      const exists = fs.existsSync(p);
+      logger.info(`Vérification chemin frontend: ${p} -> ${exists}`);
+      return exists;
+    });
 
     if (frontendPath) {
-      logger.info(`Frontend trouvé à : ${frontendPath}`);
+      logger.info(`Frontend servi depuis : ${frontendPath}`);
       
-      app.use(express.static(frontendPath));
+      // Servir les assets statiques avec cache
+      app.use(express.static(frontendPath, {
+        maxAge: '1d',
+        setHeaders: (res, filePath) => {
+          if (filePath.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'no-cache');
+          }
+        },
+      }));
       
       // Toutes les routes non-API renvoient index.html (SPA routing)
       app.get('*', (_req: Request, res: Response) => {
         res.sendFile(path.join(frontendPath, 'index.html'));
       });
     } else {
-      logger.warn(`Dossier frontend introuvable. Chemins testés :`);
-      possiblePaths.forEach((p) => logger.warn(`  - ${p} (existe: ${fs.existsSync(p)})`));
+      logger.error('Dossier frontend introuvable !');
+      possiblePaths.forEach((p) => logger.error(`  - ${p}`));
     }
   }
 };
