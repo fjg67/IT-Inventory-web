@@ -19,7 +19,10 @@ const app = express();
 // --- Middlewares de sécurité ---
 
 // Protection des en-têtes HTTP
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
+  crossOriginEmbedderPolicy: false,
+}));
 
 // Configuration CORS depuis la variable d'environnement
 const corsOrigins = process.env.CORS_ORIGINS
@@ -109,6 +112,27 @@ const mountRoutes = async (): Promise<void> => {
   }
 };
 
+// --- Servir le frontend en production ---
+
+const serveFrontend = (): void => {
+  if (process.env.NODE_ENV === 'production') {
+    const frontendPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
+    
+    if (fs.existsSync(frontendPath)) {
+      app.use(express.static(frontendPath));
+      
+      // Toutes les routes non-API renvoient index.html (SPA routing)
+      app.get('*', (_req: Request, res: Response) => {
+        res.sendFile(path.join(frontendPath, 'index.html'));
+      });
+      
+      logger.info(`Frontend servi depuis : ${frontendPath}`);
+    } else {
+      logger.warn(`Dossier frontend introuvable : ${frontendPath}`);
+    }
+  }
+};
+
 // --- Route 404 pour les chemins non trouvés ---
 
 const setup404 = (): void => {
@@ -142,6 +166,7 @@ const PORT = parseInt(process.env.PORT || '3001', 10);
 
 const startServer = async (): Promise<void> => {
   await mountRoutes();
+  serveFrontend();
   setup404();
   setupErrorHandler();
 
