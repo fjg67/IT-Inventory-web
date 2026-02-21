@@ -123,19 +123,27 @@ const mountRoutes = async (): Promise<void> => {
 
 const serveFrontend = (): void => {
   if (process.env.NODE_ENV === 'production') {
-    const frontendPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
-    
-    if (fs.existsSync(frontendPath)) {
+    // Essayer plusieurs chemins possibles pour trouver le frontend
+    const possiblePaths = [
+      path.join(__dirname, '..', '..', 'frontend', 'dist'),
+      path.join(process.cwd(), '..', 'frontend', 'dist'),
+      path.join(process.cwd(), 'frontend', 'dist'),
+    ];
+
+    const frontendPath = possiblePaths.find((p) => fs.existsSync(p));
+
+    if (frontendPath) {
+      logger.info(`Frontend trouvé à : ${frontendPath}`);
+      
       app.use(express.static(frontendPath));
       
       // Toutes les routes non-API renvoient index.html (SPA routing)
       app.get('*', (_req: Request, res: Response) => {
         res.sendFile(path.join(frontendPath, 'index.html'));
       });
-      
-      logger.info(`Frontend servi depuis : ${frontendPath}`);
     } else {
-      logger.warn(`Dossier frontend introuvable : ${frontendPath}`);
+      logger.warn(`Dossier frontend introuvable. Chemins testés :`);
+      possiblePaths.forEach((p) => logger.warn(`  - ${p} (existe: ${fs.existsSync(p)})`));
     }
   }
 };
