@@ -63,7 +63,9 @@ const CATEGORY_EMOJI: Record<string, string> = {
 
 export default function AlertsPage() {
   const queryClient = useQueryClient()
-  const [selectedSite, setSelectedSite] = useState<string>('_all')
+  // Lire le siteId depuis l'URL si présent
+  const urlSiteId = new URLSearchParams(window.location.search).get('siteId')
+  const [selectedSite, setSelectedSite] = useState<string>(urlSiteId || '_all')
   const [replenishOpen, setReplenishOpen] = useState(false)
   const [replenishArticleId, setReplenishArticleId] = useState<string>('')
   const [replenishSiteId, setReplenishSiteId] = useState<string>('')

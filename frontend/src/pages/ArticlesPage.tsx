@@ -271,6 +271,9 @@ export default function ArticlesPage() {
   const { isAdmin } = useAuth()
   const searchInputRef = useRef<HTMLInputElement>(null)
 
+  // Lire le siteId depuis l'URL si présent
+  const urlSiteId = searchParams.get('siteId') || undefined
+
   // Auto-focus recherche si ?focus=search
   useEffect(() => {
     if (searchParams.get('focus') === 'search') {
@@ -283,6 +286,7 @@ export default function ArticlesPage() {
   const [filters, setFilters] = useState<ArticleFilters>({
     page: 1,
     limit: PAGE_SIZE,
+    site: urlSiteId,
   })
   const [searchInput, setSearchInput] = useState('')
 

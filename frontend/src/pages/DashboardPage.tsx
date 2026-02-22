@@ -142,7 +142,7 @@ export default function DashboardPage() {
           color="blue"
           loading={statsLoading}
           index={0}
-          onClick={() => navigate('/articles')}
+          onClick={() => navigate(siteId ? `/articles?siteId=${siteId}` : '/articles')}
           sparklineData={stats?.sparklines?.totalArticles}
         />
         <StatsCard
@@ -152,7 +152,7 @@ export default function DashboardPage() {
           color="danger"
           loading={statsLoading}
           index={1}
-          onClick={() => navigate('/alerts')}
+          onClick={() => navigate(siteId ? `/alerts?siteId=${siteId}` : '/alerts')}
           sparklineData={stats?.sparklines?.outOfStock}
         />
         <StatsCard
@@ -162,7 +162,7 @@ export default function DashboardPage() {
           color="warning"
           loading={statsLoading}
           index={2}
-          onClick={() => navigate('/alerts')}
+          onClick={() => navigate(siteId ? `/alerts?siteId=${siteId}` : '/alerts')}
           sparklineData={stats?.sparklines?.lowStock}
         />
         <StatsCard
@@ -172,7 +172,7 @@ export default function DashboardPage() {
           color="green"
           loading={statsLoading}
           index={3}
-          onClick={() => navigate('/movements')}
+          onClick={() => navigate(siteId ? `/movements?siteId=${siteId}` : '/movements')}
           sparklineData={stats?.sparklines?.movements}
         />
       </div>

@@ -175,10 +175,14 @@ export default function StockMovementsPage() {
   const queryClient = useQueryClient()
   const { user } = useAuth()
 
+  // Lire le siteId depuis l'URL si présent
+  const urlSiteId = new URLSearchParams(window.location.search).get('siteId') || undefined
+
   // État des filtres et pagination
   const [filters, setFilters] = useState<MovementFilters>({
     page: 1,
     limit: PAGE_SIZE,
+    siteId: urlSiteId,
   })
   const [searchInput, setSearchInput] = useState('')
 
