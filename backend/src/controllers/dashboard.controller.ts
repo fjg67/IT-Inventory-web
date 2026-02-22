@@ -88,9 +88,9 @@ export const getDashboardStats = async (req: Request, res: Response): Promise<vo
       }),
     ]);
 
-    // Quand on filtre par site, seuls compter les articles qui ont du stock > 0 sur ce site
+    // Quand on filtre par site, compter tous les articles qui ont une entrée de stock sur ce site (même quantité = 0)
     const articlesOnSite = siteId
-      ? allArticlesWithStocks.filter(a => a.stocks.some(s => s.quantity > 0))
+      ? allArticlesWithStocks.filter(a => a.stocks.length > 0)
       : allArticlesWithStocks;
 
     const totalArticles = articlesOnSite.length;
