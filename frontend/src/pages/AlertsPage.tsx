@@ -238,7 +238,7 @@ export default function AlertsPage() {
             <MapPin className="h-3.5 w-3.5 text-white/40" />
           </div>
           <Select value={selectedSite} onValueChange={setSelectedSite}>
-            <SelectTrigger className="w-52 h-9 bg-white/[0.03] border-white/[0.06] rounded-xl text-sm">
+            <SelectTrigger className="w-40 sm:w-52 h-9 bg-white/[0.03] border-white/[0.06] rounded-xl text-sm">
               <SelectValue placeholder="Tous les sites" />
             </SelectTrigger>
             <SelectContent>

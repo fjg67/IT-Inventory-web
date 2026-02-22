@@ -305,12 +305,12 @@ export default function StockMovementsPage() {
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="flex items-start justify-between gap-6"
+        className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6"
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <div className="relative">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/25">
-              <Zap className="h-7 w-7 text-white" />
+            <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/25">
+              <Zap className="h-5 w-5 sm:h-7 sm:w-7 text-white" />
             </div>
             <div className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-emerald-400 border-2 border-[#0a0f1e] animate-pulse" />
           </div>
@@ -336,14 +336,15 @@ export default function StockMovementsPage() {
             ) : (
               <Download className="mr-2 h-4 w-4" />
             )}
-            Exporter
+            <span className="hidden sm:inline">Exporter</span>
           </Button>
           <Button
             onClick={() => setFormOpen(true)}
             className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/25 border-0 transition-all hover:shadow-blue-500/40"
           >
             <Plus className="mr-2 h-4 w-4" />
-            Nouveau mouvement
+            <span className="hidden sm:inline">Nouveau mouvement</span>
+            <span className="sm:hidden">Nouveau</span>
           </Button>
         </div>
       </motion.div>
@@ -369,11 +370,11 @@ export default function StockMovementsPage() {
             )}
           </div>
 
-          {/* Filtre par type — pills */}
-          <div className="flex items-center gap-1 p-0.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+          {/* Filtre par type — pills scrollable */}
+          <div className="flex items-center gap-1 p-0.5 rounded-lg bg-white/[0.03] border border-white/[0.06] overflow-x-auto scrollbar-hide">
             <button
               onClick={() => handleFilterType('_all')}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap shrink-0 ${
                 !filters.type
                   ? 'bg-white/10 text-white shadow-sm'
                   : 'text-white/40 hover:text-white/60'
@@ -388,7 +389,7 @@ export default function StockMovementsPage() {
                 <button
                   key={type}
                   onClick={() => handleFilterType(type)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap shrink-0 ${
                     isActive
                       ? `${config.bgColor} ${config.color}`
                       : 'text-white/40 hover:text-white/60'
@@ -400,12 +401,12 @@ export default function StockMovementsPage() {
             })}
           </div>
 
-          {/* Séparateur */}
-          <div className="h-6 w-px bg-white/[0.06]" />
+          {/* Séparateur — masqué sur mobile */}
+          <div className="hidden sm:block h-6 w-px bg-white/[0.06]" />
 
           {/* Filtre par site */}
           <Select value={filters.siteId ?? '_all'} onValueChange={handleFilterSite}>
-            <SelectTrigger className="w-40 h-8 text-xs bg-white/[0.03] border-white/[0.06] rounded-lg">
+            <SelectTrigger className="w-32 sm:w-40 h-8 text-xs bg-white/[0.03] border-white/[0.06] rounded-lg">
               <SelectValue placeholder="Site" />
             </SelectTrigger>
             <SelectContent>
@@ -419,7 +420,7 @@ export default function StockMovementsPage() {
           </Select>
 
           {/* Dates */}
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-2 sm:ml-auto">
             <div className="flex items-center gap-1.5">
               <CalendarDays className="h-3.5 w-3.5 text-white/30" />
               <Input
@@ -432,7 +433,7 @@ export default function StockMovementsPage() {
                     page: 1,
                   }))
                 }
-                className="w-36 h-8 text-xs bg-white/[0.03] border-white/[0.06] rounded-lg"
+                className="w-28 sm:w-36 h-8 text-xs bg-white/[0.03] border-white/[0.06] rounded-lg"
               />
             </div>
             <ArrowRight className="h-3 w-3 text-white/20" />
@@ -446,7 +447,7 @@ export default function StockMovementsPage() {
                   page: 1,
                 }))
               }
-              className="w-36 h-8 text-xs bg-white/[0.03] border-white/[0.06] rounded-lg"
+              className="w-28 sm:w-36 h-8 text-xs bg-white/[0.03] border-white/[0.06] rounded-lg"
             />
           </div>
         </div>

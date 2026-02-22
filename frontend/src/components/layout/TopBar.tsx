@@ -40,7 +40,7 @@ export function TopBar() {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuth()
-  const { toggle, alertCount } = useSidebarStore()
+  const { toggle, alertCount, setMobileOpen } = useSidebarStore()
 
   // Déterminer le titre de la page actuelle
   const getPageTitle = () => {
@@ -78,20 +78,30 @@ export function TopBar() {
   const breadcrumbs = getBreadcrumbs()
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-surface/60 backdrop-blur-xl px-6">
+    <header className="sticky top-0 z-30 flex h-14 sm:h-16 items-center gap-2 sm:gap-4 border-b border-border bg-surface/60 backdrop-blur-xl px-3 sm:px-6">
       {/* Gauche : bouton toggle + fil d'Ariane */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+        {/* Bouton menu mobile */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setMobileOpen(true)}
+          className="h-9 w-9 text-text-secondary hover:text-text-primary lg:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+        {/* Bouton toggle desktop */}
         <Button
           variant="ghost"
           size="icon"
           onClick={toggle}
-          className="h-9 w-9 text-text-secondary hover:text-text-primary"
+          className="h-9 w-9 text-text-secondary hover:text-text-primary hidden lg:flex"
         >
           <Menu className="h-5 w-5" />
         </Button>
 
-        {/* Fil d'Ariane */}
-        <nav className="flex items-center gap-1.5 text-sm">
+        {/* Fil d'Ariane — masqué sur mobile */}
+        <nav className="hidden sm:flex items-center gap-1.5 text-sm min-w-0">
           <span className="text-text-muted">Accueil</span>
           {breadcrumbs.map((crumb, index) => (
             <span key={index} className="flex items-center gap-1.5">
@@ -116,6 +126,11 @@ export function TopBar() {
             </>
           )}
         </nav>
+
+        {/* Titre de page sur mobile */}
+        <span className="sm:hidden font-medium text-text-primary text-sm truncate">
+          {getPageTitle()}
+        </span>
       </div>
 
       {/* Droite : actions */}

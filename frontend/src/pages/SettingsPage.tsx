@@ -57,10 +57,10 @@ export default function SettingsPage() {
     .slice(0, 2)
 
   return (
-    <div className="relative min-h-full">
+    <div className="relative min-h-full overflow-hidden">
       {/* Orbe décoratif fond */}
       <div
-        className="pointer-events-none absolute top-0 right-0 w-[400px] h-[400px] z-0"
+        className="pointer-events-none absolute top-0 right-0 w-[400px] h-[400px] z-0 hidden sm:block"
         style={{
           background: 'radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)',
         }}

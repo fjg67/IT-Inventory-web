@@ -216,7 +216,7 @@ export function StatsCard({
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
       onClick={onClick}
       className={cn(
-        'glass-card p-6 relative overflow-hidden group',
+        'glass-card p-3 sm:p-6 relative overflow-hidden group',
         onClick ? 'cursor-pointer' : 'cursor-default',
         'ring-1', colors.ring,
         'hover:ring-2 transition-shadow duration-300'
@@ -237,21 +237,21 @@ export function StatsCard({
       />
 
       <div className="relative z-10">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-text-secondary text-sm font-medium tracking-wide uppercase">
+        <div className="flex items-center justify-between mb-2 sm:mb-4">
+          <span className="text-text-secondary text-[10px] sm:text-sm font-medium tracking-wide uppercase">
             {title}
           </span>
           <div className={cn(
-            'p-2.5 rounded-xl text-white',
+            'p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl text-white',
             colors.iconBg, colors.iconGlow,
             'group-hover:scale-110 transition-transform duration-300'
           )}>
-            <Icon className="h-5 w-5" />
+            <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
         </div>
 
-        <div className="flex items-end gap-3">
-          <span className="text-3xl font-bold text-text-primary tracking-tight">
+        <div className="flex items-end gap-2 sm:gap-3">
+          <span className="text-xl sm:text-3xl font-bold text-text-primary tracking-tight">
             {typeof value === 'number' ? <AnimatedCounter value={value} /> : value}
           </span>
 

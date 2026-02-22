@@ -44,7 +44,7 @@ interface NavItem {
 export function Sidebar() {
   const location = useLocation()
   const { user, isAdmin, logout } = useAuth()
-  const { isOpen, alertCount, toggle } = useSidebarStore()
+  const { isOpen, isMobileOpen, alertCount, toggle, setMobileOpen } = useSidebarStore()
 
   // Liste des liens de navigation
   const navItems: NavItem[] = [
@@ -81,11 +81,12 @@ export function Sidebar() {
 
   return (
     <TooltipProvider delayDuration={0}>
+      {/* Desktop sidebar */}
       <motion.aside
         initial={false}
         animate={{ width: isOpen ? 260 : 72 }}
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className="fixed left-0 top-0 z-40 h-screen flex flex-col border-r border-border bg-surface/80 backdrop-blur-xl"
+        className="fixed left-0 top-0 z-40 h-screen hidden lg:flex flex-col border-r border-border bg-surface/80 backdrop-blur-xl"
       >
         {/* En-tête avec logo */}
         <div className="flex h-16 items-center justify-between px-4">
@@ -243,6 +244,104 @@ export function Sidebar() {
               <TooltipContent side="right">Déconnexion</TooltipContent>
             </Tooltip>
           )}
+        </div>
+      </motion.aside>
+
+      {/* Mobile sidebar (drawer) */}
+      <motion.aside
+        initial={{ x: -280 }}
+        animate={{ x: isMobileOpen ? 0 : -280 }}
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        className="fixed left-0 top-0 z-50 h-screen w-[260px] flex lg:hidden flex-col border-r border-border bg-surface/95 backdrop-blur-xl"
+      >
+        {/* En-tête avec logo */}
+        <div className="flex h-16 items-center justify-between px-4">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-indigo-500/10 ring-1 ring-white/[0.08] shadow-lg shadow-primary/10 overflow-hidden">
+              <img src={logoImg} alt="Logo" className="h-8 w-8 object-contain drop-shadow-md" />
+            </div>
+            <span className="whitespace-nowrap text-lg font-bold text-text-primary">
+              IT-Inventory
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMobileOpen(false)}
+            className="h-8 w-8 shrink-0"
+          >
+            <ChevronLeft className="h-4 w-4 text-text-secondary" />
+          </Button>
+        </div>
+
+        <Separator />
+
+        {/* Liens de navigation mobile */}
+        <ScrollArea className="flex-1 px-3 py-4">
+          <nav className="flex flex-col gap-1">
+            {filteredNavItems.map((item) => {
+              const Icon = item.icon
+              const active = isActive(item.path)
+
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                    active
+                      ? 'bg-primary/15 text-primary shadow-sm'
+                      : 'text-text-secondary hover:bg-white/5 hover:text-text-primary'
+                  )}
+                >
+                  {active && (
+                    <motion.div
+                      layoutId="sidebar-mobile-active"
+                      className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-primary"
+                      transition={{ duration: 0.2 }}
+                    />
+                  )}
+                  <Icon className={cn('h-5 w-5 shrink-0', active ? 'text-primary' : 'text-text-secondary group-hover:text-text-primary')} />
+                  <span className="truncate">{item.label}</span>
+                  {item.badge !== undefined && item.badge > 0 && (
+                    <Badge variant="danger" className="ml-auto text-[10px] px-1.5 py-0">
+                      {item.badge}
+                    </Badge>
+                  )}
+                </NavLink>
+              )
+            })}
+          </nav>
+        </ScrollArea>
+
+        <Separator />
+
+        {/* Section utilisateur mobile */}
+        <div className="p-3">
+          <div className="flex items-center gap-3 rounded-lg bg-white/5 p-3">
+            <Avatar className="h-9 w-9 shrink-0">
+              <AvatarFallback className="bg-primary/20 text-primary text-xs">
+                {user?.name ? getInitials(user.name) : '??'}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 overflow-hidden">
+              <p className="truncate text-sm font-medium text-text-primary">
+                {user?.name ? getInitials(user.name) : '??'}
+              </p>
+              <p className="truncate text-xs text-text-secondary">
+                {user?.role === 'ADMIN' ? 'Administrateur' : 'Technicien'}
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={logout}
+              className="h-8 w-8 shrink-0 text-text-secondary hover:text-danger"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </motion.aside>
     </TooltipProvider>

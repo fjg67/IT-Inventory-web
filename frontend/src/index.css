@@ -133,6 +133,15 @@
 }
 
 @layer utilities {
+  /* Masquer la scrollbar pour les éléments scrollables horizontalement */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Animation de chargement skeleton */
   .skeleton {
     @apply bg-gradient-to-r from-surface via-surface-elevated to-surface bg-[length:200%_100%];

@@ -94,13 +94,13 @@ export function MovementChart({ data, loading }: MovementChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 ring-1 ring-white/[0.04]"
+      className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3 sm:p-6 ring-1 ring-white/[0.04]"
     >
       {/* Noise texture */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iLjAyIi8+PC9zdmc+')] opacity-50 pointer-events-none" />
 
       <div className="relative z-10">
-        <div className="flex items-start justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
           <ChartHeader
             icon={TrendingUp}
             title="Mouvements — 30 jours"
@@ -108,20 +108,20 @@ export function MovementChart({ data, loading }: MovementChartProps) {
             glowColor="bg-blue-500"
           />
           {/* Mini stats */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/[0.08] ring-1 ring-emerald-500/20">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg bg-emerald-500/[0.08] ring-1 ring-emerald-500/20">
               <ArrowUpRight className="h-3 w-3 text-emerald-400" />
               <span className="text-xs font-bold text-emerald-400 tabular-nums">{totalEntries}</span>
               <span className="text-[10px] text-emerald-400/50">entrées</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/[0.08] ring-1 ring-red-500/20">
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg bg-red-500/[0.08] ring-1 ring-red-500/20">
               <ArrowDownRight className="h-3 w-3 text-red-400" />
               <span className="text-xs font-bold text-red-400 tabular-nums">{totalExits}</span>
               <span className="text-[10px] text-red-400/50">sorties</span>
             </div>
           </div>
         </div>
-        <ResponsiveContainer width="100%" height={320}>
+        <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={data}>
             <defs>
               <linearGradient id="gradientEntries" x1="0" y1="0" x2="0" y2="1">

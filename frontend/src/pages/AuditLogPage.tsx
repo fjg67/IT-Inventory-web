@@ -261,7 +261,7 @@ export default function AuditLogPage() {
 
           {/* Filtre par technicien */}
           <Select value={filters.userId ?? '_all'} onValueChange={handleFilterUser}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-36 sm:w-48">
               <SelectValue placeholder="Technicien" />
             </SelectTrigger>
             <SelectContent>
@@ -276,7 +276,7 @@ export default function AuditLogPage() {
 
           {/* Filtre par type d'action */}
           <Select value={filters.action ?? '_all'} onValueChange={handleFilterAction}>
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-36 sm:w-44">
               <SelectValue placeholder="Action" />
             </SelectTrigger>
             <SelectContent>
@@ -302,7 +302,7 @@ export default function AuditLogPage() {
                   page: 1,
                 }))
               }
-              className="w-40"
+              className="w-32 sm:w-40"
             />
           </div>
 
@@ -319,7 +319,7 @@ export default function AuditLogPage() {
                   page: 1,
                 }))
               }
-              className="w-40"
+              className="w-32 sm:w-40"
             />
           </div>
         </div>

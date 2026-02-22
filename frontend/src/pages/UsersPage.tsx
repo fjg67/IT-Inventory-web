@@ -265,12 +265,13 @@ export default function UsersPage() {
             }
           />
         ) : (
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Utilisateur</TableHead>
                 <TableHead className="w-[110px]">Statut</TableHead>
-                <TableHead className="w-[180px]">Dernière connexion</TableHead>
+                <TableHead className="w-[180px] hidden sm:table-cell">Dernière connexion</TableHead>
                 <TableHead className="w-[200px] text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -301,7 +302,7 @@ export default function UsersPage() {
                       {user.isActive ? 'Actif' : 'Inactif'}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-xs text-text-secondary">
+                  <TableCell className="text-xs text-text-secondary hidden sm:table-cell">
                     {formatDate(user.lastLoginAt)}
                   </TableCell>
                   <TableCell className="text-right">
@@ -353,6 +354,7 @@ export default function UsersPage() {
               ))}
             </TableBody>
           </Table>
+          </div>
         )}
       </motion.div>
 

@@ -104,10 +104,10 @@ export default function DashboardPage() {
         </div>
 
         {/* Site selector pills */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.03] border border-white/5">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.03] border border-white/5 overflow-x-auto scrollbar-hide">
           <button
             onClick={() => setSelectedSiteId('')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 whitespace-nowrap shrink-0 ${
               selectedSiteId === ''
                 ? 'bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30 shadow-sm'
                 : 'text-text-muted hover:text-text-secondary hover:bg-white/5'
@@ -119,7 +119,7 @@ export default function DashboardPage() {
             <button
               key={site.id}
               onClick={() => setSelectedSiteId(site.id)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                 selectedSiteId === site.id
                   ? 'bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30 shadow-sm'
                   : 'text-text-muted hover:text-text-secondary hover:bg-white/5'
@@ -133,7 +133,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
         <StatsCard
           title="Total articles"
           value={stats?.totalArticles ?? 0}

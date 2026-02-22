@@ -435,7 +435,7 @@ export default function ArticlesPage() {
         </div>
 
         {/* Filtres */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-text-muted" />
             <span className="text-sm text-text-secondary">Filtres :</span>
@@ -446,7 +446,7 @@ export default function ArticlesPage() {
             value={filters.category ?? '_all'}
             onValueChange={handleFilterCategory}
           >
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-36 sm:w-44">
               <SelectValue placeholder="Catégorie" />
             </SelectTrigger>
             <SelectContent>
@@ -464,7 +464,7 @@ export default function ArticlesPage() {
             value={filters.status ?? '_all'}
             onValueChange={handleFilterStatus}
           >
-            <SelectTrigger className="w-36">
+            <SelectTrigger className="w-28 sm:w-36">
               <SelectValue placeholder="Statut" />
             </SelectTrigger>
             <SelectContent>
@@ -537,8 +537,8 @@ export default function ArticlesPage() {
                   onClick={() => navigate(`/articles/${article.id}`)}
                 >
                   <div className="flex items-stretch">
-                    {/* Image / Icône article */}
-                    <div className="flex-shrink-0 w-20 flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 border-r border-border">
+                    {/* Image / Icône article — masqué sur mobile */}
+                    <div className="hidden sm:flex flex-shrink-0 w-20 items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 border-r border-border">
                       {article.imageUrl ? (
                         <img
                           src={article.imageUrl.startsWith('http') ? article.imageUrl : `http://localhost:3001${article.imageUrl}`}
@@ -554,7 +554,7 @@ export default function ArticlesPage() {
                     </div>
 
                     {/* Contenu principal */}
-                    <div className="flex-1 min-w-0 p-4">
+                    <div className="flex-1 min-w-0 p-3 sm:p-4">
                       {/* Ligne 1 : Nom + Actions */}
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <h3 className="font-semibold text-text-primary text-base leading-tight truncate">
@@ -566,7 +566,7 @@ export default function ArticlesPage() {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="h-7 w-7 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                               >
                                 <MoreVertical className="h-4 w-4" />
                               </Button>
@@ -652,11 +652,15 @@ export default function ArticlesPage() {
                           <Clock className="h-3 w-3" />
                           Modifié {timeAgo(article.updatedAt)}
                         </span>
+                        {/* Stock compact sur mobile */}
+                        <span className="sm:hidden inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-white/5 border border-white/10">
+                          📦 {article.totalStock ?? 0}
+                        </span>
                       </div>
                     </div>
 
                     {/* Indicateur stock à droite */}
-                    <div className="flex items-center gap-2 pr-4 pl-2 flex-shrink-0">
+                    <div className="hidden sm:flex items-center gap-2 pr-4 pl-2 flex-shrink-0">
                       <StockIndicator
                         stock={article.totalStock ?? 0}
                         minStock={article.minStock}
