@@ -51,16 +51,16 @@ export default function DashboardPage() {
     queryFn: () => dashboardService.getCategoryDistribution(siteId),
   })
 
-  // Alertes
+  // Alertes (filtrées par site)
   const { data: alertsData, isLoading: alertsLoading } = useQuery({
-    queryKey: ['alerts'],
-    queryFn: () => alertsService.getAlerts(),
+    queryKey: ['alerts', siteId],
+    queryFn: () => alertsService.getAlerts(siteId),
   })
 
-  // Derniers mouvements
+  // Derniers mouvements (filtrés par site)
   const { data: movementsData, isLoading: movementsLoading } = useQuery({
-    queryKey: ['movements', 'recent'],
-    queryFn: () => stockService.getMovements({ limit: 10, page: 1 }),
+    queryKey: ['movements', 'recent', siteId],
+    queryFn: () => stockService.getMovements({ limit: 10, page: 1, siteId }),
   })
 
   // Mise à jour du badge alertes dans la sidebar

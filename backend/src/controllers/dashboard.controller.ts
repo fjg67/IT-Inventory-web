@@ -288,9 +288,9 @@ export const getCategoryDistribution = async (req: Request, res: Response): Prom
   try {
     const siteId = req.query.siteId as string | undefined;
 
-    // Si un site est sélectionné, ne compter que les articles qui ont du stock sur ce site
+    // Si un site est sélectionné, ne compter que les articles qui ont une entrée de stock sur ce site (même quantité = 0)
     const articleFilter = siteId
-      ? { isArchived: false, stocks: { some: { siteId, quantity: { gt: 0 } } } }
+      ? { isArchived: false, stocks: { some: { siteId } } }
       : { isArchived: false };
 
     // Groupement des articles par catégorie
