@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Eye, EyeOff, Loader2, ChevronRight, ShieldCheck, ArrowLeft, Check, Sparkles, Unlock, XCircle, ShieldAlert, AlertTriangle } from 'lucide-react'
+import { Eye, EyeOff, Loader2, ChevronRight, ShieldCheck, Check, Sparkles, Unlock, XCircle, ShieldAlert, AlertTriangle } from 'lucide-react'
 import logoImg from '@/assets/logo.png'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/hooks/useAuth'
@@ -101,11 +101,6 @@ export default function LoginPage() {
       setShowUnlockAnim(false)
       setStep('profiles')
     }, 1600)
-  }
-
-  const handleBack = () => {
-    setStep('password')
-    setSelectedUser(null)
   }
 
   const handleSelectUser = (user: ProfileUser) => {
@@ -334,15 +329,6 @@ export default function LoginPage() {
               transition={{ duration: 0.3, ease: 'easeOut' }}
               className="space-y-3"
             >
-              {/* Bouton retour */}
-              <button
-                onClick={handleBack}
-                className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors mb-2 cursor-pointer"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span className="text-sm">Modifier le mot de passe</span>
-              </button>
-
               {profilesLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <div key={i} className="glass-card p-4 flex items-center gap-4 animate-pulse">
