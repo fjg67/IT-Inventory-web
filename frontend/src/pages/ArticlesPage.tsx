@@ -307,6 +307,13 @@ export default function ArticlesPage() {
   const [showCelebration, setShowCelebration] = useState(false)
   const [celebrationName, setCelebrationName] = useState('')
 
+  // Récupération des sites pour le filtre
+  const { data: sitesData } = useQuery({
+    queryKey: ['sites'],
+    queryFn: () => sitesService.getAll(),
+  })
+  const sites = sitesData?.sites ?? []
+
   // Récupération des articles
   const { data, isLoading, isError } = useQuery({
     queryKey: ['articles', filters],
@@ -395,6 +402,14 @@ export default function ArticlesPage() {
     }))
   }, [])
 
+  const handleFilterSite = useCallback((value: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      site: value === '_all' ? undefined : value,
+      page: 1,
+    }))
+  }, [])
+
   const handlePageChange = useCallback((page: number) => {
     setFilters((prev) => ({ ...prev, page }))
   }, [])
@@ -459,6 +474,24 @@ export default function ArticlesPage() {
             </SelectContent>
           </Select>
 
+          {/* Filtre site */}
+          <Select
+            value={filters.site ?? '_all'}
+            onValueChange={handleFilterSite}
+          >
+            <SelectTrigger className="w-36 sm:w-44">
+              <SelectValue placeholder="Site" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="_all">Tous les sites</SelectItem>
+              {sites.filter(s => s.isActive).map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  <span className="flex items-center gap-2"><MapPin className="h-3 w-3" /> {s.name}</span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           {/* Filtre statut */}
           <Select
             value={filters.status ?? '_all'}
@@ -502,12 +535,12 @@ export default function ArticlesPage() {
               icon={Package}
               title="Aucun article trouvé"
               description={
-                filters.search || filters.category || filters.status
+                filters.search || filters.category || filters.site || filters.status
                   ? 'Essayez de modifier vos filtres de recherche.'
                   : "Commencez par ajouter votre premier article à l'inventaire."
               }
               action={
-                !filters.search && !filters.category && !filters.status ? (
+                !filters.search && !filters.category && !filters.site && !filters.status ? (
                   <Button onClick={handleOpenCreate}>
                     <Plus className="mr-2 h-4 w-4" />
                     Nouvel article
