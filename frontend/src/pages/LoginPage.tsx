@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Eye, EyeOff, Loader2, ChevronRight, ShieldCheck, ArrowLeft, Check, Sparkles, Unlock } from 'lucide-react'
+import { Eye, EyeOff, Loader2, ChevronRight, ShieldCheck, ArrowLeft, Check, Sparkles, Unlock, XCircle, ShieldAlert, AlertTriangle } from 'lucide-react'
 import logoImg from '@/assets/logo.png'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/hooks/useAuth'
@@ -48,6 +48,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [passwordError, setPasswordError] = useState('')
   const [showUnlockAnim, setShowUnlockAnim] = useState(false)
+  const [showErrorAnim, setShowErrorAnim] = useState(false)
+  const [shakeKey, setShakeKey] = useState(0)
 
   // Récupération des profils actifs (préchargé pour l'étape 2)
   const { data: profilesData, isLoading: profilesLoading } = useQuery({
@@ -83,6 +85,13 @@ export default function LoginPage() {
     e.preventDefault()
     if (password.length < 6) {
       setPasswordError('Minimum 6 caractères')
+      return
+    }
+    if (password !== '!*A1Z2E3R4T5!') {
+      setPasswordError('Mot de passe incorrect')
+      setShowErrorAnim(true)
+      setShakeKey(prev => prev + 1)
+      setTimeout(() => setShowErrorAnim(false), 2200)
       return
     }
     setPasswordError('')
@@ -181,30 +190,91 @@ export default function LoginPage() {
               exit={{ opacity: 0, x: -30 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
             >
-              <form onSubmit={handlePasswordNext} className="glass-card p-6 space-y-5">
-                <div className="flex items-center gap-2 pb-4 border-b border-border">
-                  <ShieldCheck className="h-5 w-5 text-primary" />
-                  <h2 className="text-base font-semibold text-white">
-                    Connexion sécurisée
+              <motion.form
+                onSubmit={handlePasswordNext}
+                className={`glass-card p-6 space-y-5 relative overflow-hidden transition-shadow duration-500 ${
+                  showErrorAnim ? 'shadow-[0_0_40px_rgba(239,68,68,0.2)] border-red-500/40' : ''
+                }`}
+                key={shakeKey}
+                animate={showErrorAnim ? {
+                  x: [0, -12, 10, -8, 6, -4, 2, 0],
+                } : {}}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+              >
+                {/* Red flash overlay on error */}
+                <AnimatePresence>
+                  {showErrorAnim && (
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-b from-red-500/10 to-transparent z-0 pointer-events-none"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 1, 0.5, 0.8, 0] }}
+                      transition={{ duration: 1.5 }}
+                    />
+                  )}
+                </AnimatePresence>
+
+                <div className="flex items-center gap-2 pb-4 border-b border-border relative z-10">
+                  <AnimatePresence mode="wait">
+                    {showErrorAnim ? (
+                      <motion.div
+                        key="error-icon"
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        exit={{ scale: 0, rotate: 180 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                      >
+                        <ShieldAlert className="h-5 w-5 text-red-400" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="normal-icon"
+                        initial={{ scale: 0, rotate: 180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        exit={{ scale: 0, rotate: -180 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                      >
+                        <ShieldCheck className="h-5 w-5 text-primary" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <h2 className={`text-base font-semibold transition-colors duration-300 ${
+                    showErrorAnim ? 'text-red-400' : 'text-white'
+                  }`}>
+                    {showErrorAnim ? 'Accès refusé' : 'Connexion sécurisée'}
                   </h2>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 relative z-10">
                   <label htmlFor="password" className="text-sm font-medium text-text-secondary">
                     Mot de passe
                   </label>
                   <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
-                      autoComplete="current-password"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value)
-                        if (passwordError) setPasswordError('')
-                      }}
-                    />
+                    <motion.div
+                      animate={showErrorAnim ? {
+                        boxShadow: [
+                          '0 0 0px rgba(239,68,68,0)',
+                          '0 0 20px rgba(239,68,68,0.4)',
+                          '0 0 8px rgba(239,68,68,0.2)',
+                          '0 0 15px rgba(239,68,68,0.3)',
+                          '0 0 0px rgba(239,68,68,0)',
+                        ],
+                      } : {}}
+                      transition={{ duration: 1.5 }}
+                      className="rounded-lg"
+                    >
+                      <Input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="••••••••"
+                        autoComplete="current-password"
+                        value={password}
+                        className={showErrorAnim ? 'border-red-500/60 focus:border-red-500/60 focus:ring-red-500/20' : ''}
+                        onChange={(e) => {
+                          setPassword(e.target.value)
+                          if (passwordError) setPasswordError('')
+                        }}
+                      />
+                    </motion.div>
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -213,18 +283,46 @@ export default function LoginPage() {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {passwordError && (
-                    <p className="text-red-400 text-xs mt-1">{passwordError}</p>
-                  )}
+
+                  {/* Animated error message */}
+                  <AnimatePresence>
+                    {passwordError && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8, height: 0 }}
+                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                        exit={{ opacity: 0, y: -8, height: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeOut' }}
+                        className="flex items-center gap-2 mt-2 px-3 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20"
+                      >
+                        <motion.div
+                          initial={{ scale: 0, rotate: -90 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ type: 'spring', stiffness: 400, damping: 12, delay: 0.1 }}
+                        >
+                          <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                        </motion.div>
+                        <motion.p
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.15, duration: 0.25 }}
+                          className="text-red-400 text-xs font-medium"
+                        >
+                          {passwordError}
+                        </motion.p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-semibold rounded-xl"
+                  className={`w-full h-12 text-base font-semibold rounded-xl relative z-10 transition-all duration-300 ${
+                    showErrorAnim ? 'bg-red-500 hover:bg-red-600' : ''
+                  }`}
                 >
-                  Continuer
+                  {showErrorAnim ? 'Réessayer' : 'Continuer'}
                 </Button>
-              </form>
+              </motion.form>
             </motion.div>
           ) : (
             // ── Étape 2 : Sélection du profil ──
@@ -309,6 +407,136 @@ export default function LoginPage() {
           Version 1.0.0
         </motion.p>
       </motion.div>
+
+      {/* ── Error denied overlay ── */}
+      <AnimatePresence>
+        {showErrorAnim && (
+          <motion.div
+            className="fixed inset-0 z-[9998] flex items-center justify-center pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Red vignette pulse */}
+            <motion.div
+              className="absolute inset-0"
+              style={{
+                background: 'radial-gradient(ellipse at center, transparent 40%, rgba(239,68,68,0.12) 100%)',
+              }}
+              animate={{ opacity: [0, 1, 0.6, 0.8, 0] }}
+              transition={{ duration: 2 }}
+            />
+
+            {/* Glitch lines */}
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={`glitch-${i}`}
+                className="absolute left-0 right-0 h-px bg-red-500/30"
+                style={{ top: `${15 + i * 14}%` }}
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={{
+                  scaleX: [0, 1, 0],
+                  opacity: [0, 0.6, 0],
+                  x: ['-100%', '0%', '100%'],
+                }}
+                transition={{
+                  duration: 0.4,
+                  delay: 0.1 + i * 0.06,
+                  ease: 'easeOut',
+                }}
+              />
+            ))}
+
+            {/* Red spark particles */}
+            {Array.from({ length: 16 }).map((_, i) => {
+              const angle = (i / 16) * Math.PI * 2;
+              const dist = 50 + Math.random() * 80;
+              const colors = ['bg-red-400', 'bg-red-500', 'bg-orange-400', 'bg-rose-400', 'bg-red-300'];
+              return (
+                <motion.div
+                  key={`err-particle-${i}`}
+                  className={`absolute w-1 h-1 rounded-full ${colors[i % colors.length]}`}
+                  style={{ left: '50%', top: '50%' }}
+                  initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
+                  animate={{
+                    x: Math.cos(angle) * dist,
+                    y: Math.sin(angle) * dist,
+                    opacity: [1, 0.8, 0],
+                    scale: [0, 1.5, 0],
+                  }}
+                  transition={{
+                    duration: 0.8 + Math.random() * 0.3,
+                    delay: 0.15 + Math.random() * 0.1,
+                    ease: [0.22, 1.0, 0.36, 1.0],
+                  }}
+                />
+              );
+            })}
+
+            {/* Center denied badge */}
+            <motion.div
+              className="relative flex flex-col items-center"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 1.15, 1], opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Pulsing ring */}
+              <motion.div
+                className="absolute inset-[-20px] rounded-full border-2 border-red-500/30"
+                animate={{
+                  scale: [1, 1.6, 2],
+                  opacity: [0.5, 0.2, 0],
+                }}
+                transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
+              />
+              <motion.div
+                className="absolute inset-[-10px] rounded-full border border-red-500/20"
+                animate={{
+                  scale: [1, 1.4, 1.8],
+                  opacity: [0.4, 0.15, 0],
+                }}
+                transition={{ duration: 0.9, delay: 0.3, ease: 'easeOut' }}
+              />
+
+              {/* Icon circle */}
+              <div className="relative">
+                <div className="absolute inset-[-12px] rounded-full bg-red-500/20 blur-2xl" />
+                <motion.div
+                  className="relative w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-rose-600 shadow-[0_0_40px_rgba(239,68,68,0.35)] flex items-center justify-center"
+                  animate={{
+                    boxShadow: [
+                      '0 0 40px rgba(239,68,68,0.35)',
+                      '0 0 60px rgba(239,68,68,0.5)',
+                      '0 0 40px rgba(239,68,68,0.35)',
+                    ],
+                  }}
+                  transition={{ duration: 1.5, repeat: 1 }}
+                >
+                  <motion.div
+                    initial={{ scale: 0, rotate: -90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 0.2, type: 'spring', stiffness: 300, damping: 15 }}
+                  >
+                    <AlertTriangle className="w-7 h-7 text-white" strokeWidth={2.5} />
+                  </motion.div>
+                </motion.div>
+              </div>
+
+              {/* Text */}
+              <motion.p
+                className="mt-4 text-sm font-bold text-red-400 tracking-wide"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, duration: 0.3 }}
+              >
+                Accès refusé
+              </motion.p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Unlock celebration overlay ── */}
       <AnimatePresence>
