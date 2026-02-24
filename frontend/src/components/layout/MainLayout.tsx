@@ -6,6 +6,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/hooks/useAuth'
 import { useInactivityTimeout } from '@/hooks/useInactivityTimeout'
+import { useBeforeUnload } from '@/hooks/useBeforeUnload'
 import { useSidebarStore } from '@/stores/sidebarStore'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TopBar } from '@/components/layout/TopBar'
@@ -22,6 +23,9 @@ export default function MainLayout() {
   }, [logout])
 
   useInactivityTimeout(handleInactivityTimeout)
+
+  // Empêcher de quitter le navigateur sans se déconnecter
+  useBeforeUnload()
 
   // Fermer le drawer mobile à chaque changement de route
   useEffect(() => {
