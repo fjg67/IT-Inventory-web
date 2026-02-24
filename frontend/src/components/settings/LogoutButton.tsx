@@ -3,20 +3,28 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { LogOut, Loader2 } from 'lucide-react'
+import { LogoutConfirmDialog } from '@/components/shared/LogoutConfirmDialog'
 
 interface LogoutButtonProps {
   onLogout: () => void | Promise<void>
+  userName?: string
 }
 
-export function LogoutButton({ onLogout }: LogoutButtonProps) {
+export function LogoutButton({ onLogout, userName }: LogoutButtonProps) {
   const [loading, setLoading] = useState(false)
+  const [showDialog, setShowDialog] = useState(false)
 
-  const handleClick = async () => {
+  const handleClick = () => {
+    setShowDialog(true)
+  }
+
+  const handleConfirm = async () => {
     setLoading(true)
     try {
       await onLogout()
     } finally {
       setLoading(false)
+      setShowDialog(false)
     }
   }
 
@@ -64,6 +72,14 @@ export function LogoutButton({ onLogout }: LogoutButtonProps) {
       <p className="text-center text-[11px] text-text-muted italic mt-3">
         Cette action mettra fin à votre session active
       </p>
+
+      {/* Modale de confirmation */}
+      <LogoutConfirmDialog
+        open={showDialog}
+        onClose={() => setShowDialog(false)}
+        onConfirm={handleConfirm}
+        userName={userName}
+      />
     </motion.div>
   )
 }

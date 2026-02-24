@@ -1,6 +1,7 @@
 // Sidebar â€” barre latÃ©rale de navigation principale
 // Affiche les liens de navigation, le logo et les informations utilisateur
 
+import { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -20,6 +21,7 @@ import logoImg from '@/assets/logo.png'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/useAuth'
 import { useSidebarStore } from '@/stores/sidebarStore'
+import { LogoutConfirmDialog } from '@/components/shared/LogoutConfirmDialog'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -45,6 +47,7 @@ export function Sidebar() {
   const location = useLocation()
   const { user, isAdmin, logout } = useAuth()
   const { isOpen, isMobileOpen, alertCount, toggle, setMobileOpen } = useSidebarStore()
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
 
   // Liste des liens de navigation
   const navItems: NavItem[] = [
@@ -220,13 +223,13 @@ export function Sidebar() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={logout}
+                    onClick={() => setShowLogoutDialog(true)}
                     className="h-8 w-8 shrink-0 text-text-secondary hover:text-danger"
                   >
                     <LogOut className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="right">DÃ©connexion</TooltipContent>
+                <TooltipContent side="right">Déconnexion</TooltipContent>
               </Tooltip>
             </div>
           ) : (
@@ -235,13 +238,13 @@ export function Sidebar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={logout}
+                  onClick={() => setShowLogoutDialog(true)}
                   className="mx-auto flex h-10 w-10 text-text-secondary hover:text-danger"
                 >
                   <LogOut className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="right">DÃ©connexion</TooltipContent>
+              <TooltipContent side="right">Déconnexion</TooltipContent>
             </Tooltip>
           )}
         </div>
@@ -336,7 +339,7 @@ export function Sidebar() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={logout}
+              onClick={() => setShowLogoutDialog(true)}
               className="h-8 w-8 shrink-0 text-text-secondary hover:text-danger"
             >
               <LogOut className="h-4 w-4" />
@@ -344,6 +347,14 @@ export function Sidebar() {
           </div>
         </div>
       </motion.aside>
+
+      {/* Modale de confirmation de déconnexion */}
+      <LogoutConfirmDialog
+        open={showLogoutDialog}
+        onClose={() => setShowLogoutDialog(false)}
+        onConfirm={logout}
+        userName={user?.name}
+      />
     </TooltipProvider>
   )
 }

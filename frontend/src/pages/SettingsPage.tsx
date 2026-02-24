@@ -281,7 +281,7 @@ export default function SettingsPage() {
           </motion.div>
 
           {/* === DÉCONNEXION === */}
-          <LogoutButton onLogout={logout} />
+          <LogoutButton onLogout={logout} userName={user?.name} />
 
           {/* === FOOTER === */}
           <motion.div variants={itemVariants}>
