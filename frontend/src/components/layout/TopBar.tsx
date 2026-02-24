@@ -5,7 +5,6 @@ import {
   Menu,
   Search,
   Bell,
-  User,
   Settings,
   LogOut,
   ChevronRight,
@@ -192,13 +191,6 @@ export function TopBar() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => navigate('/settings')}
-              className="cursor-pointer"
-            >
-              <User className="mr-2 h-4 w-4" />
-              Profil
-            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate('/settings')}
               className="cursor-pointer"
