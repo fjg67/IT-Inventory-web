@@ -53,6 +53,23 @@
     --sidebar-hover: rgba(255, 255, 255, 0.05);
     --hover-active: rgba(255, 255, 255, 0.1);
     --dialog-bg: #0c1222;
+
+    /* Couleurs sémantiques thème */
+    --color-bg:         #0A0F1E;
+    --color-surface:    #0F1629;
+    --color-surface-2:  #141E35;
+    --color-hover:      rgba(255, 255, 255, 0.04);
+    --color-border:     rgba(255, 255, 255, 0.07);
+    --color-border-md:  rgba(255, 255, 255, 0.12);
+    --color-text:       #F1F5F9;
+    --color-text-2:     #94A3B8;
+    --color-text-3:     #4B5563;
+    --color-blue:       #3B82F6;
+    --color-blue-light: #60A5FA;
+    --color-success:    #10B981;
+    --color-warning:    #F59E0B;
+    --color-danger:     #EF4444;
+    --color-indigo:     #6366F1;
   }
 
   /* ── Mode clair ── */
@@ -101,6 +118,23 @@
     --sidebar-hover: rgba(0, 0, 0, 0.04);
     --hover-active: rgba(0, 0, 0, 0.08);
     --dialog-bg: #FFFFFF;
+
+    /* Couleurs sémantiques thème */
+    --color-bg:         #F8FAFC;
+    --color-surface:    #FFFFFF;
+    --color-surface-2:  #F1F5F9;
+    --color-hover:      rgba(0, 0, 0, 0.04);
+    --color-border:     rgba(0, 0, 0, 0.08);
+    --color-border-md:  rgba(0, 0, 0, 0.14);
+    --color-text:       #0F172A;
+    --color-text-2:     #475569;
+    --color-text-3:     #94A3B8;
+    --color-blue:       #2563EB;
+    --color-blue-light: #3B82F6;
+    --color-success:    #059669;
+    --color-warning:    #D97706;
+    --color-danger:     #DC2626;
+    --color-indigo:     #4F46E5;
   }
 }
 
@@ -115,7 +149,6 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Scrollbar personnalisée */
@@ -136,6 +169,25 @@
   ::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
   }
+}
+
+/* ── Transition globale pour le changement de thème ── */
+*,
+*::before,
+*::after {
+  transition:
+    background-color 250ms ease,
+    border-color 250ms ease,
+    color 200ms ease,
+    box-shadow 250ms ease,
+    fill 200ms ease,
+    stroke 200ms ease;
+}
+
+/* Exception : ne pas transitionner les animations intentionnelles */
+.no-theme-transition,
+.no-theme-transition * {
+  transition: none !important;
 }
 
 @layer components {

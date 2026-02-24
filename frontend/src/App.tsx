@@ -2,6 +2,7 @@
 
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
+import { ThemeProvider } from '@/contexts/ThemeContext'
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner'
 import MainLayout from '@/components/layout/MainLayout'
 
@@ -23,6 +24,7 @@ const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 function App() {
   return (
+    <ThemeProvider>
     <Suspense fallback={<LoadingSpinner fullPage />}>
       <Routes>
         {/* Page de bienvenue / onboarding */}
@@ -51,6 +53,7 @@ function App() {
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
     </Suspense>
+    </ThemeProvider>
   )
 }
 

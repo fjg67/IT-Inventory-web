@@ -27,6 +27,23 @@ const config: Config = {
         'text-primary': 'var(--text-primary)',
         'text-secondary': 'var(--text-secondary)',
         'text-muted': 'var(--text-muted)',
+
+        // Couleurs sémantiques thème (CSS variables)
+        'theme-bg':         'var(--color-bg)',
+        'theme-surface':    'var(--color-surface)',
+        'theme-surface-2':  'var(--color-surface-2)',
+        'theme-hover':      'var(--color-hover)',
+        'theme-border':     'var(--color-border)',
+        'theme-border-md':  'var(--color-border-md)',
+        'theme-text':       'var(--color-text)',
+        'theme-text-2':     'var(--color-text-2)',
+        'theme-text-3':     'var(--color-text-3)',
+        'theme-blue':       'var(--color-blue)',
+        'theme-blue-light': 'var(--color-blue-light)',
+        'theme-success':    'var(--color-success)',
+        'theme-warning':    'var(--color-warning)',
+        'theme-danger':     'var(--color-danger)',
+        'theme-indigo':     'var(--color-indigo)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

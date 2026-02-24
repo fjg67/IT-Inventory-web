@@ -16,15 +16,21 @@ import {
   LifeBuoy,
   FileText,
   ChevronRight,
+  Moon,
+  Sun,
+  Palette,
 } from 'lucide-react'
 
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import { useTheme } from '@/contexts/ThemeContext'
 import { AvatarHero } from '@/components/settings/AvatarHero'
 import { SectionCard } from '@/components/settings/SectionCard'
 import { SettingRow } from '@/components/settings/SettingRow'
 import { StatusBadge } from '@/components/settings/StatusBadge'
 import { LogoutButton } from '@/components/settings/LogoutButton'
+import { ThemeSelector } from '@/components/theme/ThemeSelector'
+import { ThemePreview } from '@/components/theme/ThemePreview'
 
 // --- Animation variants ---
 const containerVariants = {
@@ -48,6 +54,7 @@ const itemVariants = {
 export default function SettingsPage() {
   const navigate = useNavigate()
   const { user, isAdmin, logout } = useAuth()
+  const { theme, resolvedTheme, isDark } = useTheme()
 
   const initials = (user?.name ?? 'U')
     .split(' ')
@@ -122,6 +129,31 @@ export default function SettingsPage() {
               role={user?.role ?? 'TECHNICIAN'}
               isActive
             />
+          </motion.div>
+
+          {/* === APPARENCE === */}
+          <motion.div variants={itemVariants}>
+            <SectionCard label="Apparence" accentColor="bg-indigo-500" delay={0.05}>
+              {/* Thème de l'interface */}
+              <SettingRow
+                icon={isDark ? Moon : Sun}
+                iconBg={isDark ? 'bg-indigo-500/[0.1]' : 'bg-amber-500/[0.08]'}
+                iconColor={isDark ? 'text-indigo-400' : 'text-amber-500'}
+                label="Thème de l'interface"
+                sublabel={
+                  theme === 'system'
+                    ? `Automatique (${resolvedTheme === 'dark' ? 'sombre' : 'clair'} actuellement)`
+                    : resolvedTheme === 'dark' ? 'Mode sombre' : 'Mode clair'
+                }
+                value={<ThemeSelector />}
+                isLast
+              />
+
+              {/* Aperçu live */}
+              <div className="px-5 pb-5 pt-2">
+                <ThemePreview />
+              </div>
+            </SectionCard>
           </motion.div>
 
           {/* === SYNCHRONISATION === */}

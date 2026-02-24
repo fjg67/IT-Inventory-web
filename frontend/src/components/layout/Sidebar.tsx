@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/useAuth'
 import { useSidebarStore } from '@/stores/sidebarStore'
 import { LogoutConfirmDialog } from '@/components/shared/LogoutConfirmDialog'
+import { ThemeToggle } from '@/components/theme/ThemeToggle'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -201,6 +202,22 @@ export function Sidebar() {
 
         <Separator />
 
+        {/* Toggle thème */}
+        <div className="px-3 py-2">
+          {isOpen ? (
+            <div className="flex items-center justify-between rounded-lg px-3 py-2">
+              <span className="text-xs font-medium text-text-secondary" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                Thème
+              </span>
+              <ThemeToggle />
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <ThemeToggle />
+            </div>
+          )}
+        </div>
+
         {/* Section utilisateur en bas */}
         <div className="p-3">
           {isOpen ? (
@@ -319,6 +336,16 @@ export function Sidebar() {
         </ScrollArea>
 
         <Separator />
+
+        {/* Toggle thème mobile */}
+        <div className="px-3 py-2">
+          <div className="flex items-center justify-between rounded-lg px-3 py-2">
+            <span className="text-xs font-medium text-text-secondary" style={{ fontFamily: "'Outfit', sans-serif" }}>
+              Thème
+            </span>
+            <ThemeToggle />
+          </div>
+        </div>
 
         {/* Section utilisateur mobile */}
         <div className="p-3">

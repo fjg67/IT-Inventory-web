@@ -12,7 +12,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/useAuth'
 import { useSidebarStore } from '@/stores/sidebarStore'
-import { ThemeToggle } from '@/components/layout/ThemeToggle'
+import { ThemeButton } from '@/components/theme/ThemeButton'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -146,7 +146,7 @@ export function TopBar() {
         </Button>
 
         {/* Toggle thème clair/sombre */}
-        <ThemeToggle />
+        <ThemeButton />
 
         {/* Bouton notifications */}
         <Button
