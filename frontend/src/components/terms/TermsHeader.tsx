@@ -21,13 +21,13 @@ export function TermsHeader({ activeTab, onTabChange }: TermsHeaderProps) {
       <nav className="flex items-center gap-2 mb-6">
         <button
           onClick={() => navigate('/settings')}
-          className="flex items-center gap-2 text-[13px] font-['Outfit'] text-slate-500 hover:text-slate-300 transition-colors group"
+          className="flex items-center gap-2 text-[13px] font-['Outfit'] text-text-secondary hover:text-text-primary transition-colors group"
         >
           <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
           Paramètres
         </button>
-        <span className="text-slate-600 mx-1">/</span>
-        <span className="text-[13px] font-['Outfit'] text-slate-400">
+        <span className="text-text-muted mx-1">/</span>
+        <span className="text-[13px] font-['Outfit'] text-text-secondary">
           Conditions d'utilisation
         </span>
       </nav>
@@ -45,41 +45,41 @@ export function TermsHeader({ activeTab, onTabChange }: TermsHeaderProps) {
           </div>
 
           {/* Titre */}
-          <h1 className="font-['Outfit'] text-[32px] sm:text-[32px] font-extrabold leading-[1.15] text-slate-100">
+          <h1 className="font-['Outfit'] text-[32px] sm:text-[32px] font-extrabold leading-[1.15] text-text-primary">
             Conditions d'utilisation &
             <br />
-            <span className="text-slate-100">Politique de confidentialité</span>
+            <span className="text-text-primary">Politique de confidentialité</span>
           </h1>
         </div>
 
         {/* Droite — meta card */}
-        <div className="min-w-[200px] rounded-[14px] bg-[#0F1D2E] border border-white/[0.07] p-4 space-y-0">
+        <div className="min-w-[200px] rounded-[14px] bg-surface border border-border p-4 space-y-0">
           {/* Dernière mise à jour */}
           <div className="flex items-center justify-between py-2">
-            <span className="text-[11px] font-['Outfit'] text-slate-500">
+            <span className="text-[11px] font-['Outfit'] text-text-secondary">
               Dernière mise à jour
             </span>
-            <span className="text-[12px] font-['JetBrains_Mono'] font-semibold text-slate-400">
+            <span className="text-[12px] font-['JetBrains_Mono'] font-semibold text-text-secondary">
               15 janvier 2026
             </span>
           </div>
-          <div className="h-px bg-white/[0.06]" />
+          <div className="h-px bg-[var(--sidebar-hover)]" />
           {/* Version */}
           <div className="flex items-center justify-between py-2">
-            <span className="text-[11px] font-['Outfit'] text-slate-500">
+            <span className="text-[11px] font-['Outfit'] text-text-secondary">
               Version
             </span>
             <span className="text-[12px] font-['JetBrains_Mono'] font-semibold text-blue-400">
               1.0.0
             </span>
           </div>
-          <div className="h-px bg-white/[0.06]" />
+          <div className="h-px bg-[var(--sidebar-hover)]" />
           {/* Langue */}
           <div className="flex items-center justify-between py-2">
-            <span className="text-[11px] font-['Outfit'] text-slate-500">
+            <span className="text-[11px] font-['Outfit'] text-text-secondary">
               Langue
             </span>
-            <span className="text-[12px] font-['Outfit'] font-semibold text-slate-400">
+            <span className="text-[12px] font-['Outfit'] font-semibold text-text-secondary">
               Français 🇫🇷
             </span>
           </div>
@@ -87,7 +87,7 @@ export function TermsHeader({ activeTab, onTabChange }: TermsHeaderProps) {
       </div>
 
       {/* Tabs */}
-      <div className="mt-6 inline-flex items-center gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/[0.06]">
+      <div className="mt-6 inline-flex items-center gap-1 p-1 rounded-xl bg-[var(--sidebar-hover)] border border-border">
         <TabButton
           active={activeTab === 'terms'}
           icon={FileText}
@@ -123,15 +123,15 @@ function TabButton({ active, icon: Icon, label, onClick }: TabButtonProps) {
         transition-colors duration-150
         ${
           active
-            ? 'text-slate-100'
-            : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.04]'
+            ? 'text-text-primary'
+            : 'text-text-secondary hover:text-text-primary hover:bg-[var(--sidebar-hover)]'
         }
       `}
     >
       {active && (
         <motion.div
           layoutId="terms-active-tab"
-          className="absolute inset-0 rounded-lg bg-[#0F1D2E] border border-white/[0.11] shadow-[0_1px_4px_rgba(0,0,0,0.3)]"
+          className="absolute inset-0 rounded-lg bg-surface border border-border shadow-[0_1px_4px_rgba(0,0,0,0.3)]"
           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         />
       )}

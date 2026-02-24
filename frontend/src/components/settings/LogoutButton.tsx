@@ -61,7 +61,7 @@ export function LogoutButton({ onLogout }: LogoutButtonProps) {
       </button>
 
       {/* Label danger zone */}
-      <p className="text-center text-[11px] text-slate-600 italic mt-3">
+      <p className="text-center text-[11px] text-text-muted italic mt-3">
         Cette action mettra fin à votre session active
       </p>
     </motion.div>

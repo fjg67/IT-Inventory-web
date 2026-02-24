@@ -369,7 +369,7 @@ export default function AuditLogPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.2, delay: index * 0.02 }}
-                      className="border-b border-border transition-colors hover:bg-white/[0.03]"
+                      className="border-b border-border transition-colors hover:bg-[var(--sidebar-hover)]"
                     >
                       <TableCell>
                         <div className="flex items-center gap-1.5 text-xs text-text-secondary">

@@ -16,7 +16,7 @@ export function AvatarHero({ initials, role, isActive }: AvatarHeroProps) {
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-      className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-[#0E1520] shadow-[0_1px_3px_rgba(0,0,0,0.5),0_8px_24px_rgba(0,0,0,0.3)]"
+      className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_1px_3px_rgba(0,0,0,0.5),0_8px_24px_rgba(0,0,0,0.3)]"
     >
       {/* Orbe décoratif derrière l'avatar */}
       <div
@@ -68,7 +68,7 @@ export function AvatarHero({ initials, role, isActive }: AvatarHeroProps) {
 
         {/* Initiales */}
         <h2
-          className="text-[20px] font-bold text-[#EEF2FF] tracking-wide"
+          className="text-[20px] font-bold text-text-primary tracking-wide"
           style={{ fontFamily: "'Outfit', sans-serif" }}
         >
           {initials}

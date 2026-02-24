@@ -25,8 +25,8 @@ export function SectionCard({
       transition={{ delay, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
       className={cn(
         'rounded-xl overflow-hidden',
-        'border border-white/[0.06]',
-        'bg-[#0E1520]',
+        'border border-border',
+        'bg-surface',
         'shadow-[0_1px_3px_rgba(0,0,0,0.5),0_8px_24px_rgba(0,0,0,0.3)]',
         className
       )}
@@ -36,7 +36,7 @@ export function SectionCard({
         <div className="flex items-center gap-2.5 px-5 pt-5 pb-3">
           <div className={cn('w-[3px] h-3.5 rounded-full', accentColor)} />
           <span
-            className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500"
+            className="text-[10px] font-bold uppercase tracking-[0.18em] text-text-secondary"
             style={{ fontFamily: "'Outfit', sans-serif" }}
           >
             {label}

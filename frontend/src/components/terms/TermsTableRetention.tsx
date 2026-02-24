@@ -5,16 +5,16 @@ import { RETENTION_DATA } from '@/data/privacyData'
 
 export function TermsTableRetention() {
   return (
-    <div className="my-5 rounded-[14px] bg-[#0F1D2E] border border-white/[0.07] overflow-hidden">
+    <div className="my-5 rounded-[14px] bg-surface border border-border overflow-hidden">
       {/* Header */}
-      <div className="grid grid-cols-3 gap-4 px-5 py-3 bg-white/[0.04]">
-        <span className="text-[11px] font-['Outfit'] font-bold uppercase tracking-wider text-slate-500">
+      <div className="grid grid-cols-3 gap-4 px-5 py-3 bg-[var(--sidebar-hover)]">
+        <span className="text-[11px] font-['Outfit'] font-bold uppercase tracking-wider text-text-secondary">
           Type de données
         </span>
-        <span className="text-[11px] font-['Outfit'] font-bold uppercase tracking-wider text-slate-500">
+        <span className="text-[11px] font-['Outfit'] font-bold uppercase tracking-wider text-text-secondary">
           Durée
         </span>
-        <span className="text-[11px] font-['Outfit'] font-bold uppercase tracking-wider text-slate-500">
+        <span className="text-[11px] font-['Outfit'] font-bold uppercase tracking-wider text-text-secondary">
           Justification
         </span>
       </div>
@@ -25,11 +25,11 @@ export function TermsTableRetention() {
           key={row.type}
           className={`
             grid grid-cols-3 gap-4 px-5 py-3.5 items-center
-            hover:bg-white/[0.03] transition-colors
-            ${i < RETENTION_DATA.length - 1 ? 'border-b border-white/[0.05]' : ''}
+            hover:bg-[var(--sidebar-hover)] transition-colors
+            ${i < RETENTION_DATA.length - 1 ? 'border-b border-border' : ''}
           `}
         >
-          <span className="text-[13px] font-['Outfit'] text-slate-300 font-medium">
+          <span className="text-[13px] font-['Outfit'] text-text-primary font-medium">
             {row.type}
           </span>
           <span className="text-[13px] font-['JetBrains_Mono'] font-semibold text-blue-400">

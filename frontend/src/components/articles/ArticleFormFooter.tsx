@@ -16,7 +16,7 @@ export function ArticleFormFooter({ isEditing, loading, onCancel, progress }: Ar
   return (
     <div className="sticky bottom-0 -mx-6 -mb-6 mt-6">
       {/* Progress bar */}
-      <div className="h-[2px] bg-white/[0.03] relative overflow-hidden">
+      <div className="h-[2px] bg-[var(--sidebar-hover)] relative overflow-hidden">
         <motion.div
           className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-cyan-400"
           initial={{ width: 0 }}
@@ -26,9 +26,9 @@ export function ArticleFormFooter({ isEditing, loading, onCancel, progress }: Ar
       </div>
 
       {/* Button bar */}
-      <div className="flex items-center justify-between px-6 py-4 bg-[#09101E]/90 backdrop-blur-xl border-t border-white/[0.04]">
+      <div className="flex items-center justify-between px-6 py-4 bg-surface/90 backdrop-blur-xl border-t border-border">
         {/* Progress label */}
-        <span className="text-[11px] text-slate-600 font-medium" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+        <span className="text-[11px] text-text-muted font-medium" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
           {progress < 100 ? `${Math.round(progress)}% complété` : '✓ Prêt'}
         </span>
 
@@ -39,8 +39,8 @@ export function ArticleFormFooter({ isEditing, loading, onCancel, progress }: Ar
             disabled={loading}
             className="
               h-10 px-5 rounded-xl text-sm font-medium
-              border border-white/[0.06] bg-transparent text-slate-400
-              hover:bg-white/[0.04] hover:text-slate-300
+              border border-border bg-transparent text-text-secondary
+              hover:bg-[var(--sidebar-hover)] hover:text-text-primary
               disabled:opacity-40 disabled:cursor-not-allowed
               transition-all active:scale-95
             "

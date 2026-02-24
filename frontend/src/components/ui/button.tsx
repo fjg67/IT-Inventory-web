@@ -19,7 +19,7 @@ const buttonVariants = cva(
         secondary:
           "bg-surface-elevated text-text-primary hover:bg-surface-elevated/80",
         ghost:
-          "text-text-secondary hover:bg-white/5 hover:text-text-primary",
+          "text-text-secondary hover:bg-[var(--sidebar-hover)] hover:text-text-primary",
         link:
           "text-primary underline-offset-4 hover:underline",
       },

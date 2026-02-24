@@ -104,13 +104,13 @@ export default function DashboardPage() {
         </div>
 
         {/* Site selector pills */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.03] border border-white/5 overflow-x-auto scrollbar-hide">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--sidebar-hover)] border border-border overflow-x-auto scrollbar-hide">
           <button
             onClick={() => setSelectedSiteId('')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 whitespace-nowrap shrink-0 ${
               selectedSiteId === ''
                 ? 'bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30 shadow-sm'
-                : 'text-text-muted hover:text-text-secondary hover:bg-white/5'
+                : 'text-text-muted hover:text-text-secondary hover:bg-[var(--sidebar-hover)]'
             }`}
           >
             Tous les sites
@@ -122,7 +122,7 @@ export default function DashboardPage() {
               className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                 selectedSiteId === site.id
                   ? 'bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30 shadow-sm'
-                  : 'text-text-muted hover:text-text-secondary hover:bg-white/5'
+                  : 'text-text-muted hover:text-text-secondary hover:bg-[var(--sidebar-hover)]'
               }`}
             >
               <MapPin className="h-3 w-3" />

@@ -644,7 +644,7 @@ export default function ArticlesPage() {
                         )}
 
                         {article.sousType && (
-                          <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md bg-white/5 text-text-muted border border-white/10">
+                          <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md bg-[var(--sidebar-hover)] text-text-muted border border-border">
                             ⚙️ {article.sousType}
                           </span>
                         )}
@@ -653,7 +653,7 @@ export default function ArticlesPage() {
                           Modifié {timeAgo(article.updatedAt)}
                         </span>
                         {/* Stock compact sur mobile */}
-                        <span className="sm:hidden inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-white/5 border border-white/10">
+                        <span className="sm:hidden inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--sidebar-hover)] border border-border">
                           📦 {article.totalStock ?? 0}
                         </span>
                       </div>
@@ -901,7 +901,7 @@ function ArticleFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto border-white/[0.06] bg-[#09101E]/98 backdrop-blur-2xl shadow-[0_0_80px_rgba(0,0,0,0.6)] p-0">
+      <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto border-border bg-surface/98 backdrop-blur-2xl shadow-[0_0_80px_rgba(0,0,0,0.3)] p-0">
         {/* Blueprint grid background overlay */}
         <div
           className="absolute inset-0 rounded-lg pointer-events-none opacity-[0.02]"
@@ -915,7 +915,7 @@ function ArticleFormDialog({
         <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-500/[0.04] rounded-full blur-3xl pointer-events-none" />
 
         {/* ── Sticky Header ── */}
-        <div className="sticky top-0 z-20 bg-[#09101E]/95 backdrop-blur-xl border-b border-white/[0.04] px-6 pt-6 pb-4">
+        <div className="sticky top-0 z-20 bg-surface/95 backdrop-blur-xl border-b border-border px-6 pt-6 pb-4">
           <div className="flex items-center gap-3.5">
             <div className="relative">
               <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-[0_0_25px_rgba(59,130,246,0.25)]">
@@ -926,10 +926,10 @@ function ArticleFormDialog({
             </div>
             <div className="flex-1 min-w-0">
               <DialogHeader className="p-0 space-y-0">
-                <DialogTitle className="text-lg font-bold text-slate-100" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                <DialogTitle className="text-lg font-bold text-text-primary" style={{ fontFamily: 'Outfit, sans-serif' }}>
                   {isEditing ? "Modifier l'article" : 'Nouvel article'}
                 </DialogTitle>
-                <p className="text-[11px] text-slate-500 mt-0.5" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                <p className="text-[11px] text-text-muted mt-0.5" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                   {isEditing ? 'EDIT_MODE // Modifier les champs' : 'CREATE_MODE // Remplir les champs requis'}
                 </p>
               </DialogHeader>
@@ -938,14 +938,14 @@ function ArticleFormDialog({
             <button
               type="button"
               onClick={() => onOpenChange(false)}
-              className="p-2 rounded-lg hover:bg-white/5 text-slate-500 hover:text-slate-300 transition-all"
+              className="p-2 rounded-lg hover:bg-[var(--sidebar-hover)] text-text-muted hover:text-text-secondary transition-all"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
           {/* Progress bar in header */}
-          <div className="mt-4 h-[2px] bg-white/[0.03] rounded-full overflow-hidden">
+          <div className="mt-4 h-[2px] bg-[var(--sidebar-hover)] rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-gradient-to-r from-blue-500 via-blue-400 to-cyan-400 rounded-full"
               initial={{ width: 0 }}
@@ -1161,7 +1161,7 @@ function ArticleFormDialog({
               )}
             />
           </div>
-          <p className="text-[10px] text-slate-600 flex items-center gap-1.5 px-1 pb-1" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+          <p className="text-[10px] text-text-muted flex items-center gap-1.5 px-1 pb-1" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
             <AlertIcon className="h-3 w-3 text-amber-500/40" />
             alert_threshold // Notification si stock &lt; seuil
           </p>
@@ -1170,8 +1170,8 @@ function ArticleFormDialog({
           <ArticleFormSectionHeader icon={Pencil} label="Description" accentColor="emerald" />
 
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
-              Description <span className="text-slate-600">(optionnel)</span>
+            <label className="text-xs font-medium text-text-secondary" style={{ fontFamily: 'Outfit, sans-serif' }}>
+              Description <span className="text-text-muted">(optionnel)</span>
             </label>
             <div className="relative">
               <textarea
@@ -1179,11 +1179,11 @@ function ArticleFormDialog({
                 placeholder="Détails supplémentaires..."
                 maxLength={200}
                 rows={3}
-                className="w-full rounded-xl border border-white/[0.06] bg-[#0E1826] px-3.5 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/40 focus:shadow-[0_0_15px_rgba(59,130,246,0.06)] transition-all resize-none"
+                className="w-full rounded-xl border border-border bg-surface-elevated px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/40 focus:shadow-[0_0_15px_rgba(59,130,246,0.06)] transition-all resize-none"
                 style={{ fontFamily: 'JetBrains Mono, monospace' }}
                 {...register('description')}
               />
-              <span className="absolute bottom-2 right-3 text-[10px] text-slate-600 font-medium" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+              <span className="absolute bottom-2 right-3 text-[10px] text-text-muted font-medium" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                 {descLength}/200
               </span>
             </div>

@@ -94,7 +94,7 @@ export default function TermsPage() {
     activeTab === 'terms' ? TERMS_SIDEBAR_ITEMS : PRIVACY_SIDEBAR_ITEMS
 
   return (
-    <div className="min-h-screen bg-[#07101C]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6 py-10 pb-20">
         {/* Header : breadcrumb, titre, tabs */}
         <TermsHeader activeTab={activeTab} onTabChange={handleTabChange} />

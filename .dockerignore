@@ -1,0 +1,42 @@
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Git
+.git
+.gitignore
+
+# Node modules
+**/node_modules
+
+# Logs
+backend/logs
+*.log
+
+# Dev files
+**/.env
+**/.env.local
+**/.env.development
+.env.production.example
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+**/__tests__
+**/*.test.*
+**/*.spec.*
+
+# Docs
+README.md
+DEPLOYMENT.md
+render.yaml
+
+# Scripts
+scripts/

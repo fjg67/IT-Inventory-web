@@ -152,7 +152,7 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
           onClick={(e) => e.stopPropagation()}
         >
           {/* Card container */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0c1222] shadow-2xl shadow-black/50">
+          <div className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl shadow-black/50">
             {/* Header */}
             <div className="relative flex items-center justify-between px-5 py-4">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/5 to-transparent" />
@@ -163,16 +163,16 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
                   <Camera className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">Scanner un code-barres</h3>
-                  <p className="text-[10px] text-white/40">Placez le code face à la caméra</p>
+                  <h3 className="text-sm font-bold text-text-primary">Scanner un code-barres</h3>
+                  <p className="text-[10px] text-text-secondary">Placez le code face à la caméra</p>
                 </div>
               </div>
 
               <button
                 onClick={handleClose}
-                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] transition-all"
+                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--sidebar-hover)] hover:bg-surface-elevated border border-border transition-all"
               >
-                <X className="h-4 w-4 text-white/60" />
+                <X className="h-4 w-4 text-text-secondary" />
               </button>
             </div>
 
@@ -214,7 +214,7 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
                   >
                     <Zap className="h-8 w-8 text-blue-400" />
                   </motion.div>
-                  <p className="text-sm text-white/60">Démarrage de la caméra…</p>
+                  <p className="text-sm text-text-secondary">Démarrage de la caméra…</p>
                 </div>
               )}
 
@@ -224,10 +224,10 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-500/10 ring-1 ring-rose-500/20">
                     <Camera className="h-6 w-6 text-rose-400" />
                   </div>
-                  <p className="text-sm text-white/70 text-center leading-relaxed">{error}</p>
+                  <p className="text-sm text-text-primary text-center leading-relaxed">{error}</p>
                   <button
                     onClick={handleClose}
-                    className="mt-2 px-4 py-2 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-sm text-white/60 transition-all"
+                    className="mt-2 px-4 py-2 rounded-lg bg-[var(--sidebar-hover)] hover:bg-surface-elevated border border-border text-sm text-text-secondary transition-all"
                   >
                     Fermer
                   </button>
@@ -236,8 +236,8 @@ export function BarcodeScanner({ onScan, onClose }: BarcodeScannerProps) {
             </div>
 
             {/* Footer hint */}
-            <div className="px-5 py-3 border-t border-white/[0.06] bg-white/[0.02]">
-              <p className="text-[10px] text-center text-white/30">
+            <div className="px-5 py-3 border-t border-border bg-[var(--sidebar-hover)]">
+              <p className="text-[10px] text-center text-text-muted">
                 Supporte EAN-13, EAN-8, Code128, Code39, UPC-A, QR Code
               </p>
             </div>

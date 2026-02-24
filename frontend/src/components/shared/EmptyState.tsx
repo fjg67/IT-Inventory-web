@@ -28,7 +28,7 @@ export function EmptyState({
       )}
     >
       {/* Icône avec fond décoratif */}
-      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/5">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--sidebar-hover)]">
         <Icon className="h-8 w-8 text-text-muted" />
       </div>
 

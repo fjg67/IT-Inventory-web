@@ -64,7 +64,7 @@ function timeAgo(date: Date): string {
 export function RecentMovements({ movements, loading }: RecentMovementsProps) {
   if (loading) {
     return (
-      <div className="glass-card p-6 ring-1 ring-white/5">
+      <div className="glass-card p-6 ring-1 ring-border">
         <div className="flex items-center gap-3 mb-5">
           <Skeleton className="h-9 w-9 rounded-lg" />
           <Skeleton className="h-5 w-40" />
@@ -83,7 +83,7 @@ export function RecentMovements({ movements, loading }: RecentMovementsProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.5 }}
-      className="glass-card p-6 ring-1 ring-white/5"
+      className="glass-card p-6 ring-1 ring-border"
     >
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
@@ -103,7 +103,7 @@ export function RecentMovements({ movements, loading }: RecentMovementsProps) {
 
       {movements.length === 0 ? (
         <div className="py-10 text-center">
-          <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-white/5 flex items-center justify-center">
+          <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-[var(--sidebar-hover)] flex items-center justify-center">
             <Clock className="h-7 w-7 text-text-muted" />
           </div>
           <p className="text-text-secondary text-sm font-medium">Aucun mouvement</p>
@@ -122,7 +122,7 @@ export function RecentMovements({ movements, loading }: RecentMovementsProps) {
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.5 + i * 0.05 }}
-                className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-transparent hover:border-white/5 transition-all duration-200"
+                className="flex items-center gap-3 p-3 rounded-xl bg-[var(--sidebar-hover)] hover:bg-[var(--sidebar-hover)] border border-transparent hover:border-border transition-all duration-200"
               >
                 {/* Type icon */}
                 <div className={`p-1.5 rounded-lg flex-shrink-0 ${config.iconBg}`}>

@@ -37,14 +37,14 @@ export function TermsSidebar({
     <aside className="hidden md:block sticky top-6 self-start space-y-5">
       {/* Titre */}
       <div className="flex items-center gap-2">
-        <span className="text-[11px] font-['Outfit'] font-bold tracking-[0.15em] uppercase text-slate-500">
+        <span className="text-[11px] font-['Outfit'] font-bold tracking-[0.15em] uppercase text-text-secondary">
           Dans ce document
         </span>
-        <div className="h-px bg-white/[0.06] flex-1" />
+        <div className="h-px bg-[var(--sidebar-hover)] flex-1" />
       </div>
 
       {/* Barre de progression lecture */}
-      <div className="h-[3px] rounded-full bg-white/[0.06] overflow-hidden">
+      <div className="h-[3px] rounded-full bg-[var(--sidebar-hover)] overflow-hidden">
         <motion.div
           className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500"
           style={{ width: progressWidth }}
@@ -65,11 +65,11 @@ export function TermsSidebar({
                 ${
                   isActive
                     ? 'bg-blue-500/[0.06] border-l-blue-500 text-blue-400 font-semibold shadow-[inset_0_0_0_1px_rgba(59,130,246,0.1)]'
-                    : 'border-l-transparent text-slate-500 hover:bg-white/[0.03] hover:text-slate-300 hover:border-l-blue-500/20'
+                    : 'border-l-transparent text-text-secondary hover:bg-[var(--sidebar-hover)] hover:text-text-primary hover:border-l-blue-500/20'
                 }
               `}
             >
-              <span className="text-[11px] font-['JetBrains_Mono'] text-slate-600 mr-0.5">
+              <span className="text-[11px] font-['JetBrains_Mono'] text-text-muted mr-0.5">
                 {item.number}
               </span>
               <span className="text-[13px] font-['Outfit'] truncate">
@@ -81,23 +81,23 @@ export function TermsSidebar({
       </nav>
 
       {/* Séparateur */}
-      <div className="h-px bg-white/[0.06]" />
+      <div className="h-px bg-[var(--sidebar-hover)]" />
 
       {/* Liens rapides */}
       <div className="space-y-2">
-        <span className="text-[11px] font-['Outfit'] font-bold tracking-[0.1em] uppercase text-slate-600">
+        <span className="text-[11px] font-['Outfit'] font-bold tracking-[0.1em] uppercase text-text-muted">
           Voir aussi
         </span>
         <button
           onClick={() => navigate('/help')}
-          className="w-full flex items-center gap-2 text-[12px] font-['Outfit'] text-slate-500 hover:text-blue-400 transition-colors py-1"
+          className="w-full flex items-center gap-2 text-[12px] font-['Outfit'] text-text-secondary hover:text-blue-400 transition-colors py-1"
         >
           <LifeBuoy className="h-[13px] w-[13px]" />
           Aide & Support
         </button>
         <button
           onClick={() => navigate('/settings')}
-          className="w-full flex items-center gap-2 text-[12px] font-['Outfit'] text-slate-500 hover:text-blue-400 transition-colors py-1"
+          className="w-full flex items-center gap-2 text-[12px] font-['Outfit'] text-text-secondary hover:text-blue-400 transition-colors py-1"
         >
           <Settings className="h-[13px] w-[13px]" />
           Paramètres

@@ -93,7 +93,7 @@ export function HelpHero({ onSearch, onTagClick }: HelpHeroProps) {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.4 }}
-          className="text-sm text-slate-400 max-w-md mx-auto leading-relaxed"
+          className="text-sm text-text-secondary max-w-md mx-auto leading-relaxed"
         >
           Trouvez rapidement les réponses à vos questions sur la gestion de
           votre inventaire IT.
@@ -110,16 +110,16 @@ export function HelpHero({ onSearch, onTagClick }: HelpHeroProps) {
           <div
             className={`
               relative flex items-center gap-2 px-4 py-3 rounded-2xl
-              bg-white/[0.04] backdrop-blur-xl
+              bg-[var(--sidebar-hover)] backdrop-blur-xl
               border transition-all duration-300
               ${
                 isFocused
                   ? 'border-blue-500/40 ring-1 ring-blue-500/20 shadow-[0_0_24px_rgba(59,130,246,0.1)]'
-                  : 'border-white/[0.06]'
+                  : 'border-border'
               }
             `}
           >
-            <Search className="h-4 w-4 text-slate-500 shrink-0" />
+            <Search className="h-4 w-4 text-text-secondary shrink-0" />
             <input
               ref={inputRef}
               type="text"
@@ -130,7 +130,7 @@ export function HelpHero({ onSearch, onTagClick }: HelpHeroProps) {
               }}
               onFocus={() => setIsFocused(true)}
               placeholder="Rechercher un sujet, une question…"
-              className="flex-1 bg-transparent text-sm text-slate-200 placeholder:text-slate-600 outline-none font-['Inter']"
+              className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none font-['Inter']"
             />
             {query && (
               <button
@@ -139,9 +139,9 @@ export function HelpHero({ onSearch, onTagClick }: HelpHeroProps) {
                   onSearch('')
                   inputRef.current?.focus()
                 }}
-                className="p-0.5 rounded-md hover:bg-white/[0.06] transition-colors"
+                className="p-0.5 rounded-md hover:bg-[var(--sidebar-hover)] transition-colors"
               >
-                <X className="h-3.5 w-3.5 text-slate-500" />
+                <X className="h-3.5 w-3.5 text-text-secondary" />
               </button>
             )}
           </div>
@@ -154,7 +154,7 @@ export function HelpHero({ onSearch, onTagClick }: HelpHeroProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -4, scale: 0.98 }}
                 transition={{ duration: 0.2 }}
-                className="absolute z-50 mt-2 w-full rounded-xl bg-[#0e1630]/95 backdrop-blur-xl border border-white/[0.06] shadow-2xl overflow-hidden"
+                className="absolute z-50 mt-2 w-full rounded-xl bg-surface/95 backdrop-blur-xl border border-border shadow-2xl overflow-hidden"
               >
                 {filteredSuggestions.map((s, i) => (
                   <button
@@ -164,16 +164,16 @@ export function HelpHero({ onSearch, onTagClick }: HelpHeroProps) {
                       onSearch(s.text)
                       setIsFocused(false)
                     }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-[var(--sidebar-hover)] transition-colors text-left"
                   >
-                    <Search className="h-3.5 w-3.5 text-slate-600 shrink-0" />
-                    <span className="text-sm text-slate-300 flex-1 truncate">
+                    <Search className="h-3.5 w-3.5 text-text-muted shrink-0" />
+                    <span className="text-sm text-text-primary flex-1 truncate">
                       {s.text}
                     </span>
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full shrink-0 ${
                         CATEGORY_BADGE_COLORS[s.categoryId] ??
-                        'bg-slate-500/10 text-slate-400'
+                        'bg-surface-elevated text-text-secondary'
                       }`}
                     >
                       {s.categoryLabel}
@@ -192,7 +192,7 @@ export function HelpHero({ onSearch, onTagClick }: HelpHeroProps) {
           transition={{ delay: 0.35, duration: 0.4 }}
           className="flex flex-wrap items-center justify-center gap-2"
         >
-          <span className="text-[11px] text-slate-600 mr-1">Populaire :</span>
+          <span className="text-[11px] text-text-muted mr-1">Populaire :</span>
           {POPULAR_TAGS.map((tag) => (
             <button
               key={tag}
@@ -200,7 +200,7 @@ export function HelpHero({ onSearch, onTagClick }: HelpHeroProps) {
                 setQuery(tag)
                 onTagClick(tag)
               }}
-              className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.06] text-slate-400 hover:text-slate-200 hover:border-white/[0.12] hover:bg-white/[0.06] transition-all duration-200"
+              className="text-[11px] px-2.5 py-1 rounded-full bg-[var(--sidebar-hover)] border border-border text-text-secondary hover:text-text-primary hover:border-border hover:bg-[var(--sidebar-hover)] transition-all duration-200"
             >
               {tag}
             </button>

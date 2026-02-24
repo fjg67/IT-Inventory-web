@@ -52,7 +52,7 @@ export const StockInputCard = forwardRef<HTMLInputElement, StockInputCardProps>(
           </div>
 
           {/* Label */}
-          <span className="text-[11px] text-slate-500 mb-3 font-medium" style={{ fontFamily: 'Outfit, sans-serif' }}>
+          <span className="text-[11px] text-text-muted mb-3 font-medium" style={{ fontFamily: 'Outfit, sans-serif' }}>
             {label}
           </span>
 
@@ -61,7 +61,7 @@ export const StockInputCard = forwardRef<HTMLInputElement, StockInputCardProps>(
             <button
               type="button"
               onClick={decrement}
-              className={`w-9 h-9 rounded-lg border border-white/[0.06] bg-[#0E1826] flex items-center justify-center text-slate-500 ${a.btnHover} transition-all active:scale-90`}
+              className={`w-9 h-9 rounded-lg border border-border bg-surface-elevated flex items-center justify-center text-text-muted ${a.btnHover} transition-all active:scale-90`}
             >
               <Minus className="h-4 w-4" />
             </button>
@@ -74,7 +74,7 @@ export const StockInputCard = forwardRef<HTMLInputElement, StockInputCardProps>(
               onChange={(e) => onChange(Math.max(min, parseInt(e.target.value) || 0))}
               className={`
                 w-16 h-12 text-center text-lg font-bold rounded-xl
-                bg-[#0E1826] border border-white/[0.06] text-slate-200
+                bg-surface-elevated border border-border text-text-primary
                 focus:outline-none focus:ring-2 focus:ring-blue-500/10 ${a.inputFocus}
                 transition-all
               `}
@@ -84,7 +84,7 @@ export const StockInputCard = forwardRef<HTMLInputElement, StockInputCardProps>(
             <button
               type="button"
               onClick={increment}
-              className={`w-9 h-9 rounded-lg border border-white/[0.06] bg-[#0E1826] flex items-center justify-center text-slate-500 ${a.btnHover} transition-all active:scale-90`}
+              className={`w-9 h-9 rounded-lg border border-border bg-surface-elevated flex items-center justify-center text-text-muted ${a.btnHover} transition-all active:scale-90`}
             >
               <Plus className="h-4 w-4" />
             </button>

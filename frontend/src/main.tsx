@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
 import App from './App'
 import './index.css'
+import '@/stores/themeStore' // Initialise le thème au chargement
 
 // Configuration de TanStack Query
 const queryClient = new QueryClient({
@@ -27,17 +28,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           toastOptions={{
             duration: 4000,
             style: {
-              background: '#141E35',
-              color: '#F1F5F9',
-              border: '1px solid #1E2D4A',
+              background: 'var(--toast-bg)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
               borderRadius: '12px',
               fontSize: '14px',
             },
             success: {
-              iconTheme: { primary: '#10B981', secondary: '#141E35' },
+              iconTheme: { primary: '#10B981', secondary: 'var(--toast-success)' },
             },
             error: {
-              iconTheme: { primary: '#EF4444', secondary: '#141E35' },
+              iconTheme: { primary: '#EF4444', secondary: 'var(--toast-error)' },
             },
           }}
         />

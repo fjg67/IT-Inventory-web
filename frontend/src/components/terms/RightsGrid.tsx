@@ -13,7 +13,7 @@ export function RightsGrid() {
             key={right.label}
             className={`
               group flex items-start gap-3 p-3.5 rounded-xl
-              bg-white/[0.03] border border-white/[0.06]
+              bg-[var(--sidebar-hover)] border border-border
               hover:${right.colorBg} hover:${right.colorBorder}
               transition-all duration-200
             `}
@@ -27,10 +27,10 @@ export function RightsGrid() {
               <Icon className={`h-4 w-4 ${right.color}`} />
             </div>
             <div className="min-w-0">
-              <p className="text-[13px] font-['Outfit'] font-semibold text-slate-200">
+              <p className="text-[13px] font-['Outfit'] font-semibold text-text-primary">
                 {right.label}
               </p>
-              <p className="text-[11px] text-slate-500 mt-0.5">{right.description}</p>
+              <p className="text-[11px] text-text-secondary mt-0.5">{right.description}</p>
             </div>
           </div>
         )

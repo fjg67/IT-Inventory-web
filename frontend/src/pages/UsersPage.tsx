@@ -282,7 +282,7 @@ export default function UsersPage() {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.2, delay: index * 0.03 }}
-                  className={`border-b border-border transition-colors hover:bg-white/[0.03] ${
+                  className={`border-b border-border transition-colors hover:bg-[var(--sidebar-hover)] ${
                     !user.isActive ? 'opacity-50' : ''
                   }`}
                 >

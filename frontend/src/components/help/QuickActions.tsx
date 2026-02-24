@@ -67,9 +67,9 @@ export function QuickActions() {
           rel="noopener noreferrer"
           className={`
             group relative flex flex-col gap-3 p-4 rounded-2xl
-            bg-white/[0.02] backdrop-blur-xl
-            border border-white/[0.06]
-            hover:border-white/[0.12] hover:bg-white/[0.04]
+            bg-[var(--sidebar-hover)] backdrop-blur-xl
+            border border-border
+            hover:border-border hover:bg-[var(--sidebar-hover)]
             transition-all duration-300 cursor-pointer
             ${a.hoverGlow}
           `}
@@ -78,7 +78,7 @@ export function QuickActions() {
           <div
             className={`
               w-9 h-9 rounded-xl flex items-center justify-center
-              ${a.colorBg} border border-white/[0.04]
+              ${a.colorBg} border border-border
             `}
           >
             <a.icon className={`h-4 w-4 ${a.color}`} />
@@ -87,12 +87,12 @@ export function QuickActions() {
           {/* Texte */}
           <div className="space-y-1">
             <div className="flex items-center gap-1.5">
-              <h3 className="text-sm font-semibold text-slate-200 font-['Outfit']">
+              <h3 className="text-sm font-semibold text-text-primary font-['Outfit']">
                 {a.title}
               </h3>
-              <ExternalLink className="h-3 w-3 text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ExternalLink className="h-3 w-3 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <p className="text-[12px] text-slate-500 leading-relaxed">
+            <p className="text-[12px] text-text-secondary leading-relaxed">
               {a.description}
             </p>
           </div>

@@ -142,7 +142,7 @@ function CardSkeleton() {
   return (
     <div className="space-y-3 p-4">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/5">
+        <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-[var(--sidebar-hover)] border border-border">
           <Skeleton className="h-10 w-10 rounded-xl shrink-0" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-48" />
@@ -312,13 +312,13 @@ export default function StockMovementsPage() {
             <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/25">
               <Zap className="h-5 w-5 sm:h-7 sm:w-7 text-white" />
             </div>
-            <div className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-emerald-400 border-2 border-[#0a0f1e] animate-pulse" />
+            <div className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-emerald-400 border-2 border-background animate-pulse" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">
+            <h1 className="text-2xl font-bold tracking-tight text-text-primary">
               Mouvements de stock
             </h1>
-            <p className="text-sm text-white/50 mt-0.5">
+            <p className="text-sm text-text-secondary mt-0.5">
               {total > 0 ? `${total} mouvement${total > 1 ? 's' : ''} enregistré${total > 1 ? 's' : ''}` : 'Historique des mouvements'}
             </p>
           </div>
@@ -329,7 +329,7 @@ export default function StockMovementsPage() {
             variant="outline"
             onClick={handleExport}
             disabled={exporting}
-            className="bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20 transition-all"
+            className="bg-[var(--sidebar-hover)] border-border hover:bg-[var(--sidebar-hover)] hover:border-border transition-all"
           >
             {exporting ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -354,15 +354,15 @@ export default function StockMovementsPage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.1 }}
-        className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl p-4"
+        className="relative overflow-hidden rounded-2xl border border-border bg-[var(--sidebar-hover)] backdrop-blur-xl p-4"
       >
         {/* Glow decoratif */}
         <div className="absolute top-0 left-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
 
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--sidebar-hover)] border border-border">
             <Filter className="h-3.5 w-3.5 text-blue-400" />
-            <span className="text-xs font-medium text-white/60">Filtres</span>
+            <span className="text-xs font-medium text-text-secondary">Filtres</span>
             {activeFiltersCount > 0 && (
               <span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white">
                 {activeFiltersCount}
@@ -371,13 +371,13 @@ export default function StockMovementsPage() {
           </div>
 
           {/* Filtre par type — pills scrollable */}
-          <div className="flex items-center gap-1 p-0.5 rounded-lg bg-white/[0.03] border border-white/[0.06] overflow-x-auto scrollbar-hide">
+          <div className="flex items-center gap-1 p-0.5 rounded-lg bg-[var(--sidebar-hover)] border border-border overflow-x-auto scrollbar-hide">
             <button
               onClick={() => handleFilterType('_all')}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap shrink-0 ${
                 !filters.type
-                  ? 'bg-white/10 text-white shadow-sm'
-                  : 'text-white/40 hover:text-white/60'
+                  ? 'bg-surface-elevated text-text-primary shadow-sm'
+                  : 'text-text-secondary hover:text-text-secondary'
               }`}
             >
               Tous
@@ -392,7 +392,7 @@ export default function StockMovementsPage() {
                   className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap shrink-0 ${
                     isActive
                       ? `${config.bgColor} ${config.color}`
-                      : 'text-white/40 hover:text-white/60'
+                      : 'text-text-secondary hover:text-text-secondary'
                   }`}
                 >
                   {config.label}
@@ -402,11 +402,11 @@ export default function StockMovementsPage() {
           </div>
 
           {/* Séparateur — masqué sur mobile */}
-          <div className="hidden sm:block h-6 w-px bg-white/[0.06]" />
+          <div className="hidden sm:block h-6 w-px bg-[var(--sidebar-hover)]" />
 
           {/* Filtre par site */}
           <Select value={filters.siteId ?? '_all'} onValueChange={handleFilterSite}>
-            <SelectTrigger className="w-32 sm:w-40 h-8 text-xs bg-white/[0.03] border-white/[0.06] rounded-lg">
+            <SelectTrigger className="w-32 sm:w-40 h-8 text-xs bg-[var(--sidebar-hover)] border-border rounded-lg">
               <SelectValue placeholder="Site" />
             </SelectTrigger>
             <SelectContent>
@@ -422,7 +422,7 @@ export default function StockMovementsPage() {
           {/* Dates */}
           <div className="flex items-center gap-2 sm:ml-auto">
             <div className="flex items-center gap-1.5">
-              <CalendarDays className="h-3.5 w-3.5 text-white/30" />
+              <CalendarDays className="h-3.5 w-3.5 text-text-muted" />
               <Input
                 type="date"
                 value={filters.from ?? ''}
@@ -433,10 +433,10 @@ export default function StockMovementsPage() {
                     page: 1,
                   }))
                 }
-                className="w-28 sm:w-36 h-8 text-xs bg-white/[0.03] border-white/[0.06] rounded-lg"
+                className="w-28 sm:w-36 h-8 text-xs bg-[var(--sidebar-hover)] border-border rounded-lg"
               />
             </div>
-            <ArrowRight className="h-3 w-3 text-white/20" />
+            <ArrowRight className="h-3 w-3 text-text-muted" />
             <Input
               type="date"
               value={filters.to ?? ''}
@@ -447,7 +447,7 @@ export default function StockMovementsPage() {
                   page: 1,
                 }))
               }
-              className="w-28 sm:w-36 h-8 text-xs bg-white/[0.03] border-white/[0.06] rounded-lg"
+              className="w-28 sm:w-36 h-8 text-xs bg-[var(--sidebar-hover)] border-border rounded-lg"
             />
           </div>
         </div>
@@ -460,11 +460,11 @@ export default function StockMovementsPage() {
         transition={{ duration: 0.4, delay: 0.2 }}
       >
         {isLoading ? (
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+          <div className="rounded-2xl border border-border bg-[var(--sidebar-hover)] overflow-hidden">
             <CardSkeleton />
           </div>
         ) : isError ? (
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-12 text-center">
+          <div className="rounded-2xl border border-border bg-[var(--sidebar-hover)] p-12 text-center">
             <p className="text-danger mb-4">Erreur lors du chargement des mouvements.</p>
             <Button
               variant="outline"
@@ -474,7 +474,7 @@ export default function StockMovementsPage() {
             </Button>
           </div>
         ) : movements.length === 0 ? (
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+          <div className="rounded-2xl border border-border bg-[var(--sidebar-hover)] overflow-hidden">
             <EmptyState
               icon={Package}
               title="Aucun mouvement trouvé"
@@ -509,7 +509,7 @@ export default function StockMovementsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.25, delay: index * 0.03 }}
-                    className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.1] transition-all duration-300"
+                    className="group relative overflow-hidden rounded-xl border border-border bg-[var(--sidebar-hover)] hover:bg-[var(--sidebar-hover)] hover:border-border transition-all duration-300"
                   >
                     {/* Accent bar gauche */}
                     <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${
@@ -525,14 +525,14 @@ export default function StockMovementsPage() {
                       {/* Contenu principal */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <span className="text-sm font-semibold text-white truncate">
+                          <span className="text-sm font-semibold text-text-primary truncate">
                             {movement.article?.name ?? '—'}
                           </span>
-                          <span className="text-[10px] font-mono text-white/25 bg-white/[0.04] px-1.5 py-0.5 rounded shrink-0">
+                          <span className="text-[10px] font-mono text-text-muted bg-[var(--sidebar-hover)] px-1.5 py-0.5 rounded shrink-0">
                             {movement.article?.reference}
                           </span>
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-white/40">
+                        <div className="flex items-center gap-3 text-xs text-text-secondary">
                           <span className="flex items-center gap-1">
                             <User className="h-3 w-3" />
                             {movement.user?.name
@@ -556,14 +556,14 @@ export default function StockMovementsPage() {
                       <div className="hidden md:flex flex-col items-end gap-0.5 shrink-0">
                         {isTransfer ? (
                           <div className="flex items-center gap-1.5 text-xs">
-                            <span className="text-white/50">{movement.fromSite?.name}</span>
+                            <span className="text-text-secondary">{movement.fromSite?.name}</span>
                             <ArrowRight className="h-3 w-3 text-violet-400" />
-                            <span className="text-white/70 font-medium">{movement.toSite?.name}</span>
+                            <span className="text-text-primary font-medium">{movement.toSite?.name}</span>
                           </div>
                         ) : siteName ? (
-                          <span className="text-xs text-white/50">{siteName}</span>
+                          <span className="text-xs text-text-secondary">{siteName}</span>
                         ) : (
-                          <span className="text-xs text-white/20">—</span>
+                          <span className="text-xs text-text-muted">—</span>
                         )}
                         {movement.article?.emplacement && (() => {
                           const emp = movement.article.emplacement;
@@ -571,7 +571,7 @@ export default function StockMovementsPage() {
                           const match = (movSite?.includes('5') && emp.startsWith('Stock 5'))
                             || (movSite?.includes('8') && emp.startsWith('Stock 8'));
                           return match ? (
-                            <span className="flex items-center gap-1 text-[10px] text-white/30">
+                            <span className="flex items-center gap-1 text-[10px] text-text-muted">
                               <MapPin className="h-2.5 w-2.5" />
                               {emp}
                             </span>
@@ -595,7 +595,7 @@ export default function StockMovementsPage() {
                       </div>
 
                       {/* Date complète — tooltip on hover */}
-                      <span className="text-[10px] text-white/20 w-20 text-right shrink-0 hidden lg:block font-mono">
+                      <span className="text-[10px] text-text-muted w-20 text-right shrink-0 hidden lg:block font-mono">
                         {formatDate(movement.createdAt)}
                       </span>
                     </div>
@@ -761,7 +761,7 @@ function MovementFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto p-0 bg-[#0c1222] border-white/[0.08]">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto p-0 bg-surface border-border">
         {/* En-tête avec gradient */}
         <div className="relative overflow-hidden px-6 pt-6 pb-4">
           {/* Gradient background */}
@@ -773,10 +773,10 @@ function MovementFormDialog({
               <Zap className="h-5 w-5 text-white" />
             </div>
             <div>
-              <DialogTitle className="text-lg font-bold text-white">
+              <DialogTitle className="text-lg font-bold text-text-primary">
                 Nouveau mouvement
               </DialogTitle>
-              <p className="text-xs text-white/40 mt-0.5">Enregistrer un mouvement de stock</p>
+              <p className="text-xs text-text-secondary mt-0.5">Enregistrer un mouvement de stock</p>
             </div>
           </div>
         </div>
@@ -785,10 +785,10 @@ function MovementFormDialog({
           {/* Section 1 — Type de mouvement */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-white/[0.06]">
-                <Hash className="h-3 w-3 text-white/40" />
+              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--sidebar-hover)]">
+                <Hash className="h-3 w-3 text-text-secondary" />
               </div>
-              <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">Type</span>
+              <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Type</span>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {(Object.keys(MOVEMENT_TYPE_CONFIG) as MovementType[]).map((type) => {
@@ -806,17 +806,17 @@ function MovementFormDialog({
                       relative flex items-center gap-3 p-3 rounded-xl border transition-all text-left
                       ${isSelected
                         ? `border-current/20 ${config.bgColor} ${config.color} shadow-lg ${config.glowColor}`
-                        : 'border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] text-white/50'
+                        : 'border-border bg-[var(--sidebar-hover)] hover:bg-[var(--sidebar-hover)] text-text-secondary'
                       }
                     `}
                   >
                     <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all ${
-                      isSelected ? `${config.bgColor}` : 'bg-white/[0.04]'
+                      isSelected ? `${config.bgColor}` : 'bg-[var(--sidebar-hover)]'
                     }`}>
-                      <Icon className={`h-4.5 w-4.5 ${isSelected ? '' : 'text-white/30'}`} />
+                      <Icon className={`h-4.5 w-4.5 ${isSelected ? '' : 'text-text-muted'}`} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className={`text-sm font-semibold ${isSelected ? '' : 'text-white/60'}`}>
+                      <p className={`text-sm font-semibold ${isSelected ? '' : 'text-text-secondary'}`}>
                         {config.label}
                       </p>
                       <p className="text-[10px] text-current/60 mt-0.5 leading-tight">{config.description}</p>
@@ -838,23 +838,23 @@ function MovementFormDialog({
           {/* Section 2 — Site(s) */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-white/[0.06]">
-                <MapPin className="h-3 w-3 text-white/40" />
+              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--sidebar-hover)]">
+                <MapPin className="h-3 w-3 text-text-secondary" />
               </div>
-              <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">Site</span>
+              <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Site</span>
             </div>
 
             {selectedType === 'TRANSFER' ? (
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs text-white/40">Source</label>
+                  <label className="text-xs text-text-secondary">Source</label>
                   <Controller
                     name="fromSiteId"
                     control={control}
                     rules={{ required: 'Sélectionnez un site source' }}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={(v) => { field.onChange(v); setValue('articleId', ''); setArticleSearch(''); setSelectedArticleId(''); }}>
-                        <SelectTrigger className="bg-white/[0.03] border-white/[0.08] rounded-lg">
+                        <SelectTrigger className="bg-[var(--sidebar-hover)] border-border rounded-lg">
                           <SelectValue placeholder="Site source" />
                         </SelectTrigger>
                         <SelectContent>
@@ -868,14 +868,14 @@ function MovementFormDialog({
                   {errors.fromSiteId && <p className="text-[10px] text-rose-400">{errors.fromSiteId.message}</p>}
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs text-white/40">Destination</label>
+                  <label className="text-xs text-text-secondary">Destination</label>
                   <Controller
                     name="toSiteId"
                     control={control}
                     rules={{ required: 'Sélectionnez un site destination' }}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger className="bg-white/[0.03] border-white/[0.08] rounded-lg">
+                        <SelectTrigger className="bg-[var(--sidebar-hover)] border-border rounded-lg">
                           <SelectValue placeholder="Site destination" />
                         </SelectTrigger>
                         <SelectContent>
@@ -897,7 +897,7 @@ function MovementFormDialog({
                   rules={{ required: 'Sélectionnez un site' }}
                   render={({ field }) => (
                     <Select value={field.value} onValueChange={(v) => { field.onChange(v); setValue('articleId', ''); setArticleSearch(''); setSelectedArticleId(''); }}>
-                      <SelectTrigger className="bg-white/[0.03] border-white/[0.08] rounded-lg">
+                      <SelectTrigger className="bg-[var(--sidebar-hover)] border-border rounded-lg">
                         <SelectValue placeholder="Sélectionner un site" />
                       </SelectTrigger>
                       <SelectContent>
@@ -916,10 +916,10 @@ function MovementFormDialog({
           {/* Section 3 — Article */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-white/[0.06]">
-                <Package className="h-3 w-3 text-white/40" />
+              <div className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--sidebar-hover)]">
+                <Package className="h-3 w-3 text-text-secondary" />
               </div>
-              <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">Article</span>
+              <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Article</span>
             </div>
 
             <input type="hidden" {...register('articleId', { required: 'Veuillez sélectionner un article' })} />
@@ -942,19 +942,19 @@ function MovementFormDialog({
               /* Mode normal : recherche + liste complète */
               <div className="space-y-2">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/30" />
+                  <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
                   <Input
                     placeholder="Rechercher un article…"
                     value={articleSearch}
                     onChange={(e) => setArticleSearch(e.target.value)}
-                    className="pl-9 h-9 text-sm bg-white/[0.03] border-white/[0.08] rounded-lg placeholder:text-white/25"
+                    className="pl-9 h-9 text-sm bg-[var(--sidebar-hover)] border-border rounded-lg placeholder:text-text-muted"
                   />
                 </div>
-                <div className="max-h-48 overflow-y-auto rounded-xl border border-white/[0.06] bg-white/[0.02] divide-y divide-white/[0.04]">
+                <div className="max-h-48 overflow-y-auto rounded-xl border border-border bg-[var(--sidebar-hover)] divide-y divide-border">
                   {filteredArticles.length === 0 ? (
                     <div className="flex flex-col items-center gap-2 py-6">
-                      <Package className="h-5 w-5 text-white/20" />
-                      <p className="text-xs text-white/30">
+                      <Package className="h-5 w-5 text-text-muted" />
+                      <p className="text-xs text-text-muted">
                         {activeSiteId ? 'Aucun article en stock sur ce site' : 'Aucun article trouvé'}
                       </p>
                     </div>
@@ -969,19 +969,19 @@ function MovementFormDialog({
                           className={`w-full flex items-center gap-3 px-3 py-2.5 text-left text-sm transition-all cursor-pointer
                             ${isSelected
                               ? `${activeTypeConfig.bgColor} ${activeTypeConfig.color} ring-1 ring-inset ring-current/20`
-                              : 'hover:bg-white/[0.04] text-white/70'
+                              : 'hover:bg-[var(--sidebar-hover)] text-text-primary'
                             }
                           `}
                         >
                           <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
                             isSelected
                               ? 'border-current bg-current/20'
-                              : 'border-white/15 bg-transparent'
+                              : 'border-border bg-transparent'
                           }`}>
                             {isSelected && <Check className="h-3 w-3" />}
                           </div>
                           <span className="truncate flex-1 font-medium text-[13px]">{article.name}</span>
-                          <span className="text-[10px] text-white/25 font-mono shrink-0 bg-white/[0.04] px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] text-text-muted font-mono shrink-0 bg-[var(--sidebar-hover)] px-1.5 py-0.5 rounded">
                             {article.reference}
                           </span>
                         </button>
@@ -998,10 +998,10 @@ function MovementFormDialog({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="flex h-5 w-5 items-center justify-center rounded-md bg-white/[0.06]">
-                  <Hash className="h-3 w-3 text-white/40" />
+                <div className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--sidebar-hover)]">
+                  <Hash className="h-3 w-3 text-text-secondary" />
                 </div>
-                <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">Quantité</span>
+                <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Quantité</span>
               </div>
               <Input
                 id="quantity"
@@ -1012,35 +1012,35 @@ function MovementFormDialog({
                   min: { value: 1, message: 'Minimum 1' },
                   valueAsNumber: true,
                 })}
-                className="h-10 text-lg font-bold text-center bg-white/[0.03] border-white/[0.08] rounded-lg tabular-nums"
+                className="h-10 text-lg font-bold text-center bg-[var(--sidebar-hover)] border-border rounded-lg tabular-nums"
               />
               {errors.quantity && <p className="text-[10px] text-rose-400 mt-1">{errors.quantity.message}</p>}
             </div>
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="flex h-5 w-5 items-center justify-center rounded-md bg-white/[0.06]">
-                  <MessageSquare className="h-3 w-3 text-white/40" />
+                <div className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--sidebar-hover)]">
+                  <MessageSquare className="h-3 w-3 text-text-secondary" />
                 </div>
-                <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">Raison</span>
+                <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Raison</span>
               </div>
               <textarea
                 id="reason"
                 {...register('reason')}
                 rows={2}
                 placeholder="Optionnel…"
-                className="w-full resize-none rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-white placeholder:text-white/25 focus:outline-none focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50"
+                className="w-full resize-none rounded-lg border border-border bg-surface-elevated px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50"
               />
             </div>
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/[0.06]">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={loading}
-              className="bg-white/[0.03] border-white/[0.08] hover:bg-white/[0.06] transition-all"
+              className="bg-[var(--sidebar-hover)] border-border hover:bg-[var(--sidebar-hover)] transition-all"
             >
               Annuler
             </Button>

@@ -36,7 +36,7 @@ export function SettingRow({
         className={cn(
           'flex items-center justify-between w-full px-5 py-[14px]',
           'transition-colors duration-150',
-          onClick && 'hover:bg-white/[0.03] cursor-pointer group'
+          onClick && 'hover:bg-[var(--sidebar-hover)] cursor-pointer group'
         )}
         {...(onClick ? { type: 'button' as const, 'aria-label': label } : {})}
       >
@@ -52,13 +52,13 @@ export function SettingRow({
           </div>
           <div className="min-w-0">
             <p
-              className="text-[14px] font-medium text-[#EEF2FF] truncate"
+              className="text-[14px] font-medium text-text-primary truncate"
               style={{ fontFamily: "'Outfit', sans-serif" }}
             >
               {label}
             </p>
             {sublabel && (
-              <p className="text-[12px] text-slate-500 truncate mt-0.5">
+              <p className="text-[12px] text-text-secondary truncate mt-0.5">
                 {sublabel}
               </p>
             )}
@@ -71,8 +71,8 @@ export function SettingRow({
           {showChevron && (
             <ChevronRight
               className={cn(
-                'h-4 w-4 text-slate-600 transition-transform duration-200',
-                onClick && 'group-hover:translate-x-0.5 group-hover:text-slate-500'
+                'h-4 w-4 text-text-muted transition-transform duration-200',
+                onClick && 'group-hover:translate-x-0.5 group-hover:text-text-secondary'
               )}
             />
           )}
@@ -80,7 +80,7 @@ export function SettingRow({
       </Wrapper>
 
       {/* Séparateur */}
-      {!isLast && <div className="h-px bg-white/[0.04] mx-5" />}
+      {!isLast && <div className="h-px bg-[var(--sidebar-hover)] mx-5" />}
     </>
   )
 }

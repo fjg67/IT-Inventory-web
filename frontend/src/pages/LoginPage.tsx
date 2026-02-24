@@ -69,7 +69,7 @@ export default function LoginPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#080d1c] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
@@ -118,7 +118,7 @@ export default function LoginPage() {
     : 'Sélectionnez votre profil'
 
   return (
-    <div className="min-h-screen bg-[#080d1c] flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
       {/* Fond avec effets */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/[0.04] rounded-full blur-3xl" />
@@ -127,7 +127,7 @@ export default function LoginPage() {
         {Array.from({ length: 12 }).map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 rounded-full bg-white/10"
+            className="absolute w-1 h-1 rounded-full bg-surface-elevated"
             style={{ left: `${10 + i * 8}%`, top: `${15 + (i % 5) * 18}%` }}
             animate={{ y: [0, -20, 0], opacity: [0.1, 0.4, 0.1] }}
             transition={{ duration: 3 + i * 0.5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
@@ -154,7 +154,7 @@ export default function LoginPage() {
               <img src={logoImg} alt="Logo" className="h-12 w-12 object-contain" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">
+          <h1 className="text-3xl font-bold text-text-primary tracking-tight">
             IT-Inventory
           </h1>
           <p className="text-text-secondary mt-1 text-sm">
@@ -238,7 +238,7 @@ export default function LoginPage() {
                     )}
                   </AnimatePresence>
                   <h2 className={`text-base font-semibold transition-colors duration-300 ${
-                    showErrorAnim ? 'text-red-400' : 'text-white'
+                    showErrorAnim ? 'text-red-400' : 'text-text-primary'
                   }`}>
                     {showErrorAnim ? 'Accès refusé' : 'Connexion sécurisée'}
                   </h2>
@@ -337,7 +337,7 @@ export default function LoginPage() {
               {/* Bouton retour */}
               <button
                 onClick={handleBack}
-                className="flex items-center gap-2 text-text-secondary hover:text-white transition-colors mb-2 cursor-pointer"
+                className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors mb-2 cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span className="text-sm">Modifier le mot de passe</span>
@@ -550,7 +550,7 @@ export default function LoginPage() {
           >
             {/* Backdrop pulse */}
             <motion.div
-              className="absolute inset-0 bg-[#080d1c]/50 backdrop-blur-sm"
+              className="absolute inset-0 bg-background/50 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -636,12 +636,12 @@ export default function LoginPage() {
               >
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  <h2 className="text-lg font-bold text-white tracking-tight font-['Outfit',sans-serif]">
+                  <h2 className="text-lg font-bold text-text-primary tracking-tight font-['Outfit',sans-serif]">
                     Accès autorisé
                   </h2>
                   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 </div>
-                <p className="text-xs text-white/50">Choisissez votre profil</p>
+                <p className="text-xs text-text-secondary">Choisissez votre profil</p>
               </motion.div>
 
               {/* Bottom bar */}

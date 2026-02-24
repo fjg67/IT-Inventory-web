@@ -15,7 +15,7 @@ interface AlertListProps {
 export function AlertList({ alerts, loading }: AlertListProps) {
   if (loading) {
     return (
-      <div className="glass-card p-6 ring-1 ring-white/5">
+      <div className="glass-card p-6 ring-1 ring-border">
         <div className="flex items-center gap-3 mb-5">
           <Skeleton className="h-9 w-9 rounded-lg" />
           <Skeleton className="h-5 w-32" />
@@ -34,7 +34,7 @@ export function AlertList({ alerts, loading }: AlertListProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
-      className="glass-card p-6 ring-1 ring-white/5"
+      className="glass-card p-6 ring-1 ring-border"
     >
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
@@ -59,7 +59,7 @@ export function AlertList({ alerts, loading }: AlertListProps) {
 
       {alerts.length === 0 ? (
         <div className="py-10 text-center">
-          <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-white/5 flex items-center justify-center">
+          <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-[var(--sidebar-hover)] flex items-center justify-center">
             <Package className="h-7 w-7 text-text-muted" />
           </div>
           <p className="text-text-secondary text-sm font-medium">Aucune alerte</p>
@@ -78,7 +78,7 @@ export function AlertList({ alerts, loading }: AlertListProps) {
               >
                 <Link
                   to={`/articles/${alert.articleId}`}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-transparent hover:border-white/5 transition-all duration-200 group"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-[var(--sidebar-hover)] hover:bg-[var(--sidebar-hover)] border border-transparent hover:border-border transition-all duration-200 group"
                 >
                   {/* Status indicator */}
                   <div className={`p-1.5 rounded-lg flex-shrink-0 ${
@@ -90,7 +90,7 @@ export function AlertList({ alerts, loading }: AlertListProps) {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm text-text-primary truncate group-hover:text-white transition-colors font-medium">
+                    <p className="text-sm text-text-primary truncate group-hover:text-text-primary transition-colors font-medium">
                       {alert.article.name}
                     </p>
                     <p className="text-[11px] text-text-muted mt-0.5">{alert.site.name}</p>

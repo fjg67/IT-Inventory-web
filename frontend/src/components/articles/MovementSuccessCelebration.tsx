@@ -155,7 +155,7 @@ export function MovementSuccessCelebration({
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-[#080d1c]/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-background/60 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -217,7 +217,7 @@ export function MovementSuccessCelebration({
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <h2 className="text-lg font-bold text-white tracking-tight font-['Outfit',sans-serif]">
+                <h2 className="text-lg font-bold text-text-primary tracking-tight font-['Outfit',sans-serif]">
                   {config.label}
                 </h2>
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -225,14 +225,14 @@ export function MovementSuccessCelebration({
 
               {articleName && (
                 <motion.p
-                  className="text-xs text-white/60 font-medium font-mono tracking-wide"
+                  className="text-xs text-text-secondary font-medium font-mono tracking-wide"
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.65 }}
                 >
                   {articleName}
                   {quantity && quantity > 0 && (
-                    <span className="ml-2 text-white/40">×{quantity}</span>
+                    <span className="ml-2 text-text-secondary">×{quantity}</span>
                   )}
                 </motion.p>
               )}

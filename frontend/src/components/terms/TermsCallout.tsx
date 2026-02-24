@@ -38,7 +38,7 @@ export function TermsCallout({ type, children }: TermsCalloutProps) {
     >
       <div className="flex items-start gap-3">
         <Icon className={`h-4 w-4 ${s.iconColor} mt-0.5 shrink-0`} />
-        <p className="text-[14px] font-['Lora'] text-slate-400 leading-relaxed">
+        <p className="text-[14px] font-['Lora'] text-text-secondary leading-relaxed">
           {children}
         </p>
       </div>

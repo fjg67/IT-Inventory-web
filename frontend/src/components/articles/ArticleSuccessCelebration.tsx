@@ -136,7 +136,7 @@ export function ArticleSuccessCelebration({ show, articleName, onComplete }: Art
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-[#080d1c]/70 backdrop-blur-md"
+            className="absolute inset-0 bg-background/70 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -207,7 +207,7 @@ export function ArticleSuccessCelebration({ show, articleName, onComplete }: Art
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-amber-400" />
-                <h2 className="text-xl font-bold text-white tracking-tight font-['Outfit',sans-serif]">
+                <h2 className="text-xl font-bold text-text-primary tracking-tight font-['Outfit',sans-serif]">
                   Article créé avec succès
                 </h2>
                 <Sparkles className="w-4 h-4 text-amber-400" />

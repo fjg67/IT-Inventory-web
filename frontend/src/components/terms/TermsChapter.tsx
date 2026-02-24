@@ -33,7 +33,7 @@ export function TermsChapter({ chapter, extra }: TermsChapterProps) {
       className="relative mb-12 scroll-mt-8"
     >
       {/* ── Header chapitre ── */}
-      <div className="relative flex items-center gap-4 mb-6 pb-4 border-b border-white/[0.06]">
+      <div className="relative flex items-center gap-4 mb-6 pb-4 border-b border-border">
         {/* Numéro filigrane */}
         <span className="absolute right-0 -top-2 font-['Outfit'] text-[64px] font-black leading-none text-blue-500/[0.08] pointer-events-none select-none">
           {chapter.number}
@@ -51,10 +51,10 @@ export function TermsChapter({ chapter, extra }: TermsChapterProps) {
 
         {/* Titre */}
         <div>
-          <p className="text-[10px] font-['JetBrains_Mono'] text-slate-600 mb-0.5">
+          <p className="text-[10px] font-['JetBrains_Mono'] text-text-muted mb-0.5">
             {chapter.articleLabel}
           </p>
-          <h2 className="text-xl font-bold font-['Outfit'] text-slate-100">
+          <h2 className="text-xl font-bold font-['Outfit'] text-text-primary">
             {chapter.title}
           </h2>
         </div>
@@ -68,7 +68,7 @@ export function TermsChapter({ chapter, extra }: TermsChapterProps) {
           if (i === 0 && chapter.bullets) {
             return (
               <div key={i}>
-                <p className="font-['Lora'] text-[15px] leading-[1.8] text-slate-300/90 mb-4">
+                <p className="font-['Lora'] text-[15px] leading-[1.8] text-text-primary mb-4">
                   {p}
                 </p>
                 {/* Bullets */}
@@ -76,7 +76,7 @@ export function TermsChapter({ chapter, extra }: TermsChapterProps) {
                   {chapter.bullets.map((b, j) => (
                     <li key={j} className="flex items-start gap-3">
                       <span className="mt-[10px] w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
-                      <span className="font-['Lora'] text-[15px] leading-[1.8] text-slate-300/90">
+                      <span className="font-['Lora'] text-[15px] leading-[1.8] text-text-primary">
                         {b}
                       </span>
                     </li>
@@ -88,7 +88,7 @@ export function TermsChapter({ chapter, extra }: TermsChapterProps) {
           return (
             <p
               key={i}
-              className="font-['Lora'] text-[15px] leading-[1.8] text-slate-300/90 mb-4"
+              className="font-['Lora'] text-[15px] leading-[1.8] text-text-primary mb-4"
             >
               {p}
             </p>

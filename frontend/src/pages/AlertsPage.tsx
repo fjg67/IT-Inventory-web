@@ -133,7 +133,7 @@ export default function AlertsPage() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative overflow-hidden rounded-2xl border border-white/[0.06]"
+        className="relative overflow-hidden rounded-2xl border border-border"
       >
         {/* Background mesh */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-950/40 via-[#0c1425] to-amber-950/30" />
@@ -153,10 +153,10 @@ export default function AlertsPage() {
                 <AlertTriangle className="h-7 w-7 text-red-400" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white tracking-tight">
+                <h1 className="text-2xl font-bold text-text-primary tracking-tight">
                   Alertes de stock
                 </h1>
-                <p className="text-sm text-white/40 mt-0.5">
+                <p className="text-sm text-text-secondary mt-0.5">
                   Surveillance et réapprovisionnement
                 </p>
               </div>
@@ -198,13 +198,13 @@ export default function AlertsPage() {
         className="flex flex-wrap items-center justify-between gap-3"
       >
         {/* View toggle */}
-        <div className="flex items-center gap-1 rounded-xl bg-white/[0.03] p-1 ring-1 ring-white/[0.06]">
+        <div className="flex items-center gap-1 rounded-xl bg-[var(--sidebar-hover)] p-1 ring-1 ring-border">
           <button
             onClick={() => setViewMode('grid')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
               viewMode === 'grid'
-                ? 'bg-white/10 text-white shadow-sm'
-                : 'text-white/40 hover:text-white/60'
+                ? 'bg-surface-elevated text-text-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-secondary'
             }`}
           >
             <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 16 16">
@@ -219,8 +219,8 @@ export default function AlertsPage() {
             onClick={() => setViewMode('list')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
               viewMode === 'list'
-                ? 'bg-white/10 text-white shadow-sm'
-                : 'text-white/40 hover:text-white/60'
+                ? 'bg-surface-elevated text-text-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-secondary'
             }`}
           >
             <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 16 16">
@@ -234,11 +234,11 @@ export default function AlertsPage() {
 
         {/* Site filter */}
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.04] ring-1 ring-white/[0.06]">
-            <MapPin className="h-3.5 w-3.5 text-white/40" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--sidebar-hover)] ring-1 ring-border">
+            <MapPin className="h-3.5 w-3.5 text-text-secondary" />
           </div>
           <Select value={selectedSite} onValueChange={setSelectedSite}>
-            <SelectTrigger className="w-40 sm:w-52 h-9 bg-white/[0.03] border-white/[0.06] rounded-xl text-sm">
+            <SelectTrigger className="w-40 sm:w-52 h-9 bg-[var(--sidebar-hover)] border-border rounded-xl text-sm">
               <SelectValue placeholder="Tous les sites" />
             </SelectTrigger>
             <SelectContent>
@@ -356,7 +356,7 @@ function StatPill({
     >
       <Icon className={`h-4 w-4 ${colors.text}`} />
       <span className={`text-sm font-bold tabular-nums ${colors.text}`}>{value}</span>
-      <span className="text-xs text-white/40">{label}</span>
+      <span className="text-xs text-text-secondary">{label}</span>
     </motion.div>
   )
 }
@@ -389,7 +389,7 @@ function AlertCardGrid({ alert, index, onReplenish }: AlertCardProps) {
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.35, delay: index * 0.04 }}
       whileHover={{ y: -2, transition: { duration: 0.2 } }}
-      className={`group relative overflow-hidden rounded-2xl ${accentColor.border} border bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300 hover:shadow-xl ${accentColor.glow}`}
+      className={`group relative overflow-hidden rounded-2xl ${accentColor.border} border bg-[var(--sidebar-hover)] hover:bg-[var(--sidebar-hover)] transition-all duration-300 hover:shadow-xl ${accentColor.glow}`}
     >
       {/* Noise texture overlay */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iLjAyIi8+PC9zdmc+')] opacity-50 pointer-events-none" />
@@ -401,14 +401,14 @@ function AlertCardGrid({ alert, index, onReplenish }: AlertCardProps) {
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.05] ring-1 ring-white/[0.08] text-lg">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--sidebar-hover)] ring-1 ring-border text-lg">
               {emoji}
             </div>
             <div className="min-w-0">
-              <h3 className="text-sm font-semibold text-white truncate leading-tight">
+              <h3 className="text-sm font-semibold text-text-primary truncate leading-tight">
                 {alert.article.name}
               </h3>
-              <span className="text-[10px] font-mono text-white/25 mt-0.5 block">
+              <span className="text-[10px] font-mono text-text-muted mt-0.5 block">
                 {alert.article.reference}
               </span>
             </div>
@@ -423,13 +423,13 @@ function AlertCardGrid({ alert, index, onReplenish }: AlertCardProps) {
         </div>
 
         {/* Site & Emplacement */}
-        <div className="flex items-center gap-3 text-xs text-white/35">
+        <div className="flex items-center gap-3 text-xs text-text-secondary">
           <span className="flex items-center gap-1.5">
             <MapPin className="h-3 w-3" />
             {alert.site.name}
           </span>
           {alert.article.emplacement && (
-            <span className="flex items-center gap-1 text-white/25">
+            <span className="flex items-center gap-1 text-text-muted">
               <span>•</span>
               <span>📍 {alert.article.emplacement}</span>
             </span>
@@ -446,16 +446,16 @@ function AlertCardGrid({ alert, index, onReplenish }: AlertCardProps) {
           <StockRow
             label="Stock min."
             value={minStock}
-            valueClass="text-white/60"
+            valueClass="text-text-secondary"
           />
           <div className="flex items-center justify-between text-xs">
-            <span className="text-white/30">Déficit</span>
+            <span className="text-text-muted">Déficit</span>
             <span className="text-red-400/80 font-semibold tabular-nums">−{alert.deficit}</span>
           </div>
 
           {/* Progress gauge */}
           <div className="pt-1">
-            <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+            <div className="h-1.5 rounded-full bg-[var(--sidebar-hover)] overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${pct}%` }}
@@ -502,7 +502,7 @@ function AlertCardList({ alert, index, onReplenish }: AlertCardProps) {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 12 }}
       transition={{ duration: 0.3, delay: index * 0.03 }}
-      className={`group relative overflow-hidden rounded-xl border transition-all duration-300 hover:bg-white/[0.03] ${
+      className={`group relative overflow-hidden rounded-xl border transition-all duration-300 hover:bg-[var(--sidebar-hover)] ${
         isOutOfStock ? 'border-red-500/15 hover:border-red-500/25' : 'border-amber-500/10 hover:border-amber-500/20'
       }`}
     >
@@ -513,27 +513,27 @@ function AlertCardList({ alert, index, onReplenish }: AlertCardProps) {
 
       <div className="flex items-center gap-4 px-5 py-3 pl-6">
         {/* Emoji */}
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.04] ring-1 ring-white/[0.06] text-base">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--sidebar-hover)] ring-1 ring-border text-base">
           {emoji}
         </div>
 
         {/* Article info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-sm font-semibold text-white truncate">
+            <span className="text-sm font-semibold text-text-primary truncate">
               {alert.article.name}
             </span>
-            <span className="text-[10px] font-mono text-white/20 bg-white/[0.04] px-1.5 py-0.5 rounded shrink-0">
+            <span className="text-[10px] font-mono text-text-muted bg-[var(--sidebar-hover)] px-1.5 py-0.5 rounded shrink-0">
               {alert.article.reference}
             </span>
           </div>
-          <div className="flex items-center gap-3 text-xs text-white/30">
+          <div className="flex items-center gap-3 text-xs text-text-muted">
             <span className="flex items-center gap-1">
               <MapPin className="h-3 w-3" />
               {alert.site.name}
             </span>
             {alert.article.emplacement && (
-              <span className="text-white/20">📍 {alert.article.emplacement}</span>
+              <span className="text-text-muted">📍 {alert.article.emplacement}</span>
             )}
             <span className={`font-semibold tabular-nums ${isOutOfStock ? 'text-red-400/70' : 'text-amber-400/70'}`}>
               {alert.quantity}/{minStock}
@@ -543,7 +543,7 @@ function AlertCardList({ alert, index, onReplenish }: AlertCardProps) {
 
         {/* Gauge mini */}
         <div className="hidden md:flex flex-col items-end gap-1 shrink-0 w-28">
-          <div className="w-full h-1 rounded-full bg-white/[0.06] overflow-hidden">
+          <div className="w-full h-1 rounded-full bg-[var(--sidebar-hover)] overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${pct}%` }}
@@ -551,7 +551,7 @@ function AlertCardList({ alert, index, onReplenish }: AlertCardProps) {
               className={`h-full rounded-full ${isOutOfStock ? 'bg-red-500' : 'bg-amber-500'}`}
             />
           </div>
-          <span className="text-[10px] text-white/20 tabular-nums">
+          <span className="text-[10px] text-text-muted tabular-nums">
             déficit −{alert.deficit}
           </span>
         </div>
@@ -591,7 +591,7 @@ function AlertCardList({ alert, index, onReplenish }: AlertCardProps) {
 function StockRow({ label, value, valueClass }: { label: string; value: number; valueClass: string }) {
   return (
     <div className="flex items-center justify-between text-xs">
-      <span className="text-white/30">{label}</span>
+      <span className="text-text-muted">{label}</span>
       <span className={`tabular-nums ${valueClass}`}>{value}</span>
     </div>
   )
@@ -605,7 +605,7 @@ function AllClearState() {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="relative overflow-hidden rounded-2xl border border-emerald-500/10 bg-white/[0.02]"
+      className="relative overflow-hidden rounded-2xl border border-emerald-500/10 bg-[var(--sidebar-hover)]"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/20 via-transparent to-teal-950/10" />
       <div className="relative z-10 flex flex-col items-center justify-center py-20 px-6 text-center">
@@ -617,10 +617,10 @@ function AllClearState() {
         >
           <ShieldCheck className="h-10 w-10 text-emerald-400" />
         </motion.div>
-        <h3 className="text-lg font-semibold text-white mb-2">
+        <h3 className="text-lg font-semibold text-text-primary mb-2">
           Tout est en ordre
         </h3>
-        <p className="text-sm text-white/40 max-w-sm">
+        <p className="text-sm text-text-secondary max-w-sm">
           Tous vos articles sont au-dessus du stock minimum. Aucune alerte à signaler.
         </p>
         <motion.div
@@ -644,7 +644,7 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-red-500/10 bg-white/[0.02] p-12 text-center"
+      className="rounded-2xl border border-red-500/10 bg-[var(--sidebar-hover)] p-12 text-center"
     >
       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10 ring-1 ring-red-500/20 mx-auto mb-4">
         <AlertTriangle className="h-7 w-7 text-red-400" />
@@ -654,7 +654,7 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={onRetry}
-        className="px-4 py-2 rounded-xl bg-white/[0.05] ring-1 ring-white/[0.08] text-xs font-medium text-white/60 hover:text-white/80 hover:bg-white/[0.08] transition-all"
+        className="px-4 py-2 rounded-xl bg-[var(--sidebar-hover)] ring-1 ring-border text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-[var(--sidebar-hover)] transition-all"
       >
         Réessayer
       </motion.button>
@@ -670,7 +670,7 @@ function AlertsSkeleton() {
       {Array.from({ length: 9 }).map((_, i) => (
         <div
           key={i}
-          className="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-5 space-y-4"
+          className="rounded-2xl border border-border bg-[var(--sidebar-hover)] p-5 space-y-4"
         >
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">

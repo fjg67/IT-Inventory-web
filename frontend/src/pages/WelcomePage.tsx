@@ -49,7 +49,7 @@ const slides = [
 function Particle({ delay, x, y, size }: { delay: number; x: number; y: number; size: number }) {
   return (
     <motion.div
-      className="absolute rounded-full bg-white/[0.08]"
+      className="absolute rounded-full bg-[var(--sidebar-hover)]"
       style={{ width: size, height: size, left: `${x}%`, top: `${y}%` }}
       animate={{
         y: [0, -30, 0],
@@ -139,7 +139,7 @@ export default function WelcomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080d1c] flex flex-col items-center justify-center relative overflow-hidden select-none">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden select-none">
       {/* ── Fond dégradé ── */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.06)_0%,transparent_70%)]" />
@@ -251,7 +251,7 @@ export default function WelcomePage() {
             </div>
 
             {/* ── Titre ── */}
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight tracking-tight mb-5">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-text-primary leading-tight tracking-tight mb-5">
               {slide.title}
               <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">

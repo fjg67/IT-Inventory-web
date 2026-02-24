@@ -13,6 +13,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/useAuth'
 import { useSidebarStore } from '@/stores/sidebarStore'
+import { ThemeToggle } from '@/components/layout/ThemeToggle'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -78,7 +79,7 @@ export function TopBar() {
   const breadcrumbs = getBreadcrumbs()
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 sm:h-16 items-center gap-2 sm:gap-4 border-b border-border bg-surface/60 backdrop-blur-xl px-3 sm:px-6">
+    <header className="sticky top-0 z-30 flex h-14 sm:h-16 items-center gap-2 sm:gap-4 border-b border-border bg-surface/60 backdrop-blur-xl px-3 sm:px-6 transition-colors duration-300">
       {/* Gauche : bouton toggle + fil d'Ariane */}
       <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         {/* Bouton menu mobile */}
@@ -145,6 +146,9 @@ export function TopBar() {
           <Search className="h-4 w-4" />
         </Button>
 
+        {/* Toggle thème clair/sombre */}
+        <ThemeToggle />
+
         {/* Bouton notifications */}
         <Button
           variant="ghost"
@@ -166,7 +170,7 @@ export function TopBar() {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="flex items-center gap-2 px-2 hover:bg-white/5"
+              className="flex items-center gap-2 px-2 hover:bg-[var(--sidebar-hover)]"
             >
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-primary/20 text-primary text-xs">

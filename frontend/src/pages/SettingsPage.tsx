@@ -77,12 +77,12 @@ export default function SettingsPage() {
         >
           <div>
             <h1
-              className="text-[28px] font-bold text-[#EEF2FF]"
+              className="text-[28px] font-bold text-text-primary"
               style={{ fontFamily: "'Outfit', sans-serif" }}
             >
               Paramètres
             </h1>
-            <p className="text-[13px] text-slate-500 mt-1">
+            <p className="text-[13px] text-text-secondary mt-1">
               Configuration et informations
             </p>
           </div>
@@ -169,7 +169,7 @@ export default function SettingsPage() {
                   <div className="flex items-center gap-1.5">
                     <Activity className="h-3 w-3 text-indigo-300" />
                     <span
-                      className="text-[12px] text-slate-500"
+                      className="text-[12px] text-text-secondary"
                       style={{ fontFamily: "'JetBrains Mono', monospace" }}
                     >
                       Temps réel
@@ -221,7 +221,7 @@ export default function SettingsPage() {
                 label="Licence"
                 value={
                   <span
-                    className="text-[12px] text-slate-500"
+                    className="text-[12px] text-text-secondary"
                     style={{ fontFamily: "'JetBrains Mono', monospace" }}
                   >
                     MIT
@@ -236,7 +236,7 @@ export default function SettingsPage() {
                 iconColor="text-indigo-300"
                 label="IT-Inventory"
                 value={
-                  <span className="text-[12px] text-slate-500">
+                  <span className="text-[12px] text-text-secondary">
                     Gestion de stock IT
                   </span>
                 }
@@ -244,8 +244,8 @@ export default function SettingsPage() {
 
               {/* Copyright */}
               <div className="flex items-center gap-2 px-5 py-3">
-                <Copyright className="h-3.5 w-3.5 text-slate-600 shrink-0" />
-                <p className="text-[11px] text-slate-600 italic">
+                <Copyright className="h-3.5 w-3.5 text-text-muted shrink-0" />
+                <p className="text-[11px] text-text-muted italic">
                   © 2026 Florian JOVE GARCIA — Tous droits réservés
                 </p>
               </div>
@@ -269,8 +269,8 @@ export default function SettingsPage() {
               {/* Conditions */}
               <SettingRow
                 icon={FileText}
-                iconBg="bg-slate-400/[0.06]"
-                iconColor="text-slate-400"
+                iconBg="bg-surface-elevated"
+                iconColor="text-text-secondary"
                 label="Conditions d'utilisation"
                 sublabel="Politique de confidentialité"
                 showChevron
@@ -285,7 +285,7 @@ export default function SettingsPage() {
 
           {/* === FOOTER === */}
           <motion.div variants={itemVariants}>
-            <p className="text-center text-[11px] text-slate-700 pb-4">
+            <p className="text-center text-[11px] text-text-muted pb-4">
               © 2026 IT-Inventory — Tous droits réservés
             </p>
           </motion.div>

@@ -18,7 +18,7 @@ export const ArticleFormInput = forwardRef<HTMLInputElement, ArticleFormInputPro
   ({ label, required, error, prefixIcon: PrefixIcon, suffixSlot, hint, className = '', ...rest }, ref) => {
     return (
       <div className="space-y-1.5">
-        <label className="text-xs font-medium text-slate-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
+        <label className="text-xs font-medium text-text-secondary" style={{ fontFamily: 'Outfit, sans-serif' }}>
           {label}
           {required && <span className="text-red-400 ml-0.5">*</span>}
         </label>
@@ -26,14 +26,14 @@ export const ArticleFormInput = forwardRef<HTMLInputElement, ArticleFormInputPro
         <div className="relative flex items-center gap-2">
           {PrefixIcon && (
             <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-              <PrefixIcon className="h-4 w-4 text-slate-500" />
+              <PrefixIcon className="h-4 w-4 text-text-muted" />
             </div>
           )}
           <input
             ref={ref}
             className={`
-              w-full h-11 rounded-xl text-sm text-slate-200 placeholder:text-slate-600
-              border border-white/[0.06] bg-[#0E1826]
+              w-full h-11 rounded-xl text-sm text-text-primary placeholder:text-text-muted
+              border border-border bg-surface-elevated
               focus:outline-none focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/10
               focus:shadow-[0_0_15px_rgba(59,130,246,0.08)]
               transition-all duration-200
@@ -48,7 +48,7 @@ export const ArticleFormInput = forwardRef<HTMLInputElement, ArticleFormInputPro
         </div>
 
         {hint && !error && (
-          <p className="text-[10px] text-slate-500 pl-1" style={{ fontFamily: 'Outfit, sans-serif' }}>{hint}</p>
+          <p className="text-[10px] text-text-muted pl-1" style={{ fontFamily: 'Outfit, sans-serif' }}>{hint}</p>
         )}
         {error && (
           <p className="text-[11px] text-red-400 flex items-center gap-1 pl-0.5">

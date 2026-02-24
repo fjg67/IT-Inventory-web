@@ -41,7 +41,7 @@ export function ArticleFormSelect({
 }: ArticleFormSelectProps) {
   return (
     <div className="space-y-1.5">
-      <label className="text-xs font-medium text-slate-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
+      <label className="text-xs font-medium text-text-secondary" style={{ fontFamily: 'Outfit, sans-serif' }}>
         {label}
         {required && <span className="text-red-400 ml-0.5">*</span>}
       </label>
@@ -49,7 +49,7 @@ export function ArticleFormSelect({
       <Select value={value || '_none'} onValueChange={(v) => onChange(v === '_none' ? '' : v)}>
         <SelectTrigger
           className={`
-            h-11 rounded-xl text-sm bg-[#0E1826] border-white/[0.06]
+            h-11 rounded-xl text-sm bg-surface-elevated border-border
             focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/10
             focus:shadow-[0_0_15px_rgba(59,130,246,0.08)]
             transition-all duration-200
@@ -58,7 +58,7 @@ export function ArticleFormSelect({
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent className="bg-[#111F30] border-white/10 backdrop-blur-xl">
+        <SelectContent className="bg-surface border-border backdrop-blur-xl">
           {!required && (
             <SelectItem value="_none">{emptyLabel}</SelectItem>
           )}

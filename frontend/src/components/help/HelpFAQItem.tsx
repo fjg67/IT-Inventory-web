@@ -18,8 +18,8 @@ export function HelpFAQItem({ item, isOpen, onToggle }: HelpFAQItemProps) {
         rounded-xl border transition-all duration-300
         ${
           isOpen
-            ? 'bg-white/[0.03] border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.06)]'
-            : 'bg-white/[0.01] border-white/[0.05] hover:border-white/[0.08] hover:bg-white/[0.02]'
+            ? 'bg-[var(--sidebar-hover)] border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.06)]'
+            : 'bg-[var(--sidebar-hover)] border-border hover:border-border hover:bg-[var(--sidebar-hover)]'
         }
       `}
     >
@@ -32,12 +32,12 @@ export function HelpFAQItem({ item, isOpen, onToggle }: HelpFAQItemProps) {
         <div
           className={`
             w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-300
-            ${isOpen ? 'bg-blue-500/[0.12] border border-blue-500/25' : 'bg-white/[0.04] border border-white/[0.06]'}
+            ${isOpen ? 'bg-blue-500/[0.12] border border-blue-500/25' : 'bg-[var(--sidebar-hover)] border border-border'}
           `}
         >
           <BookOpen
             className={`h-3.5 w-3.5 transition-colors duration-300 ${
-              isOpen ? 'text-blue-400' : 'text-slate-600'
+              isOpen ? 'text-blue-400' : 'text-text-muted'
             }`}
           />
         </div>
@@ -45,7 +45,7 @@ export function HelpFAQItem({ item, isOpen, onToggle }: HelpFAQItemProps) {
         {/* Question text */}
         <span
           className={`flex-1 text-sm font-medium transition-colors duration-300 ${
-            isOpen ? 'text-slate-100' : 'text-slate-300'
+            isOpen ? 'text-text-primary' : 'text-text-primary'
           }`}
         >
           {item.question}
@@ -73,7 +73,7 @@ export function HelpFAQItem({ item, isOpen, onToggle }: HelpFAQItemProps) {
         >
           <ChevronDown
             className={`h-4 w-4 transition-colors ${
-              isOpen ? 'text-blue-400' : 'text-slate-600'
+              isOpen ? 'text-blue-400' : 'text-text-muted'
             }`}
           />
         </motion.div>
@@ -94,7 +94,7 @@ export function HelpFAQItem({ item, isOpen, onToggle }: HelpFAQItemProps) {
               <div className="h-px bg-gradient-to-r from-blue-500/20 via-white/[0.04] to-transparent" />
 
               {/* Answer text */}
-              <p className="text-[13px] text-slate-400 leading-relaxed">
+              <p className="text-[13px] text-text-secondary leading-relaxed">
                 {item.answer}
               </p>
 
@@ -104,7 +104,7 @@ export function HelpFAQItem({ item, isOpen, onToggle }: HelpFAQItemProps) {
                   {item.bullets.map((b, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-400/50 shrink-0" />
-                      <span className="text-[12px] text-slate-400 leading-relaxed">
+                      <span className="text-[12px] text-text-secondary leading-relaxed">
                         {b}
                       </span>
                     </li>

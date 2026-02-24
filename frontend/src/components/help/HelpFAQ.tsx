@@ -57,13 +57,13 @@ export function HelpFAQ({ searchQuery = '' }: HelpFAQProps) {
           <div className="w-7 h-7 rounded-lg bg-indigo-500/[0.08] border border-indigo-500/20 flex items-center justify-center">
             <HelpCircle className="h-3.5 w-3.5 text-indigo-400" />
           </div>
-          <h2 className="text-[13px] font-semibold text-slate-300 uppercase tracking-widest font-['Outfit']">
+          <h2 className="text-[13px] font-semibold text-text-primary uppercase tracking-widest font-['Outfit']">
             Questions fréquentes
           </h2>
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+        <div className="flex items-center gap-1 p-1 rounded-xl bg-[var(--sidebar-hover)] border border-border">
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -72,15 +72,15 @@ export function HelpFAQ({ searchQuery = '' }: HelpFAQProps) {
                 relative px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all duration-300
                 ${
                   activeTab === tab.id
-                    ? 'text-white'
-                    : 'text-slate-500 hover:text-slate-300'
+                    ? 'text-text-primary'
+                    : 'text-text-secondary hover:text-text-primary'
                 }
               `}
             >
               {activeTab === tab.id && (
                 <motion.div
                   layoutId="faq-tab"
-                  className="absolute inset-0 rounded-lg bg-white/[0.08] border border-white/[0.1] shadow-[0_0_12px_rgba(99,102,241,0.1)]"
+                  className="absolute inset-0 rounded-lg bg-[var(--sidebar-hover)] border border-border shadow-[0_0_12px_rgba(99,102,241,0.1)]"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
@@ -94,7 +94,7 @@ export function HelpFAQ({ searchQuery = '' }: HelpFAQProps) {
       <div className="space-y-6">
         {grouped.length === 0 && (
           <div className="text-center py-10">
-            <p className="text-sm text-slate-600">Aucune question trouvée.</p>
+            <p className="text-sm text-text-muted">Aucune question trouvée.</p>
           </div>
         )}
 
@@ -103,10 +103,10 @@ export function HelpFAQ({ searchQuery = '' }: HelpFAQProps) {
             {/* Group label */}
             <div className="flex items-center gap-2 pl-1">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-400/40" />
-              <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider font-['Outfit']">
+              <span className="text-[11px] font-medium text-text-secondary uppercase tracking-wider font-['Outfit']">
                 {group.label}
               </span>
-              <span className="text-[10px] text-slate-700 font-['JetBrains_Mono']">
+              <span className="text-[10px] text-text-muted font-['JetBrains_Mono']">
                 ({group.items.length})
               </span>
             </div>

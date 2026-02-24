@@ -1,4 +1,4 @@
-// Page détail article — Premium redesign v2
+// Page dÃ©tail article â€” Premium redesign v2
 
 import { useState, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -60,14 +60,14 @@ import {
 } from '@/components/ui/select'
 import { DataTablePagination } from '@/components/shared/DataTablePagination'
 
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // CONSTANTES
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const HISTORY_PAGE_SIZE = 15
 
 const MOVEMENT_LABELS: Record<MovementType, string> = {
-  ENTRY: 'Entrée',
+  ENTRY: 'EntrÃ©e',
   EXIT: 'Sortie',
   TRANSFER: 'Transfert',
   ADJUSTMENT: 'Ajustement',
@@ -83,7 +83,7 @@ const MOVEMENT_BADGE_VARIANT: Record<MovementType, 'success' | 'danger' | 'info'
 const CATEGORY_COLORS: Record<string, { gradient: string; glow: string }> = {
   'Accessoires': { gradient: 'from-blue-500 via-indigo-600 to-violet-700', glow: 'shadow-blue-500/25' },
   'Audio':       { gradient: 'from-purple-500 via-fuchsia-600 to-pink-700', glow: 'shadow-purple-500/25' },
-  'Câble':       { gradient: 'from-rose-500 via-red-600 to-orange-600',     glow: 'shadow-rose-500/25' },
+  'CÃ¢ble':       { gradient: 'from-rose-500 via-red-600 to-orange-600',     glow: 'shadow-rose-500/25' },
   'Chargeur':    { gradient: 'from-emerald-500 via-green-600 to-teal-700',  glow: 'shadow-emerald-500/25' },
   'Electrique':  { gradient: 'from-amber-500 via-orange-600 to-red-600',    glow: 'shadow-amber-500/25' },
   'Ergonomie':   { gradient: 'from-cyan-500 via-teal-600 to-blue-700',      glow: 'shadow-cyan-500/25' },
@@ -92,27 +92,27 @@ const CATEGORY_COLORS: Record<string, { gradient: string; glow: string }> = {
 }
 
 const FAMILLES_EMOJI: Record<string, string> = {
-  'Accessoires': '🖱️', 'Audio': '🎧', 'Câble': '🔌', 'Chargeur': '🔋',
-  'Electrique': '⚡', 'Ergonomie': '🪑', 'Kit': '📦',
+  'Accessoires': 'ðŸ–±ï¸', 'Audio': 'ðŸŽ§', 'CÃ¢ble': 'ðŸ”Œ', 'Chargeur': 'ðŸ”‹',
+  'Electrique': 'âš¡', 'Ergonomie': 'ðŸª‘', 'Kit': 'ðŸ“¦',
 }
 
 const BRANDS_EMOJI: Record<string, string> = {
-  'DELL': '💻', 'Cherry': '🍒', 'StarTec': '⭐', '3M': '🏷️',
-  'Générique': '⚪', 'Plantronics': '🎧', 'Aurora': '✨',
-  'Urban Factory': '🏭', 'Epsos': '📷', 'Poly': '🎙️',
-  'HP': '💻', 'Ergotron': '🖥️', 'Fujitsu': '💻', 'Logitech': '🖱️',
+  'DELL': 'ðŸ’»', 'Cherry': 'ðŸ’', 'StarTec': 'â­', '3M': 'ðŸ·ï¸',
+  'GÃ©nÃ©rique': 'âšª', 'Plantronics': 'ðŸŽ§', 'Aurora': 'âœ¨',
+  'Urban Factory': 'ðŸ­', 'Epsos': 'ðŸ“·', 'Poly': 'ðŸŽ™ï¸',
+  'HP': 'ðŸ’»', 'Ergotron': 'ðŸ–¥ï¸', 'Fujitsu': 'ðŸ’»', 'Logitech': 'ðŸ–±ï¸',
 }
 
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // HELPERS
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function timeAgo(dateStr: string): string {
   const now = new Date()
   const date = new Date(dateStr)
   const diffMs = now.getTime() - date.getTime()
   const diffMin = Math.floor(diffMs / 60_000)
-  if (diffMin < 1) return "À l'instant"
+  if (diffMin < 1) return "Ã€ l'instant"
   if (diffMin < 60) return `il y a ${diffMin}min`
   const diffH = Math.floor(diffMin / 60)
   if (diffH < 24) return `il y a ${diffH}h`
@@ -122,9 +122,9 @@ function timeAgo(dateStr: string): string {
   return `il y a ${diffM} mois`
 }
 
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // COMPOSANT PRINCIPAL
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -141,7 +141,7 @@ export default function ArticleDetailPage() {
   const [celebrationType, setCelebrationType] = useState<MovementType>('ENTRY')
   const [celebrationQty, setCelebrationQty] = useState(0)
 
-  // ─── Requêtes ───
+  // â”€â”€â”€ RequÃªtes â”€â”€â”€
 
   const {
     data: articleData,
@@ -181,10 +181,10 @@ export default function ArticleDetailPage() {
     setMovementOpen(true)
   }, [])
 
-  // ─── Loading ───
+  // â”€â”€â”€ Loading â”€â”€â”€
   if (articleLoading) return <ArticleDetailSkeleton />
 
-  // ─── Not found ───
+  // â”€â”€â”€ Not found â”€â”€â”€
   if (articleError || !article) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
@@ -197,7 +197,7 @@ export default function ArticleDetailPage() {
             <Package className="h-10 w-10 text-red-400" />
           </div>
           <h2 className="text-xl font-bold text-text-primary">Article introuvable</h2>
-          <p className="text-text-muted text-sm">Cet article n'existe pas ou a été supprimé.</p>
+          <p className="text-text-muted text-sm">Cet article n'existe pas ou a Ã©tÃ© supprimÃ©.</p>
           <Button onClick={() => navigate('/articles')} className="mt-2">
             <ArrowLeft className="mr-2 h-4 w-4" /> Retour aux articles
           </Button>
@@ -206,10 +206,10 @@ export default function ArticleDetailPage() {
     )
   }
 
-  // ─── Données dérivées ───
+  // â”€â”€â”€ DonnÃ©es dÃ©rivÃ©es â”€â”€â”€
   const totalStock = article.totalStock ?? 0
   const catColors = CATEGORY_COLORS[article.category] ?? CATEGORY_COLORS['Divers']!
-  const categoryEmoji = FAMILLES_EMOJI[article.category] ?? '📦'
+  const categoryEmoji = FAMILLES_EMOJI[article.category] ?? 'ðŸ“¦'
   const isOk = article.status === 'ok'
   const isLow = article.status === 'low'
   const isOut = article.status === 'out'
@@ -221,9 +221,9 @@ export default function ArticleDetailPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {/* ══════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {/* HERO HEADER                               */}
-      {/* ══════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -235,9 +235,9 @@ export default function ArticleDetailPage() {
           {/* Subtle noise overlay */}
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWx0ZXI9InVybCgjYSkiIG9wYWNpdHk9IjAuMDUiLz48L3N2Zz4=')] opacity-40" />
 
-          {/* Decorative geometry — subtle */}
-          <div className="absolute -top-32 -right-32 h-80 w-80 rounded-full border border-white/[0.06]" />
-          <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full border border-white/[0.04]" />
+          {/* Decorative geometry â€” subtle */}
+          <div className="absolute -top-32 -right-32 h-80 w-80 rounded-full border border-border" />
+          <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full border border-border/50" />
 
           <div className="relative z-10 px-6 pt-5 pb-20 sm:px-8 sm:pt-6 sm:pb-24">
             {/* Navigation */}
@@ -246,7 +246,7 @@ export default function ArticleDetailPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate('/articles')}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md text-white/90 hover:bg-white/20 transition-all border border-white/10"
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-elevated backdrop-blur-md text-text-primary hover:bg-surface-elevated transition-all border border-border"
               >
                 <ArrowLeft className="h-4 w-4" />
               </motion.button>
@@ -255,7 +255,7 @@ export default function ArticleDetailPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => navigate('/articles')}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md text-white/90 hover:bg-white/20 transition-all border border-white/10"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-elevated backdrop-blur-md text-text-primary hover:bg-surface-elevated transition-all border border-border"
                 >
                   <Pencil className="h-3.5 w-3.5" />
                 </motion.button>
@@ -272,21 +272,21 @@ export default function ArticleDetailPage() {
                 className="relative mb-5"
               >
                 {article.imageUrl ? (
-                  <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl overflow-hidden ring-4 ring-white/20 shadow-2xl">
+                  <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl overflow-hidden ring-4 ring-border shadow-2xl">
                     <img src={article.imageUrl} alt={article.name} className="h-full w-full object-cover" />
                   </div>
                 ) : (
-                  <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl ring-4 ring-white/20 shadow-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                  <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl ring-4 ring-border shadow-2xl bg-surface-elevated backdrop-blur-sm flex items-center justify-center">
                     <span className="text-4xl sm:text-5xl drop-shadow-lg">{categoryEmoji}</span>
                   </div>
                 )}
                 {/* Status dot */}
-                <div className={`absolute -bottom-1 -right-1 h-7 w-7 rounded-full flex items-center justify-center shadow-lg ring-3 ring-white/30 ${
+                <div className={`absolute -bottom-1 -right-1 h-7 w-7 rounded-full flex items-center justify-center shadow-lg ring-3 ring-border ${
                   isOk ? 'bg-emerald-500' : isLow ? 'bg-amber-500' : isOut ? 'bg-red-500' : 'bg-gray-500'
                 }`}>
-                  {isOk ? <Check className="h-3.5 w-3.5 text-white" /> :
-                   isLow ? <AlertTriangle className="h-3.5 w-3.5 text-white" /> :
-                   <X className="h-3.5 w-3.5 text-white" />}
+                  {isOk ? <Check className="h-3.5 w-3.5 text-text-primary" /> :
+                   isLow ? <AlertTriangle className="h-3.5 w-3.5 text-text-primary" /> :
+                   <X className="h-3.5 w-3.5 text-text-primary" />}
                 </div>
               </motion.div>
 
@@ -295,10 +295,10 @@ export default function ArticleDetailPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md rounded-full px-3.5 py-1 mb-3 border border-white/10"
+                className="flex items-center gap-1.5 bg-surface-elevated backdrop-blur-md rounded-full px-3.5 py-1 mb-3 border border-border"
               >
-                <Hash className="h-3 w-3 text-white/50" />
-                <span className="text-xs font-mono text-white/80 tracking-wide">{article.reference}</span>
+                <Hash className="h-3 w-3 text-text-secondary" />
+                <span className="text-xs font-mono text-text-primary tracking-wide">{article.reference}</span>
               </motion.div>
 
               {/* Title */}
@@ -306,7 +306,7 @@ export default function ArticleDetailPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-xl sm:text-2xl font-bold text-white text-center leading-snug max-w-md"
+                className="text-xl sm:text-2xl font-bold text-text-primary text-center leading-snug max-w-md"
               >
                 {article.name}
               </motion.h1>
@@ -314,7 +314,7 @@ export default function ArticleDetailPage() {
           </div>
         </div>
 
-        {/* ── STAT CARDS overlay ── */}
+        {/* â”€â”€ STAT CARDS overlay â”€â”€ */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -331,7 +331,7 @@ export default function ArticleDetailPage() {
                 key={stat.label}
                 whileHover={{ y: -3, scale: 1.02 }}
                 transition={{ type: 'spring', stiffness: 400 }}
-                className="relative overflow-hidden rounded-2xl bg-[#0c1425]/90 backdrop-blur-xl border border-white/[0.08] p-4 sm:p-5 text-center shadow-xl"
+                className="relative overflow-hidden rounded-2xl bg-surface/90 backdrop-blur-xl border border-border p-4 sm:p-5 text-center shadow-xl"
               >
                 <div className={`mx-auto mb-2.5 h-10 w-10 rounded-xl flex items-center justify-center ${
                   stat.color === 'emerald' ? 'bg-emerald-500/15 text-emerald-400' :
@@ -352,39 +352,39 @@ export default function ArticleDetailPage() {
         </motion.div>
       </motion.div>
 
-      {/* ══════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {/* CONTENT                                   */}
-      {/* ══════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <div className="space-y-5 px-1">
 
-        {/* ── INFORMATIONS ── */}
+        {/* â”€â”€ INFORMATIONS â”€â”€ */}
         <motion.section
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="rounded-2xl bg-[#0c1425]/80 backdrop-blur-xl border border-white/[0.06] overflow-hidden"
+          className="rounded-2xl bg-surface/80 backdrop-blur-xl border border-border overflow-hidden"
         >
-          <div className="px-5 py-3.5 border-b border-white/[0.06]">
+          <div className="px-5 py-3.5 border-b border-border">
             <h2 className="text-sm font-semibold text-text-primary tracking-wide">Informations</h2>
           </div>
 
-          <div className="divide-y divide-white/[0.04]">
-            <InfoRow label="Référence" value={article.reference} />
+          <div className="divide-y divide-border">
+            <InfoRow label="RÃ©fÃ©rence" value={article.reference} />
             {article.codeFamille && (
-              <InfoRow label="Code famille" badge={{ text: article.codeFamille, emoji: '🏷️', color: 'blue' }} />
+              <InfoRow label="Code famille" badge={{ text: article.codeFamille, emoji: 'ðŸ·ï¸', color: 'blue' }} />
             )}
             <InfoRow label="Famille" badge={{ text: article.category, emoji: categoryEmoji, color: 'green' }} />
             {article.articleType && (
-              <InfoRow label="Type" badge={{ text: article.articleType, emoji: '≡', color: 'indigo' }} />
+              <InfoRow label="Type" badge={{ text: article.articleType, emoji: 'â‰¡', color: 'indigo' }} />
             )}
             {article.sousType && (
-              <InfoRow label="Sous-type" badge={{ text: article.sousType, emoji: '◈', color: 'orange' }} />
+              <InfoRow label="Sous-type" badge={{ text: article.sousType, emoji: 'â—ˆ', color: 'orange' }} />
             )}
             {article.brand && (
-              <InfoRow label="Marque" badge={{ text: article.brand, emoji: BRANDS_EMOJI[article.brand] ?? '🏷️', color: 'teal' }} />
+              <InfoRow label="Marque" badge={{ text: article.brand, emoji: BRANDS_EMOJI[article.brand] ?? 'ðŸ·ï¸', color: 'teal' }} />
             )}
             {article.emplacement && (
-              <InfoRow label="Emplacement" badge={{ text: article.emplacement, emoji: '📍', color: 'pink' }} />
+              <InfoRow label="Emplacement" badge={{ text: article.emplacement, emoji: 'ðŸ“', color: 'pink' }} />
             )}
             {article.barcode && (
               <InfoRow label="Code-barres" value={article.barcode} mono />
@@ -393,19 +393,19 @@ export default function ArticleDetailPage() {
           </div>
         </motion.section>
 
-        {/* ── STOCK PAR SITE ── */}
+        {/* â”€â”€ STOCK PAR SITE â”€â”€ */}
         {article.stocks && article.stocks.length > 0 && (
           <motion.section
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
-            className="rounded-2xl bg-[#0c1425]/80 backdrop-blur-xl border border-white/[0.06] overflow-hidden"
+            className="rounded-2xl bg-surface/80 backdrop-blur-xl border border-border overflow-hidden"
           >
-            <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center gap-2">
+            <div className="px-5 py-3.5 border-b border-border flex items-center gap-2">
               <MapPin className="h-4 w-4 text-blue-400" />
               <h2 className="text-sm font-semibold text-text-primary tracking-wide">Stock par site</h2>
             </div>
-            <div className="divide-y divide-white/[0.04]">
+            <div className="divide-y divide-border">
               {article.stocks.map((stock) => {
                 const qty = stock.quantity
                 const stockOut = qty <= 0
@@ -441,7 +441,7 @@ export default function ArticleDetailPage() {
           </motion.section>
         )}
 
-        {/* ── EXPORT ── */}
+        {/* â”€â”€ EXPORT â”€â”€ */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -452,22 +452,22 @@ export default function ArticleDetailPage() {
             whileTap={{ scale: 0.99 }}
             onClick={() => {
               exportService.exportArticles()
-              toast.success('Export en cours de téléchargement...')
+              toast.success('Export en cours de tÃ©lÃ©chargement...')
             }}
             className="w-full flex items-center gap-4 rounded-2xl bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 p-4 sm:p-5 text-left shadow-lg shadow-blue-500/15 hover:shadow-blue-500/25 transition-shadow group cursor-pointer"
           >
-            <div className="h-11 w-11 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center shrink-0">
-              <Download className="h-5 w-5 text-white" />
+            <div className="h-11 w-11 rounded-xl bg-surface-elevated backdrop-blur flex items-center justify-center shrink-0">
+              <Download className="h-5 w-5 text-text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white">Exporter en CSV</p>
-              <p className="text-[11px] text-white/60 mt-0.5">Fiche article + historique • Téléchargement immédiat</p>
+              <p className="text-sm font-semibold text-text-primary">Exporter en CSV</p>
+              <p className="text-[11px] text-text-secondary mt-0.5">Fiche article + historique â€¢ TÃ©lÃ©chargement immÃ©diat</p>
             </div>
-            <FileSpreadsheet className="h-5 w-5 text-white/30 group-hover:text-white/60 transition-colors shrink-0" />
+            <FileSpreadsheet className="h-5 w-5 text-text-muted group-hover:text-text-secondary transition-colors shrink-0" />
           </motion.button>
         </motion.div>
 
-        {/* ── ACTIONS RAPIDES ── */}
+        {/* â”€â”€ ACTIONS RAPIDES â”€â”€ */}
         <motion.section
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -475,20 +475,20 @@ export default function ArticleDetailPage() {
         >
           <h2 className="text-sm font-semibold text-text-primary tracking-wide mb-3">Actions rapides</h2>
           <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
-            <ActionBtn icon={LogIn} label="Entrée" variant="emerald" onClick={() => handleOpenMovement('ENTRY')} />
+            <ActionBtn icon={LogIn} label="EntrÃ©e" variant="emerald" onClick={() => handleOpenMovement('ENTRY')} />
             <ActionBtn icon={LogOut} label="Sortie" variant="red" onClick={() => handleOpenMovement('EXIT')} />
             <ActionBtn icon={ArrowLeftRight} label="Transfert" variant="violet" onClick={() => handleOpenMovement('TRANSFER')} />
           </div>
         </motion.section>
 
-        {/* ── HISTORIQUE ── */}
+        {/* â”€â”€ HISTORIQUE â”€â”€ */}
         <motion.section
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="rounded-2xl bg-[#0c1425]/80 backdrop-blur-xl border border-white/[0.06] overflow-hidden"
+          className="rounded-2xl bg-surface/80 backdrop-blur-xl border border-border overflow-hidden"
         >
-          <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between">
+          <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="h-4 w-4 text-blue-400" />
               <h2 className="text-sm font-semibold text-text-primary tracking-wide">Historique</h2>
@@ -500,20 +500,20 @@ export default function ArticleDetailPage() {
 
           {/* Date filters */}
           {historyTotal > 0 && (
-            <div className="flex items-center gap-2 px-5 py-2.5 border-b border-white/[0.04] bg-white/[0.01]">
+            <div className="flex items-center gap-2 px-5 py-2.5 border-b border-border/50 bg-[var(--sidebar-hover)]">
               <Calendar className="h-3.5 w-3.5 text-text-muted shrink-0" />
               <Input
                 type="date"
                 value={historyFrom}
                 onChange={(e) => { setHistoryFrom(e.target.value); setHistoryPage(1) }}
-                className="h-7 w-32 text-[11px] bg-white/5 border-white/10 rounded-lg"
+                className="h-7 w-32 text-[11px] bg-[var(--sidebar-hover)] border-border rounded-lg"
               />
-              <span className="text-text-muted text-[10px]">→</span>
+              <span className="text-text-muted text-[10px]">â†’</span>
               <Input
                 type="date"
                 value={historyTo}
                 onChange={(e) => { setHistoryTo(e.target.value); setHistoryPage(1) }}
-                className="h-7 w-32 text-[11px] bg-white/5 border-white/10 rounded-lg"
+                className="h-7 w-32 text-[11px] bg-[var(--sidebar-hover)] border-border rounded-lg"
               />
               {(historyFrom || historyTo) && (
                 <button
@@ -531,11 +531,11 @@ export default function ArticleDetailPage() {
               <HistorySkeleton />
             ) : movements.length === 0 ? (
               <div className="flex flex-col items-center py-10">
-                <div className="h-14 w-14 rounded-2xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mb-3">
+                <div className="h-14 w-14 rounded-2xl bg-[var(--sidebar-hover)] border border-border flex items-center justify-center mb-3">
                   <TrendingUp className="h-6 w-6 text-text-muted" />
                 </div>
                 <p className="text-sm font-medium text-text-primary">Aucun mouvement</p>
-                <p className="text-[11px] text-text-muted mt-1">Les mouvements de cet article apparaîtront ici</p>
+                <p className="text-[11px] text-text-muted mt-1">Les mouvements de cet article apparaÃ®tront ici</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -543,7 +543,7 @@ export default function ArticleDetailPage() {
                   <MvtRow key={mvt.id} movement={mvt} index={index} />
                 ))}
                 {historyTotalPages > 1 && (
-                  <div className="border-t border-white/[0.06] pt-3 mt-3">
+                  <div className="border-t border-border pt-3 mt-3">
                     <DataTablePagination
                       page={historyPage}
                       totalPages={historyTotalPages}
@@ -559,7 +559,7 @@ export default function ArticleDetailPage() {
         </motion.section>
       </div>
 
-      {/* ── MOVEMENT DIALOG ── */}
+      {/* â”€â”€ MOVEMENT DIALOG â”€â”€ */}
       <MovementDialog
         open={movementOpen}
         onOpenChange={setMovementOpen}
@@ -582,7 +582,7 @@ export default function ArticleDetailPage() {
       <MovementSuccessCelebration
         show={showCelebration}
         type={celebrationType}
-        articleName={`${article.reference} — ${article.name}`}
+        articleName={`${article.reference} â€” ${article.name}`}
         quantity={celebrationQty}
         onComplete={() => setShowCelebration(false)}
       />
@@ -590,11 +590,11 @@ export default function ArticleDetailPage() {
   )
 }
 
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // SUB COMPONENTS
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-/* ─── Info Row ─── */
+/* â”€â”€â”€ Info Row â”€â”€â”€ */
 function InfoRow({
   label,
   value,
@@ -632,7 +632,7 @@ function InfoRow({
   )
 }
 
-/* ─── Action Button ─── */
+/* â”€â”€â”€ Action Button â”€â”€â”€ */
 function ActionBtn({
   icon: Icon,
   label,
@@ -678,7 +678,7 @@ function ActionBtn({
   )
 }
 
-/* ─── Movement Row ─── */
+/* â”€â”€â”€ Movement Row â”€â”€â”€ */
 function MvtRow({ movement, index }: { movement: StockMovement; index: number }) {
   const cfgMap: Record<string, { color: string; bg: string; Icon: React.ComponentType<{ className?: string }> }> = {
     ENTRY:      { color: 'text-emerald-400', bg: 'bg-emerald-500/10 ring-1 ring-emerald-500/15', Icon: TrendingUp },
@@ -692,8 +692,8 @@ function MvtRow({ movement, index }: { movement: StockMovement; index: number })
 
   const siteText =
     movement.type === 'TRANSFER'
-      ? `${movement.fromSite?.name ?? '?'} → ${movement.toSite?.name ?? '?'}`
-      : (movement.toSite ?? movement.fromSite)?.name ?? '—'
+      ? `${movement.fromSite?.name ?? '?'} â†’ ${movement.toSite?.name ?? '?'}`
+      : (movement.toSite ?? movement.fromSite)?.name ?? 'â€”'
 
   return (
     <motion.div
@@ -726,9 +726,9 @@ function MvtRow({ movement, index }: { movement: StockMovement; index: number })
   )
 }
 
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // MOVEMENT DIALOG
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 interface MovementDialogProps {
   open: boolean
@@ -740,7 +740,7 @@ interface MovementDialogProps {
 }
 
 function MovementDialog({ open, onOpenChange, type, article, sites, onSuccess }: MovementDialogProps) {
-  // Déterminer le site principal (celui avec le plus de stock)
+  // DÃ©terminer le site principal (celui avec le plus de stock)
   const mainSiteId = useMemo(() => {
     if (!article.stocks || article.stocks.length === 0) return undefined
     const best = article.stocks.reduce((a, b) => (b.quantity > a.quantity ? b : a))
@@ -804,11 +804,11 @@ function MovementDialog({ open, onOpenChange, type, article, sites, onSuccess }:
         <form onSubmit={onFormSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label>Article</Label>
-            <Input value={`${article.reference} — ${article.name}`} disabled />
+            <Input value={`${article.reference} â€” ${article.name}`} disabled />
           </div>
 
           {article.emplacement && (
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06]">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--sidebar-hover)] border border-border">
               <MapPin className="h-3.5 w-3.5 text-blue-400 shrink-0" />
               <span className="text-xs text-text-muted">Emplacement :</span>
               <span className="text-xs font-medium text-text-primary">{article.emplacement}</span>
@@ -858,7 +858,7 @@ function MovementDialog({ open, onOpenChange, type, article, sites, onSuccess }:
                 rules={{ required: 'Le site est requis' }}
                 render={({ field }) => (
                   <Select value={field.value ?? ''} onValueChange={field.onChange}>
-                    <SelectTrigger><SelectValue placeholder="Sélectionner un site" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="SÃ©lectionner un site" /></SelectTrigger>
                     <SelectContent>
                       {activeSites.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                     </SelectContent>
@@ -870,9 +870,9 @@ function MovementDialog({ open, onOpenChange, type, article, sites, onSuccess }:
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="mvt-quantity">Quantité *</Label>
+            <Label htmlFor="mvt-quantity">QuantitÃ© *</Label>
             <Input id="mvt-quantity" type="number" min={1}
-              {...register('quantity', { required: 'La quantité est requise', valueAsNumber: true, min: { value: 1, message: 'La quantité doit être ≥ 1' } })}
+              {...register('quantity', { required: 'La quantitÃ© est requise', valueAsNumber: true, min: { value: 1, message: 'La quantitÃ© doit Ãªtre â‰¥ 1' } })}
             />
             {errors.quantity && <p className="text-xs text-danger">{errors.quantity.message}</p>}
           </div>
@@ -894,9 +894,9 @@ function MovementDialog({ open, onOpenChange, type, article, sites, onSuccess }:
   )
 }
 
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // SKELETONS
-// ═══════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function ArticleDetailSkeleton() {
   return (
@@ -916,7 +916,7 @@ function ArticleDetailSkeleton() {
         <div className="relative -mt-12 z-10 mx-8">
           <div className="grid grid-cols-3 gap-4">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="rounded-2xl bg-[#0c1425]/90 border border-white/[0.08] p-5 flex flex-col items-center">
+              <div key={i} className="rounded-2xl bg-surface/90 border border-border p-5 flex flex-col items-center">
                 <Skeleton className="h-10 w-10 rounded-xl mb-2.5" />
                 <Skeleton className="h-8 w-10 mb-1.5" />
                 <Skeleton className="h-3 w-16" />
@@ -926,12 +926,12 @@ function ArticleDetailSkeleton() {
         </div>
       </div>
       <div className="space-y-5 px-1">
-        <div className="rounded-2xl bg-[#0c1425]/80 border border-white/[0.06] overflow-hidden">
-          <div className="px-5 py-3.5 border-b border-white/[0.06]">
+        <div className="rounded-2xl bg-surface/80 border border-border overflow-hidden">
+          <div className="px-5 py-3.5 border-b border-border">
             <Skeleton className="h-4 w-28" />
           </div>
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center justify-between px-5 py-3 border-b border-white/[0.04] last:border-0">
+            <div key={i} className="flex items-center justify-between px-5 py-3 border-b border-border/50 last:border-0">
               <Skeleton className="h-4 w-20" />
               <Skeleton className="h-6 w-24 rounded-full" />
             </div>
@@ -941,15 +941,15 @@ function ArticleDetailSkeleton() {
           <Skeleton className="h-4 w-32" />
           <div className="grid grid-cols-3 gap-3">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="rounded-2xl bg-[#0c1425]/80 border border-white/[0.06] p-5 flex flex-col items-center gap-2">
+              <div key={i} className="rounded-2xl bg-surface/80 border border-border p-5 flex flex-col items-center gap-2">
                 <Skeleton className="h-11 w-11 rounded-xl" />
                 <Skeleton className="h-3 w-14" />
               </div>
             ))}
           </div>
         </div>
-        <div className="rounded-2xl bg-[#0c1425]/80 border border-white/[0.06] overflow-hidden">
-          <div className="px-5 py-3.5 border-b border-white/[0.06] flex justify-between">
+        <div className="rounded-2xl bg-surface/80 border border-border overflow-hidden">
+          <div className="px-5 py-3.5 border-b border-border flex justify-between">
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-3 w-20" />
           </div>

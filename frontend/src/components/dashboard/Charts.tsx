@@ -37,14 +37,14 @@ interface CustomTooltipProps {
 function ChartTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-[#0a0f1e]/95 backdrop-blur-2xl border border-white/[0.08] rounded-2xl px-4 py-3 shadow-2xl shadow-black/40">
-      <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold mb-2">{label}</p>
+    <div className="bg-surface/95 backdrop-blur-2xl border border-border rounded-2xl px-4 py-3 shadow-2xl shadow-black/40">
+      <p className="text-text-muted text-[10px] uppercase tracking-wider font-semibold mb-2">{label}</p>
       {payload.map((entry, i) => (
         <div key={i} className="flex items-center gap-2.5 text-sm py-0.5">
-          <div className="w-2 h-2 rounded-full ring-2 ring-offset-1 ring-offset-[#0a0f1e]"
+          <div className="w-2 h-2 rounded-full ring-2 ring-offset-1 ring-offset-background"
             style={{ backgroundColor: entry.color }} />
-          <span className="text-white/50 text-xs">{entry.name}</span>
-          <span className="text-white font-bold ml-auto tabular-nums">{entry.value}</span>
+          <span className="text-text-secondary text-xs">{entry.name}</span>
+          <span className="text-text-primary font-bold ml-auto tabular-nums">{entry.value}</span>
         </div>
       ))}
     </div>
@@ -57,11 +57,11 @@ function ChartHeader({ icon: Icon, title, iconBg, glowColor }: { icon: typeof Tr
     <div className="flex items-center gap-3.5 mb-6">
       <div className="relative">
         <div className={`absolute inset-0 ${glowColor} blur-lg opacity-40 rounded-xl`} />
-        <div className={`relative p-2.5 rounded-xl ${iconBg} ring-1 ring-white/[0.08]`}>
+        <div className={`relative p-2.5 rounded-xl ${iconBg} ring-1 ring-border`}>
           <Icon className="h-4 w-4" />
         </div>
       </div>
-      <h3 className="text-[15px] font-semibold text-white tracking-tight">{title}</h3>
+      <h3 className="text-[15px] font-semibold text-text-primary tracking-tight">{title}</h3>
     </div>
   )
 }
@@ -94,7 +94,7 @@ export function MovementChart({ data, loading }: MovementChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3 sm:p-6 ring-1 ring-white/[0.04]"
+      className="relative overflow-hidden rounded-2xl border border-border bg-[var(--sidebar-hover)] p-3 sm:p-6 ring-1 ring-border"
     >
       {/* Noise texture */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iLjAyIi8+PC9zdmc+')] opacity-50 pointer-events-none" />
@@ -214,7 +214,7 @@ export function TopArticlesChart({ data, loading }: TopArticlesChartProps) {
   // Couleurs de gradient par rang
   const rankColors = [
     { bg: 'from-amber-500/20 to-amber-500/5', bar: 'from-amber-400 to-yellow-500', text: 'text-amber-400', badge: 'bg-amber-500/20 text-amber-300 ring-amber-500/30', medal: '🥇' },
-    { bg: 'from-slate-300/15 to-slate-400/5', bar: 'from-slate-300 to-slate-400', text: 'text-slate-300', badge: 'bg-slate-400/20 text-slate-300 ring-slate-400/30', medal: '🥈' },
+    { bg: 'from-slate-300/15 to-slate-400/5', bar: 'from-slate-300 to-slate-400', text: 'text-text-primary', badge: 'bg-surface-elevated text-text-primary ring-border', medal: '🥈' },
     { bg: 'from-amber-700/15 to-amber-800/5', bar: 'from-amber-600 to-amber-700', text: 'text-amber-600', badge: 'bg-amber-700/20 text-amber-500 ring-amber-700/30', medal: '🥉' },
   ]
 
@@ -225,7 +225,7 @@ export function TopArticlesChart({ data, loading }: TopArticlesChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
-      className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 ring-1 ring-white/[0.04]"
+      className="relative overflow-hidden rounded-2xl border border-border bg-[var(--sidebar-hover)] p-6 ring-1 ring-border"
     >
       {/* Noise texture */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iLjAyIi8+PC9zdmc+')] opacity-50 pointer-events-none" />
@@ -238,9 +238,9 @@ export function TopArticlesChart({ data, loading }: TopArticlesChartProps) {
             iconBg="bg-orange-500/15 text-orange-400"
             glowColor="bg-orange-500"
           />
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] ring-1 ring-white/[0.06]">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[var(--sidebar-hover)] ring-1 ring-border">
             <Zap className="h-3 w-3 text-amber-400" />
-            <span className="text-[10px] font-semibold text-white/40 uppercase tracking-wider">Activité</span>
+            <span className="text-[10px] font-semibold text-text-secondary uppercase tracking-wider">Activité</span>
           </div>
         </div>
 
@@ -255,7 +255,7 @@ export function TopArticlesChart({ data, loading }: TopArticlesChartProps) {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 + index * 0.05 }}
-                className={`group relative overflow-hidden rounded-xl bg-gradient-to-r ${color.bg} border border-white/[0.04] hover:border-white/[0.08] transition-all duration-300`}
+                className={`group relative overflow-hidden rounded-xl bg-gradient-to-r ${color.bg} border border-border hover:border-border transition-all duration-300`}
               >
                 <div className="relative z-10 flex items-center gap-3 px-4 py-2.5">
                   {/* Rank */}
@@ -263,7 +263,7 @@ export function TopArticlesChart({ data, loading }: TopArticlesChartProps) {
                     {color.medal ? (
                       <span className="text-base">{color.medal}</span>
                     ) : (
-                      <span className="text-xs font-bold text-white/20 tabular-nums">
+                      <span className="text-xs font-bold text-text-muted tabular-nums">
                         #{index + 1}
                       </span>
                     )}
@@ -272,16 +272,16 @@ export function TopArticlesChart({ data, loading }: TopArticlesChartProps) {
                   {/* Article info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-semibold text-white truncate">
+                      <span className="text-[13px] font-semibold text-text-primary truncate">
                         {item.name}
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono text-white/20">{item.reference}</span>
+                    <span className="text-[10px] font-mono text-text-muted">{item.reference}</span>
                   </div>
 
                   {/* Bar + Count */}
                   <div className="flex items-center gap-3 flex-shrink-0">
-                    <div className="w-24 sm:w-32 md:w-40 h-2 rounded-full bg-white/[0.04] overflow-hidden">
+                    <div className="w-24 sm:w-32 md:w-40 h-2 rounded-full bg-[var(--sidebar-hover)] overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${pct}%` }}
@@ -329,7 +329,7 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.5 }}
-      className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 ring-1 ring-white/[0.04]"
+      className="relative overflow-hidden rounded-2xl border border-border bg-[var(--sidebar-hover)] p-6 ring-1 ring-border"
     >
       {/* Noise texture */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iLjAyIi8+PC9zdmc+')] opacity-50 pointer-events-none" />
@@ -370,8 +370,8 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
             {/* Center text with glow */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <div className="absolute w-20 h-20 bg-indigo-500/10 rounded-full blur-xl" />
-              <span className="relative text-3xl font-bold text-white tabular-nums">{total}</span>
-              <span className="relative text-[10px] text-white/30 uppercase tracking-widest font-semibold mt-0.5">articles</span>
+              <span className="relative text-3xl font-bold text-text-primary tabular-nums">{total}</span>
+              <span className="relative text-[10px] text-text-muted uppercase tracking-widest font-semibold mt-0.5">articles</span>
             </div>
           </div>
 
@@ -391,19 +391,19 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
                   <div className="flex items-center justify-between text-sm mb-1.5">
                     <div className="flex items-center gap-2.5">
                       <div
-                        className="w-2.5 h-2.5 rounded-[4px] ring-1 ring-white/10"
+                        className="w-2.5 h-2.5 rounded-[4px] ring-1 ring-border"
                         style={{ backgroundColor: CATEGORY_COLORS[index % CATEGORY_COLORS.length] }}
                       />
                       <span className="text-xs">{emoji}</span>
-                      <span className="text-white/60 text-xs font-medium">{item.category}</span>
+                      <span className="text-text-secondary text-xs font-medium">{item.category}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-white font-bold text-xs tabular-nums">{item.count}</span>
-                      <span className="text-white/20 text-[10px] w-8 text-right tabular-nums">{pct}%</span>
+                      <span className="text-text-primary font-bold text-xs tabular-nums">{item.count}</span>
+                      <span className="text-text-muted text-[10px] w-8 text-right tabular-nums">{pct}%</span>
                     </div>
                   </div>
                   {/* Animated progress bar */}
-                  <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+                  <div className="h-1.5 rounded-full bg-[var(--sidebar-hover)] overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${pct}%` }}

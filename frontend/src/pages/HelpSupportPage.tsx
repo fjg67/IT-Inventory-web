@@ -43,7 +43,7 @@ export default function HelpSupportPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#080d1c]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-0">
         {/* Back button */}
         <motion.button
@@ -51,7 +51,7 @@ export default function HelpSupportPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
           onClick={() => navigate('/settings')}
-          className="flex items-center gap-1.5 text-[12px] text-slate-500 hover:text-slate-300 transition-colors mb-6 group"
+          className="flex items-center gap-1.5 text-[12px] text-text-secondary hover:text-text-primary transition-colors mb-6 group"
         >
           <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
           Retour aux paramètres

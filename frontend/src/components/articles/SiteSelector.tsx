@@ -19,7 +19,7 @@ interface SiteSelectorProps {
 export function SiteSelector({ sites, value, onChange, error }: SiteSelectorProps) {
   return (
     <div className="space-y-2">
-      <label className="text-xs font-medium text-slate-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
+      <label className="text-xs font-medium text-text-secondary" style={{ fontFamily: 'Outfit, sans-serif' }}>
         Affecter au site <span className="text-red-400">*</span>
       </label>
 
@@ -35,7 +35,7 @@ export function SiteSelector({ sites, value, onChange, error }: SiteSelectorProp
                 transition-all duration-250 select-none
                 ${isSelected
                   ? 'bg-blue-500/[0.08] border border-blue-500/30 ring-1 ring-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]'
-                  : 'bg-[#0E1826] border border-white/[0.05] hover:border-white/[0.1] hover:bg-[#111F30]'
+                  : 'bg-surface-elevated border border-border hover:border-text-muted/20 hover:bg-surface-elevated/80'
                 }
               `}
             >
@@ -61,15 +61,15 @@ export function SiteSelector({ sites, value, onChange, error }: SiteSelectorProp
 
               {/* Icon */}
               <div className={`p-2 rounded-lg transition-colors ${
-                isSelected ? 'bg-blue-500/15' : 'bg-white/5'
+                isSelected ? 'bg-blue-500/15' : 'bg-[var(--sidebar-hover)]'
               }`}>
-                <MapPin className={`h-4 w-4 transition-colors ${isSelected ? 'text-blue-400' : 'text-slate-500'}`} />
+                <MapPin className={`h-4 w-4 transition-colors ${isSelected ? 'text-blue-400' : 'text-text-muted'}`} />
               </div>
 
               {/* Label */}
               <span
                 className={`text-sm font-semibold transition-colors ${
-                  isSelected ? 'text-blue-300' : 'text-slate-300'
+                  isSelected ? 'text-blue-300' : 'text-text-primary'
                 }`}
                 style={{ fontFamily: 'Outfit, sans-serif' }}
               >

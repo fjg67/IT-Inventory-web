@@ -1,4 +1,4 @@
-// Sidebar — barre latérale de navigation principale
+// Sidebar â€” barre latÃ©rale de navigation principale
 // Affiche les liens de navigation, le logo et les informations utilisateur
 
 import { NavLink, useLocation } from 'react-router-dom'
@@ -32,7 +32,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 
-// Définition des liens de navigation
+// DÃ©finition des liens de navigation
 interface NavItem {
   label: string
   path: string
@@ -55,10 +55,10 @@ export function Sidebar() {
     { label: 'Sites', path: '/sites', icon: Building2, adminOnly: true },
     { label: 'Utilisateurs', path: '/users', icon: Users, adminOnly: true },
     { label: "Journal d'audit", path: '/audit', icon: FileText, adminOnly: true },
-    { label: 'Paramètres', path: '/settings', icon: Settings, adminOnly: true },
+    { label: 'ParamÃ¨tres', path: '/settings', icon: Settings, adminOnly: true },
   ]
 
-  // Filtrer les liens selon le rôle
+  // Filtrer les liens selon le rÃ´le
   const filteredNavItems = navItems.filter(
     (item) => !item.adminOnly || isAdmin
   )
@@ -73,7 +73,7 @@ export function Sidebar() {
       .slice(0, 2)
   }
 
-  // Vérifier si un lien est actif
+  // VÃ©rifier si un lien est actif
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/'
     return location.pathname.startsWith(path)
@@ -88,10 +88,10 @@ export function Sidebar() {
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         className="fixed left-0 top-0 z-40 h-screen hidden lg:flex flex-col border-r border-border bg-surface/80 backdrop-blur-xl"
       >
-        {/* En-tête avec logo */}
+        {/* En-tÃªte avec logo */}
         <div className="flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-indigo-500/10 ring-1 ring-white/[0.08] shadow-lg shadow-primary/10 overflow-hidden">
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-indigo-500/10 ring-1 ring-border shadow-lg shadow-primary/10 overflow-hidden">
               <img src={logoImg} alt="Logo" className="h-8 w-8 object-contain drop-shadow-md" />
             </div>
             {isOpen && (
@@ -136,7 +136,7 @@ export function Sidebar() {
                     'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
                     active
                       ? 'bg-primary/15 text-primary shadow-sm'
-                      : 'text-text-secondary hover:bg-white/5 hover:text-text-primary'
+                      : 'text-text-secondary hover:bg-[var(--sidebar-hover)] hover:text-text-primary'
                   )}
                 >
                   {/* Indicateur de lien actif */}
@@ -167,7 +167,7 @@ export function Sidebar() {
                     </Badge>
                   )}
 
-                  {/* Badge compact quand la sidebar est fermée */}
+                  {/* Badge compact quand la sidebar est fermÃ©e */}
                   {!isOpen && item.badge !== undefined && item.badge > 0 && (
                     <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[9px] font-bold text-white">
                       {item.badge > 9 ? '9+' : item.badge}
@@ -176,7 +176,7 @@ export function Sidebar() {
                 </NavLink>
               )
 
-              // Afficher un tooltip quand la sidebar est fermée
+              // Afficher un tooltip quand la sidebar est fermÃ©e
               if (!isOpen) {
                 return (
                   <Tooltip key={item.path}>
@@ -201,7 +201,7 @@ export function Sidebar() {
         {/* Section utilisateur en bas */}
         <div className="p-3">
           {isOpen ? (
-            <div className="flex items-center gap-3 rounded-lg bg-white/5 p-3">
+            <div className="flex items-center gap-3 rounded-lg bg-[var(--sidebar-hover)] p-3">
               <Avatar className="h-9 w-9 shrink-0">
                 <AvatarFallback className="bg-primary/20 text-primary text-xs">
                   {user?.name ? getInitials(user.name) : '??'}
@@ -226,7 +226,7 @@ export function Sidebar() {
                     <LogOut className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="right">Déconnexion</TooltipContent>
+                <TooltipContent side="right">DÃ©connexion</TooltipContent>
               </Tooltip>
             </div>
           ) : (
@@ -241,7 +241,7 @@ export function Sidebar() {
                   <LogOut className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="right">Déconnexion</TooltipContent>
+              <TooltipContent side="right">DÃ©connexion</TooltipContent>
             </Tooltip>
           )}
         </div>
@@ -254,10 +254,10 @@ export function Sidebar() {
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         className="fixed left-0 top-0 z-50 h-screen w-[260px] flex lg:hidden flex-col border-r border-border bg-surface/95 backdrop-blur-xl"
       >
-        {/* En-tête avec logo */}
+        {/* En-tÃªte avec logo */}
         <div className="flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-indigo-500/10 ring-1 ring-white/[0.08] shadow-lg shadow-primary/10 overflow-hidden">
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-indigo-500/10 ring-1 ring-border shadow-lg shadow-primary/10 overflow-hidden">
               <img src={logoImg} alt="Logo" className="h-8 w-8 object-contain drop-shadow-md" />
             </div>
             <span className="whitespace-nowrap text-lg font-bold text-text-primary">
@@ -292,7 +292,7 @@ export function Sidebar() {
                     'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
                     active
                       ? 'bg-primary/15 text-primary shadow-sm'
-                      : 'text-text-secondary hover:bg-white/5 hover:text-text-primary'
+                      : 'text-text-secondary hover:bg-[var(--sidebar-hover)] hover:text-text-primary'
                   )}
                 >
                   {active && (
@@ -319,7 +319,7 @@ export function Sidebar() {
 
         {/* Section utilisateur mobile */}
         <div className="p-3">
-          <div className="flex items-center gap-3 rounded-lg bg-white/5 p-3">
+          <div className="flex items-center gap-3 rounded-lg bg-[var(--sidebar-hover)] p-3">
             <Avatar className="h-9 w-9 shrink-0">
               <AvatarFallback className="bg-primary/20 text-primary text-xs">
                 {user?.name ? getInitials(user.name) : '??'}

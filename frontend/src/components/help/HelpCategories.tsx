@@ -33,7 +33,7 @@ export function HelpCategories({ onCategoryClick }: HelpCategoriesProps) {
       {/* Section header */}
       <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-        <h2 className="text-[13px] font-semibold text-slate-400 uppercase tracking-widest font-['Outfit']">
+        <h2 className="text-[13px] font-semibold text-text-secondary uppercase tracking-widest font-['Outfit']">
           Parcourir par catégorie
         </h2>
         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
@@ -57,9 +57,9 @@ export function HelpCategories({ onCategoryClick }: HelpCategoriesProps) {
               onClick={() => onCategoryClick?.(cat.id)}
               className={`
                 group relative flex items-start gap-3.5 p-4 rounded-2xl text-left
-                bg-white/[0.02] backdrop-blur-xl
-                border border-white/[0.06]
-                hover:border-white/[0.1] hover:bg-white/[0.04]
+                bg-[var(--sidebar-hover)] backdrop-blur-xl
+                border border-border
+                hover:border-border hover:bg-[var(--sidebar-hover)]
                 transition-all duration-300
               `}
               style={{
@@ -85,18 +85,18 @@ export function HelpCategories({ onCategoryClick }: HelpCategoriesProps) {
               {/* Text */}
               <div className="flex-1 min-w-0 space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-semibold text-slate-200 font-['Outfit'] truncate">
+                  <h3 className="text-sm font-semibold text-text-primary font-['Outfit'] truncate">
                     {cat.title}
                   </h3>
-                  <ChevronRight className="h-3.5 w-3.5 text-slate-600 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                  <ChevronRight className="h-3.5 w-3.5 text-text-muted opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </div>
-                <p className="text-[12px] text-slate-500 leading-relaxed">
+                <p className="text-[12px] text-text-secondary leading-relaxed">
                   {cat.description}
                 </p>
               </div>
 
               {/* Count badge */}
-              <span className="text-[10px] font-['JetBrains_Mono'] font-medium text-slate-600 bg-white/[0.04] px-2 py-0.5 rounded-full border border-white/[0.06] shrink-0 mt-0.5">
+              <span className="text-[10px] font-['JetBrains_Mono'] font-medium text-text-muted bg-[var(--sidebar-hover)] px-2 py-0.5 rounded-full border border-border shrink-0 mt-0.5">
                 {cat.count}
               </span>
             </motion.button>
