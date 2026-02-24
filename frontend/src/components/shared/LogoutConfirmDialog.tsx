@@ -24,6 +24,10 @@ export function LogoutConfirmDialog({ open, onClose, onConfirm, userName }: Logo
     }
   }
 
+  const initials = userName
+    ? userName.split(' ').map(w => w[0]).join('').toUpperCase()
+    : null
+
   return (
     <AnimatePresence>
       {open && (
@@ -81,8 +85,8 @@ export function LogoutConfirmDialog({ open, onClose, onConfirm, userName }: Logo
 
               {/* Description */}
               <p className="mt-2 text-sm text-text-secondary leading-relaxed">
-                {userName
-                  ? <>Voulez-vous vraiment déconnecter <span className="font-semibold text-text-primary">{userName}</span> ?</>
+                {initials
+                  ? <>Voulez-vous vraiment déconnecter <span className="font-semibold text-text-primary">{initials}</span> ?</>
                   : 'Voulez-vous vraiment vous déconnecter ?'
                 }
               </p>
