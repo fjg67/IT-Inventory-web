@@ -19,7 +19,7 @@ import { loginSchema } from '../utils/validation';
 export const getProfiles = async (_req: Request, res: Response): Promise<void> => {
   try {
     const users = await prisma.user.findMany({
-      where: { isActive: true },
+      where: { isActive: true, role: 'TECHNICIAN' },
       select: {
         id: true,
         technicianId: true,
