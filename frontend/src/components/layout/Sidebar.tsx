@@ -1,4 +1,4 @@
-// Sidebar â€” barre latÃ©rale de navigation principale
+// Sidebar — barre latérale de navigation principale
 // Affiche les liens de navigation, le logo et les informations utilisateur
 
 import { useState } from 'react'
@@ -35,7 +35,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 
-// DÃ©finition des liens de navigation
+// Définition des liens de navigation
 interface NavItem {
   label: string
   path: string
@@ -59,10 +59,10 @@ export function Sidebar() {
     { label: 'Sites', path: '/sites', icon: Building2, adminOnly: true },
     { label: 'Utilisateurs', path: '/users', icon: Users, adminOnly: true },
     { label: "Journal d'audit", path: '/audit', icon: FileText, adminOnly: true },
-    { label: 'ParamÃ¨tres', path: '/settings', icon: Settings, adminOnly: true },
+    { label: 'Paramètres', path: '/settings', icon: Settings, adminOnly: true },
   ]
 
-  // Filtrer les liens selon le rÃ´le
+  // Filtrer les liens selon le rôle
   const filteredNavItems = navItems.filter(
     (item) => !item.adminOnly || isAdmin
   )
@@ -77,7 +77,7 @@ export function Sidebar() {
       .slice(0, 2)
   }
 
-  // VÃ©rifier si un lien est actif
+  // Vérifier si un lien est actif
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/'
     return location.pathname.startsWith(path)
@@ -171,7 +171,7 @@ export function Sidebar() {
                     </Badge>
                   )}
 
-                  {/* Badge compact quand la sidebar est fermÃ©e */}
+                  {/* Badge compact quand la sidebar est fermée */}
                   {!isOpen && item.badge !== undefined && item.badge > 0 && (
                     <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[9px] font-bold text-white">
                       {item.badge > 9 ? '9+' : item.badge}
@@ -180,7 +180,7 @@ export function Sidebar() {
                 </NavLink>
               )
 
-              // Afficher un tooltip quand la sidebar est fermÃ©e
+              // Afficher un tooltip quand la sidebar est fermée
               if (!isOpen) {
                 return (
                   <Tooltip key={item.path}>

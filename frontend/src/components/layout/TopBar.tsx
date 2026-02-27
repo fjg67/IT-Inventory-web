@@ -1,6 +1,7 @@
 // TopBar — barre supérieure avec recherche, notifications et menu utilisateur
 
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import {
   Menu,
   Search,
@@ -12,6 +13,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/useAuth'
 import { useSidebarStore } from '@/stores/sidebarStore'
+import { articlesService } from '@/services/articles.service'
 import { ThemeButton } from '@/components/theme/ThemeButton'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -36,17 +38,36 @@ const routeTitles: Record<string, string> = {
   '/settings': 'Paramètres',
 }
 
+// Regex pour détecter un UUID
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 export function TopBar() {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuth()
   const { toggle, alertCount, setMobileOpen } = useSidebarStore()
 
+  // Extraire l'ID article si on est sur /articles/:id
+  const articleDetailMatch = location.pathname.match(/^\/articles\/([0-9a-f-]{36})$/i)
+  const articleId = articleDetailMatch?.[1] ?? null
+
+  // Récupérer le nom de l'article si nécessaire
+  const { data: articleData } = useQuery({
+    queryKey: ['article', articleId],
+    queryFn: () => articlesService.getById(articleId!),
+    enabled: !!articleId,
+    staleTime: 5 * 60 * 1000,
+  })
+
   // Déterminer le titre de la page actuelle
   const getPageTitle = () => {
     // Vérifier les correspondances exactes
     if (routeTitles[location.pathname]) {
       return routeTitles[location.pathname]
+    }
+    // Page détail article → afficher le nom
+    if (articleId && articleData?.article?.name) {
+      return articleData.article.name
     }
     // Vérifier les correspondances partielles (sous-pages)
     const matchingRoute = Object.keys(routeTitles).find(
@@ -60,6 +81,10 @@ export function TopBar() {
     const segments = location.pathname.split('/').filter(Boolean)
     if (segments.length === 0) return []
     return segments.map((segment) => {
+      // Si c'est un UUID et qu'on a le nom de l'article, l'afficher
+      if (UUID_REGEX.test(segment) && articleData?.article?.name) {
+        return articleData.article.name
+      }
       const title = routeTitles[`/${segment}`]
       return title || segment.charAt(0).toUpperCase() + segment.slice(1)
     })
