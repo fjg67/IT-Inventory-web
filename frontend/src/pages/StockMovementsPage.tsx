@@ -44,6 +44,7 @@ import { exportService } from '@/services/export.service'
 import { articlesService } from '@/services/articles.service'
 import { sitesService } from '@/services/sites.service'
 import { useAuth } from '@/hooks/useAuth'
+import { useSiteStore } from '@/stores/siteStore'
 import { MovementSuccessCelebration } from '@/components/articles/MovementSuccessCelebration'
 
 import { EmptyState } from '@/components/shared/EmptyState'
@@ -223,7 +224,13 @@ export default function StockMovementsPage() {
   })
 
   const articles = articlesData?.articles ?? []
-  const sites = (sitesData?.sites ?? []).filter((s: Site) => s.isActive)
+  const selectedWorkspace = useSiteStore((s) => s.selectedSite)
+  const allSites = (sitesData?.sites ?? []).filter((s: Site) => s.isActive)
+  const sites = selectedWorkspace?.parentSiteId
+    ? allSites.filter((s: Site) => s.parentSiteId === selectedWorkspace.parentSiteId)
+    : selectedWorkspace
+      ? allSites.filter((s: Site) => s.parentSiteId === selectedWorkspace.id || s.id === selectedWorkspace.id)
+      : allSites
 
   // Celebration state
   const [showCelebration, setShowCelebration] = useState(false)

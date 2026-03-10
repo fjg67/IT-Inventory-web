@@ -17,6 +17,24 @@ export const authService = {
     return response.data
   },
 
+  // Liste des sites actifs (sélecteur d'espace de travail — public)
+  getSitesPublic: async (): Promise<{ success: boolean; sites: import('@/types').Site[] }> => {
+    const response = await api.get('/auth/sites')
+    return response.data
+  },
+
+  // Création d'une agence (sous-site)
+  createAgency: async (data: { name: string; edsNumber: string; parentSiteId: string }): Promise<{ success: boolean; agency: import('@/types').Site }> => {
+    const response = await api.post('/auth/agencies', data)
+    return response.data
+  },
+
+  // Suppression d'une agence
+  deleteAgency: async (id: string): Promise<{ success: boolean }> => {
+    const response = await api.delete(`/auth/agencies/${id}`)
+    return response.data
+  },
+
   // Connexion
   login: async (data: LoginFormData): Promise<LoginResponse> => {
     const response = await api.post('/auth/login', data)

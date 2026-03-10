@@ -10,6 +10,7 @@ import { alertsService } from '@/services/alerts.service'
 import { stockService } from '@/services/stock.service'
 import { sitesService } from '@/services/sites.service'
 import { useSidebarStore } from '@/stores/sidebarStore'
+import { useSiteStore } from '@/stores/siteStore'
 import { StatsCard } from '@/components/dashboard/StatsCard'
 import { MovementChart, TopArticlesChart, CategoryChart } from '@/components/dashboard/Charts'
 import { AlertList } from '@/components/dashboard/AlertList'
@@ -18,6 +19,7 @@ import { RecentMovements } from '@/components/dashboard/RecentMovements'
 export default function DashboardPage() {
   const navigate = useNavigate()
   const { setAlertCount } = useSidebarStore()
+  const selectedWorkspace = useSiteStore((s) => s.selectedSite)
   const [selectedSiteId, setSelectedSiteId] = useState<string>('')
 
   // Récupération des sites
@@ -26,7 +28,13 @@ export default function DashboardPage() {
     queryFn: () => sitesService.getAll(),
   })
 
-  const sites = sitesData?.sites ?? []
+  // Filtrer les sites selon le workspace sélectionné
+  const allSites = sitesData?.sites ?? []
+  const sites = selectedWorkspace
+    ? selectedWorkspace.parentSiteId
+      ? allSites.filter((s) => s.parentSiteId === selectedWorkspace.parentSiteId)
+      : allSites.filter((s) => s.parentSiteId === selectedWorkspace.id || s.id === selectedWorkspace.id)
+    : allSites.filter((s) => !s.parentSiteId)
   const siteId = selectedSiteId || undefined
 
   // Récupération des statistiques

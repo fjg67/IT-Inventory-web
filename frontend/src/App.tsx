@@ -9,6 +9,7 @@ import MainLayout from '@/components/layout/MainLayout'
 // Chargement paresseux des pages
 const WelcomePage = lazy(() => import('@/pages/WelcomePage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
+const WorkspaceSelectionPage = lazy(() => import('@/pages/WorkspaceSelectionPage'))
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
 const ArticlesPage = lazy(() => import('@/pages/ArticlesPage'))
 const ArticleDetailPage = lazy(() => import('@/pages/ArticleDetailPage'))
@@ -32,6 +33,9 @@ function App() {
 
         {/* Page de connexion (publique) */}
         <Route path="/login" element={<LoginPage />} />
+
+        {/* Sélection de l'espace de travail */}
+        <Route path="/workspace" element={<WorkspaceSelectionPage />} />
 
         {/* Pages protégées avec le layout principal */}
         <Route element={<MainLayout />}>

@@ -4,13 +4,25 @@
 import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Eye, EyeOff, Loader2, ChevronRight, ShieldCheck, Check, Sparkles, Unlock, XCircle, ShieldAlert, AlertTriangle } from 'lucide-react'
+import { Eye, EyeOff, Loader2, ChevronRight, ShieldCheck, Check, Sparkles, Unlock, XCircle, ShieldAlert, AlertTriangle, Building2, MapPin, ArrowLeft, Plus, Trash2, Hash } from 'lucide-react'
 import logoImg from '@/assets/logo.png'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/hooks/useAuth'
 import { authService, type ProfileUser } from '@/services/auth.service'
+import { useSiteStore } from '@/stores/siteStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import type { Site } from '@/types'
+
+// Couleurs d'icône de site par index
+const SITE_COLORS = [
+  { bg: 'from-blue-500 to-blue-600', glow: 'rgba(59,130,246,0.25)' },
+  { bg: 'from-emerald-500 to-green-600', glow: 'rgba(16,185,129,0.25)' },
+  { bg: 'from-violet-500 to-purple-600', glow: 'rgba(139,92,246,0.25)' },
+  { bg: 'from-amber-500 to-orange-500', glow: 'rgba(245,158,11,0.25)' },
+  { bg: 'from-rose-500 to-red-500', glow: 'rgba(244,63,94,0.25)' },
+  { bg: 'from-teal-500 to-cyan-500', glow: 'rgba(20,184,166,0.25)' },
+]
 
 // Couleurs d'avatar par index
 const AVATAR_COLORS = [
@@ -38,7 +50,7 @@ function getRoleBadge(role: string) {
   return { label: 'Technicien', color: 'bg-blue-500/15 text-blue-400' }
 }
 
-type Step = 'password' | 'profiles'
+type Step = 'password' | 'workspace' | 'agencies' | 'profiles'
 
 export default function LoginPage() {
   const { login, loginLoading, isAuthenticated, isLoading } = useAuth()
@@ -50,12 +62,49 @@ export default function LoginPage() {
   const [showUnlockAnim, setShowUnlockAnim] = useState(false)
   const [showErrorAnim, setShowErrorAnim] = useState(false)
   const [shakeKey, setShakeKey] = useState(0)
+  const [selectedParentSite, setSelectedParentSite] = useState<Site | null>(null)
+  const setSelectedSite = useSiteStore((s) => s.setSelectedSite)
+  const queryClient = useQueryClient()
 
-  // Récupération des profils actifs (préchargé pour l'étape 2)
+  // Agency form state
+  const [agencyName, setAgencyName] = useState('')
+  const [agencyEds, setAgencyEds] = useState('')
+  const [agencyError, setAgencyError] = useState('')
+
+  // Récupération des profils actifs (préchargé pour l'étape 3)
   const { data: profilesData, isLoading: profilesLoading } = useQuery({
     queryKey: ['auth', 'profiles'],
     queryFn: () => authService.getProfiles(),
     staleTime: 60_000,
+  })
+
+  // Récupération des sites (public — pour l'étape 2)
+  const { data: sitesData, isLoading: sitesLoading } = useQuery({
+    queryKey: ['auth', 'sites'],
+    queryFn: () => authService.getSitesPublic(),
+    staleTime: 60_000,
+  })
+
+  // Mutations agences
+  const createAgencyMutation = useMutation({
+    mutationFn: (data: { name: string; edsNumber: string; parentSiteId: string }) =>
+      authService.createAgency(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'sites'] })
+      setAgencyName('')
+      setAgencyEds('')
+      setAgencyError('')
+    },
+    onError: (err: any) => {
+      setAgencyError(err?.response?.data?.error ?? 'Erreur lors de la création')
+    },
+  })
+
+  const deleteAgencyMutation = useMutation({
+    mutationFn: (id: string) => authService.deleteAgency(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'sites'] })
+    },
   })
 
   // Auto-focus sur le champ mot de passe à l'étape 1
@@ -99,8 +148,38 @@ export default function LoginPage() {
     setShowUnlockAnim(true)
     setTimeout(() => {
       setShowUnlockAnim(false)
-      setStep('profiles')
+      setStep('workspace')
     }, 1600)
+  }
+
+  const allSites = (sitesData?.sites ?? []).filter((s) => s.isActive)
+  // Sites de niveau supérieur (pas de parent)
+  const topLevelSites = allSites.filter((s) => !s.parentSiteId)
+  // Sous-sites du parent sélectionné
+  const childSites = selectedParentSite
+    ? allSites.filter((s) => s.parentSiteId === selectedParentSite.id)
+    : []
+  const displayedSites = selectedParentSite ? childSites : topLevelSites
+
+  const handleSelectSite = (site: Site) => {
+    // Si c'est "Agences", aller vers l'étape agences (même sans enfants)
+    if (site.name.toLowerCase().includes('agence') && !site.parentSiteId) {
+      setSelectedParentSite(site)
+      setStep('agencies')
+      return
+    }
+    // Si le site a des enfants, drill down
+    const hasChildren = allSites.some((s) => s.parentSiteId === site.id)
+    if (hasChildren) {
+      setSelectedParentSite(site)
+      return
+    }
+    setSelectedSite(site)
+    setStep('profiles')
+  }
+
+  const handleBackToParents = () => {
+    setSelectedParentSite(null)
   }
 
   const handleSelectUser = (user: ProfileUser) => {
@@ -108,9 +187,35 @@ export default function LoginPage() {
     login({ technicianId: user.technicianId, password })
   }
 
-  const stepLabel = step === 'password'
-    ? 'Entrez votre mot de passe'
-    : 'Sélectionnez votre profil'
+  const handleCreateAgency = () => {
+    if (!agencyName.trim()) {
+      setAgencyError('Le nom est requis')
+      return
+    }
+    if (!/^\d{3}$/.test(agencyEds)) {
+      setAgencyError('Le numéro EDS doit contenir exactement 3 chiffres')
+      return
+    }
+    if (!selectedParentSite) return
+    createAgencyMutation.mutate({
+      name: agencyName.trim(),
+      edsNumber: agencyEds,
+      parentSiteId: selectedParentSite.id,
+    })
+  }
+
+  const handleAgencySelect = (agency: Site) => {
+    setSelectedSite(agency)
+    setStep('profiles')
+  }
+
+  const stepLabels: Record<Step, string> = {
+    password: 'Entrez votre mot de passe',
+    workspace: selectedParentSite ? selectedParentSite.name : 'Sélectionnez votre espace de travail',
+    agencies: 'Gestion des agences',
+    profiles: 'Sélectionnez votre profil',
+  }
+  const stepLabel = stepLabels[step]
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
@@ -319,8 +424,220 @@ export default function LoginPage() {
                 </Button>
               </motion.form>
             </motion.div>
+          ) : step === 'workspace' ? (
+            // ── Étape 2 : Sélection de l'espace de travail ──
+            <motion.div
+              key={`workspace-step-${selectedParentSite?.id ?? 'root'}`}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="space-y-3"
+            >
+              {/* Bouton retour si on est dans un sous-niveau */}
+              {selectedParentSite && (
+                <motion.button
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  onClick={handleBackToParents}
+                  className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-1 cursor-pointer"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  <span>Retour</span>
+                </motion.button>
+              )}
+              {sitesLoading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="glass-card p-5 flex items-center gap-4 animate-pulse">
+                    <div className="w-14 h-14 rounded-2xl bg-surface-elevated" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 w-36 bg-surface-elevated rounded" />
+                      <div className="h-3 w-24 bg-surface-elevated rounded" />
+                    </div>
+                  </div>
+                ))
+              ) : displayedSites.length === 0 ? (
+                <div className="glass-card p-8 text-center">
+                  <Building2 className="h-10 w-10 text-text-muted mx-auto mb-3" />
+                  <p className="text-text-secondary">Aucun site disponible</p>
+                </div>
+              ) : (
+                displayedSites.map((site, index) => {
+                  const color = SITE_COLORS[index % SITE_COLORS.length]!
+                  return (
+                    <motion.button
+                      key={site.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
+                      onClick={() => handleSelectSite(site)}
+                      className="w-full glass-card p-5 flex items-center gap-4 cursor-pointer group hover:border-primary/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.1)] transition-all duration-300"
+                    >
+                      <div
+                        className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color.bg} flex items-center justify-center shadow-lg flex-shrink-0`}
+                        style={{ boxShadow: `0 4px 20px ${color.glow}` }}
+                      >
+                        <Building2 className="h-7 w-7 text-white" />
+                      </div>
+                      <div className="flex-1 text-left min-w-0">
+                        <h3 className="text-base font-semibold text-text-primary truncate">{site.name}</h3>
+                        {site.address ? (
+                          <p className="text-sm text-text-secondary mt-0.5 flex items-center gap-1 truncate">
+                            <MapPin className="h-3 w-3 flex-shrink-0" />
+                            {site.address}
+                          </p>
+                        ) : (
+                          <p className="text-sm text-text-muted mt-0.5">
+                            {site._count?.stocks
+                              ? `${site._count.stocks} article${site._count.stocks > 1 ? 's' : ''} en stock`
+                              : 'Site de stockage'}
+                          </p>
+                        )}
+                      </div>
+                      <div className="w-9 h-9 rounded-xl bg-surface-elevated/60 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                        <ChevronRight className="w-5 h-5 text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                      </div>
+                    </motion.button>
+                  )
+                })
+              )}
+            </motion.div>
+          ) : step === 'agencies' ? (
+            // ── Étape Agences : liste + création ──
+            <motion.div
+              key="agencies-step"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="space-y-4"
+            >
+              {/* Bouton retour */}
+              <motion.button
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                onClick={() => {
+                  setSelectedParentSite(null)
+                  setStep('workspace')
+                  setAgencyError('')
+                }}
+                className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-1 cursor-pointer"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>Retour</span>
+              </motion.button>
+
+              {/* Liste des agences existantes */}
+              {childSites.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-text-muted uppercase tracking-wider">Agences existantes</p>
+                  {childSites.map((agency, index) => (
+                    <motion.div
+                      key={agency.id}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.06 }}
+                      className="glass-card p-4 flex items-center gap-3 group"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                        <Building2 className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-text-primary truncate">{agency.name}</p>
+                        {agency.edsNumber && (
+                          <p className="text-xs text-text-muted flex items-center gap-1">
+                            <Hash className="h-3 w-3" />
+                            EDS {agency.edsNumber}
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => deleteAgencyMutation.mutate(agency.id)}
+                        disabled={deleteAgencyMutation.isPending}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+
+              {/* Formulaire de création */}
+              <div className="glass-card p-4 space-y-3">
+                <p className="text-xs font-medium text-text-muted uppercase tracking-wider">Nouvelle agence</p>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Nom de l'agence"
+                    value={agencyName}
+                    onChange={(e) => setAgencyName(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Input
+                    placeholder="EDS (3 chiffres)"
+                    value={agencyEds}
+                    onChange={(e) => {
+                      const v = e.target.value.replace(/\D/g, '').slice(0, 3)
+                      setAgencyEds(v)
+                    }}
+                    className="w-32"
+                    maxLength={3}
+                  />
+                </div>
+                {agencyError && (
+                  <p className="text-xs text-red-400">{agencyError}</p>
+                )}
+                <Button
+                  onClick={handleCreateAgency}
+                  disabled={createAgencyMutation.isPending}
+                  className="w-full"
+                  size="sm"
+                >
+                  {createAgencyMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : (
+                    <Plus className="h-4 w-4 mr-2" />
+                  )}
+                  Ajouter l'agence
+                </Button>
+              </div>
+
+              {/* Sélection d'une agence pour continuer */}
+              {childSites.length > 0 && (
+                <div className="space-y-2 pt-2">
+                  <p className="text-xs font-medium text-text-muted uppercase tracking-wider">Sélectionner une agence</p>
+                  {childSites.map((agency, index) => {
+                    const color = SITE_COLORS[(index + 2) % SITE_COLORS.length]!
+                    return (
+                      <motion.button
+                        key={agency.id}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.1 + index * 0.06 }}
+                        onClick={() => handleAgencySelect(agency)}
+                        className="w-full glass-card p-4 flex items-center gap-3 cursor-pointer group hover:border-primary/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.1)] transition-all duration-300"
+                      >
+                        <div
+                          className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color.bg} flex items-center justify-center shadow-lg flex-shrink-0`}
+                          style={{ boxShadow: `0 4px 15px ${color.glow}` }}
+                        >
+                          <Building2 className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="flex-1 text-left min-w-0">
+                          <p className="text-sm font-semibold text-text-primary truncate">{agency.name}</p>
+                          {agency.edsNumber && (
+                            <p className="text-xs text-text-muted">EDS {agency.edsNumber}</p>
+                          )}
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                      </motion.button>
+                    )
+                  })}
+                </div>
+              )}
+            </motion.div>
           ) : (
-            // ── Étape 2 : Sélection du profil ──
+            // ── Étape 3 : Sélection du profil ──
             <motion.div
               key="profiles-step"
               initial={{ opacity: 0, x: 30 }}
@@ -627,7 +944,7 @@ export default function LoginPage() {
                   </h2>
                   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 </div>
-                <p className="text-xs text-text-secondary">Choisissez votre profil</p>
+                <p className="text-xs text-text-secondary">Choisissez votre espace</p>
               </motion.div>
 
               {/* Bottom bar */}

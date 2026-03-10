@@ -26,11 +26,14 @@ export interface Site {
   id: string
   name: string
   address: string | null
+  edsNumber: string | null
+  parentSiteId: string | null
   isActive: boolean
   createdAt: string
   updatedAt?: string
   _count?: {
     stocks: number
+    children: number
   }
   lastActivity?: string | null
 }

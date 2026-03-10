@@ -43,6 +43,120 @@ export const getProfiles = async (_req: Request, res: Response): Promise<void> =
 };
 
 /**
+ * Liste des sites actifs (endpoint public pour le sélecteur d'espace de travail)
+ * Retourne uniquement id, name, address, parentSiteId
+ */
+export const getSitesPublic = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const sites = await prisma.site.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        edsNumber: true,
+        parentSiteId: true,
+        isActive: true,
+        createdAt: true,
+        _count: { select: { children: true } },
+      },
+      orderBy: { name: 'asc' },
+    });
+
+    res.status(200).json({
+      success: true,
+      sites,
+    });
+  } catch (error) {
+    logger.error('Erreur lors de la récupération des sites publics :', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur interne du serveur',
+    });
+  }
+};
+
+/**
+ * Création d'une agence (sous-site d'Agences) — public
+ */
+export const createAgency = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, edsNumber, parentSiteId } = req.body;
+
+    if (!name || !edsNumber || !parentSiteId) {
+      res.status(400).json({ success: false, message: 'Nom, numéro EDS et site parent requis' });
+      return;
+    }
+
+    // Validate EDS is 3 digits
+    if (!/^\d{3}$/.test(edsNumber)) {
+      res.status(400).json({ success: false, message: 'Le numéro EDS doit contenir exactement 3 chiffres' });
+      return;
+    }
+
+    // Check parent exists
+    const parent = await prisma.site.findUnique({ where: { id: parentSiteId } });
+    if (!parent) {
+      res.status(404).json({ success: false, message: 'Site parent introuvable' });
+      return;
+    }
+
+    // Check EDS uniqueness
+    const existing = await prisma.site.findFirst({ where: { edsNumber } });
+    if (existing) {
+      res.status(409).json({ success: false, message: 'Ce numéro EDS est déjà utilisé' });
+      return;
+    }
+
+    const agency = await prisma.site.create({
+      data: {
+        name,
+        edsNumber,
+        parentSiteId,
+        address: `EDS ${edsNumber}`,
+        isActive: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        edsNumber: true,
+        parentSiteId: true,
+        isActive: true,
+        createdAt: true,
+      },
+    });
+
+    res.status(201).json({ success: true, agency });
+  } catch (error) {
+    logger.error('Erreur lors de la création de l\'agence :', error);
+    res.status(500).json({ success: false, message: 'Erreur interne du serveur' });
+  }
+};
+
+/**
+ * Suppression d'une agence — public
+ */
+export const deleteAgency = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const site = await prisma.site.findUnique({ where: { id } });
+    if (!site || !site.parentSiteId) {
+      res.status(404).json({ success: false, message: 'Agence introuvable' });
+      return;
+    }
+
+    await prisma.site.delete({ where: { id } });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    logger.error('Erreur lors de la suppression de l\'agence :', error);
+    res.status(500).json({ success: false, message: 'Erreur interne du serveur' });
+  }
+};
+
+/**
  * Connexion d'un utilisateur
  * Valide les identifiants, génère les tokens et enregistre le cookie de rafraîchissement
  */

@@ -29,6 +29,7 @@ import {
 import type { Article, ArticleFormData, ArticleFilters, StockStatus } from '@/types'
 import { articlesService } from '@/services/articles.service'
 import { sitesService } from '@/services/sites.service'
+import { useSiteStore } from '@/stores/siteStore'
 import { useAuth } from '@/hooks/useAuth'
 
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -312,7 +313,13 @@ export default function ArticlesPage() {
     queryKey: ['sites'],
     queryFn: () => sitesService.getAll(),
   })
-  const sites = sitesData?.sites ?? []
+  const selectedWorkspace = useSiteStore((s) => s.selectedSite)
+  const allSites = sitesData?.sites ?? []
+  const sites = selectedWorkspace?.parentSiteId
+    ? allSites.filter((s) => s.parentSiteId === selectedWorkspace.parentSiteId)
+    : selectedWorkspace
+      ? allSites.filter((s) => s.parentSiteId === selectedWorkspace.id || s.id === selectedWorkspace.id)
+      : allSites
 
   // Récupération des articles
   const { data, isLoading, isError } = useQuery({
@@ -793,7 +800,13 @@ function ArticleFormDialog({
     queryFn: () => sitesService.getAll(),
     staleTime: 60_000,
   })
-  const sites = sitesData?.sites ?? []
+  const selectedWorkspace2 = useSiteStore((s) => s.selectedSite)
+  const allSites2 = sitesData?.sites ?? []
+  const sites = selectedWorkspace2?.parentSiteId
+    ? allSites2.filter((s) => s.parentSiteId === selectedWorkspace2.parentSiteId)
+    : selectedWorkspace2
+      ? allSites2.filter((s) => s.parentSiteId === selectedWorkspace2.id || s.id === selectedWorkspace2.id)
+      : allSites2
 
   const {
     register,

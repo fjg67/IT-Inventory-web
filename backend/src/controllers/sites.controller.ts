@@ -20,6 +20,9 @@ export const getSites = async (req: Request, res: Response): Promise<void> => {
             id: true,
           },
         },
+        children: {
+          select: { id: true },
+        },
       },
       orderBy: { name: 'asc' },
     });
@@ -48,12 +51,13 @@ export const getSites = async (req: Request, res: Response): Promise<void> => {
         });
 
         // Suppression du champ stocks brut du retour
-        const { stocks, ...siteData } = site;
+        const { stocks, children, ...siteData } = site;
 
         return {
           ...siteData,
           articleCount,
           lastMovementAt: lastMovement?.createdAt ?? null,
+          _count: { stocks: stocks.length, children: children.length },
         };
       })
     );
