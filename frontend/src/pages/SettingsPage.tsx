@@ -156,62 +156,6 @@ export default function SettingsPage() {
             </SectionCard>
           </motion.div>
 
-          {/* === SYNCHRONISATION === */}
-          <motion.div variants={itemVariants}>
-            <SectionCard label="Synchronisation" accentColor="bg-blue-500" delay={0.1}>
-              {/* État */}
-              <SettingRow
-                icon={Globe}
-                iconBg="bg-blue-500/[0.08]"
-                iconColor="text-blue-400"
-                label="État"
-                value={<StatusBadge label="0 en attente" type="info" />}
-              />
-
-              {/* Connexion */}
-              <SettingRow
-                icon={Wifi}
-                iconBg="bg-emerald-500/[0.08]"
-                iconColor="text-emerald-400"
-                label="Connexion"
-                value={
-                  <div className="flex items-center gap-2">
-                    <span className="relative flex h-[7px] w-[7px]">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex h-[7px] w-[7px] rounded-full bg-emerald-400" />
-                    </span>
-                    <span
-                      className="text-[13px] font-semibold text-emerald-400"
-                      style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                    >
-                      Connecté
-                    </span>
-                  </div>
-                }
-              />
-
-              {/* Dernière sync */}
-              <SettingRow
-                icon={RefreshCw}
-                iconBg="bg-indigo-500/[0.1]"
-                iconColor="text-indigo-300"
-                label="Dernière sync"
-                isLast
-                value={
-                  <div className="flex items-center gap-1.5">
-                    <Activity className="h-3 w-3 text-indigo-300" />
-                    <span
-                      className="text-[12px] text-text-secondary"
-                      style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                    >
-                      Temps réel
-                    </span>
-                  </div>
-                }
-              />
-            </SectionCard>
-          </motion.div>
-
           {/* === À PROPOS === */}
           <motion.div variants={itemVariants}>
             <SectionCard label="À propos" accentColor="bg-violet-500" delay={0.2}>

@@ -23,6 +23,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useSidebarStore } from '@/stores/sidebarStore'
 import { LogoutConfirmDialog } from '@/components/shared/LogoutConfirmDialog'
 import { ThemeToggle } from '@/components/theme/ThemeToggle'
+import { WorkspaceIndicator } from '@/components/layout/WorkspaceIndicator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -124,6 +125,11 @@ export function Sidebar() {
         </div>
 
         <Separator />
+
+        {/* Indicateur de workspace */}
+        <div className="px-3 pt-3 pb-1">
+          <WorkspaceIndicator isOpen={isOpen} />
+        </div>
 
         {/* Liens de navigation */}
         <ScrollArea className="flex-1 px-3 py-4">
@@ -295,6 +301,11 @@ export function Sidebar() {
         </div>
 
         <Separator />
+
+        {/* Indicateur de workspace mobile */}
+        <div className="px-3 pt-3 pb-1">
+          <WorkspaceIndicator isOpen={true} />
+        </div>
 
         {/* Liens de navigation mobile */}
         <ScrollArea className="flex-1 px-3 py-4">

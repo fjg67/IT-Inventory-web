@@ -272,8 +272,10 @@ export default function ArticlesPage() {
   const { isAdmin } = useAuth()
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  // Lire le siteId depuis l'URL si présent
+  // Lire le siteId depuis l'URL si présent, sinon utiliser le workspace sélectionné
   const urlSiteId = searchParams.get('siteId') || undefined
+  const workspaceSite = useSiteStore((s) => s.selectedSite)
+  const initialSiteId = urlSiteId || (workspaceSite?.parentSiteId ? workspaceSite.id : undefined)
 
   // Auto-focus recherche si ?focus=search
   useEffect(() => {
@@ -287,7 +289,7 @@ export default function ArticlesPage() {
   const [filters, setFilters] = useState<ArticleFilters>({
     page: 1,
     limit: PAGE_SIZE,
-    site: urlSiteId,
+    site: initialSiteId,
   })
   const [searchInput, setSearchInput] = useState('')
 
@@ -314,12 +316,24 @@ export default function ArticlesPage() {
     queryFn: () => sitesService.getAll(),
   })
   const selectedWorkspace = useSiteStore((s) => s.selectedSite)
+  const setFilterSiteName = useSiteStore((s) => s.setFilterSiteName)
   const allSites = sitesData?.sites ?? []
   const sites = selectedWorkspace?.parentSiteId
     ? allSites.filter((s) => s.parentSiteId === selectedWorkspace.parentSiteId)
     : selectedWorkspace
       ? allSites.filter((s) => s.parentSiteId === selectedWorkspace.id || s.id === selectedWorkspace.id)
       : allSites
+
+  // Auto-sélectionner le premier site si aucun n'est choisi
+  useEffect(() => {
+    if (!filters.site && sites.length > 0) {
+      const first = sites[0]
+      if (first) {
+        setFilters((prev) => ({ ...prev, site: first.id, page: 1 }))
+        setFilterSiteName(first.name)
+      }
+    }
+  }, [sites, filters.site, setFilterSiteName])
 
   // Récupération des articles
   const { data, isLoading, isError } = useQuery({
@@ -410,12 +424,14 @@ export default function ArticlesPage() {
   }, [])
 
   const handleFilterSite = useCallback((value: string) => {
+    const siteName = allSites.find(s => s.id === value)?.name ?? ''
+    setFilterSiteName(siteName)
     setFilters((prev) => ({
       ...prev,
-      site: value === '_all' ? undefined : value,
+      site: value,
       page: 1,
     }))
-  }, [])
+  }, [allSites, setFilterSiteName])
 
   const handlePageChange = useCallback((page: number) => {
     setFilters((prev) => ({ ...prev, page }))
@@ -483,14 +499,13 @@ export default function ArticlesPage() {
 
           {/* Filtre site */}
           <Select
-            value={filters.site ?? '_all'}
+            value={filters.site ?? ''}
             onValueChange={handleFilterSite}
           >
             <SelectTrigger className="w-36 sm:w-44">
               <SelectValue placeholder="Site" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="_all">Tous les sites</SelectItem>
               {sites.filter(s => s.isActive).map((s) => (
                 <SelectItem key={s.id} value={s.id}>
                   <span className="flex items-center gap-2"><MapPin className="h-3 w-3" /> {s.name}</span>

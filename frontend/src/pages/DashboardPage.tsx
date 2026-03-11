@@ -1,7 +1,7 @@
 // Page Tableau de bord — vue d'ensemble premium avec KPIs, graphiques et listes
 
 import { useQuery } from '@tanstack/react-query'
-import { Package, AlertTriangle, TrendingDown, Activity, MapPin, LayoutDashboard } from 'lucide-react'
+import { Package, AlertTriangle, TrendingDown, Activity, MapPin, LayoutDashboard, Building2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -20,7 +20,11 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const { setAlertCount } = useSidebarStore()
   const selectedWorkspace = useSiteStore((s) => s.selectedSite)
-  const [selectedSiteId, setSelectedSiteId] = useState<string>('')
+  const setFilterSiteName = useSiteStore((s) => s.setFilterSiteName)
+
+  // Si le workspace sélectionné est un sous-site, pré-sélectionner ce site dans les pills
+  const initialSiteId = selectedWorkspace?.parentSiteId ? selectedWorkspace.id : ''
+  const [selectedSiteId, setSelectedSiteId] = useState<string>(initialSiteId)
 
   // Récupération des sites
   const { data: sitesData } = useQuery({
@@ -35,6 +39,18 @@ export default function DashboardPage() {
       ? allSites.filter((s) => s.parentSiteId === selectedWorkspace.parentSiteId)
       : allSites.filter((s) => s.parentSiteId === selectedWorkspace.id || s.id === selectedWorkspace.id)
     : allSites.filter((s) => !s.parentSiteId)
+
+  // Auto-sélectionner le premier site si aucun n'est choisi
+  useEffect(() => {
+    if (!selectedSiteId && sites.length > 0) {
+      const first = sites[0]
+      if (first) {
+        setSelectedSiteId(first.id)
+        setFilterSiteName(first.name)
+      }
+    }
+  }, [sites, selectedSiteId, setFilterSiteName])
+
   const siteId = selectedSiteId || undefined
 
   // Récupération des statistiques
@@ -111,31 +127,39 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Site selector pills */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--sidebar-hover)] border border-border overflow-x-auto scrollbar-hide">
-          <button
-            onClick={() => setSelectedSiteId('')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 whitespace-nowrap shrink-0 ${
-              selectedSiteId === ''
-                ? 'bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30 shadow-sm'
-                : 'text-text-muted hover:text-text-secondary hover:bg-[var(--sidebar-hover)]'
-            }`}
-          >
-            Tous les sites
-          </button>
+        {/* Site selector pills — premium design */}
+        <div className="relative flex items-center gap-1 p-1.5 rounded-2xl bg-surface/60 backdrop-blur-xl border border-border/50 shadow-lg shadow-black/5 overflow-x-auto scrollbar-hide">
+          {/* Fond glassmorphism subtil */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/[0.03] via-transparent to-violet-500/[0.03]" />
+
           {sites.map((site) => (
-            <button
+            <motion.button
               key={site.id}
-              onClick={() => setSelectedSiteId(site.id)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => { setSelectedSiteId(site.id); setFilterSiteName(site.name) }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className={`relative z-10 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 ${
                 selectedSiteId === site.id
-                  ? 'bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/30 shadow-sm'
-                  : 'text-text-muted hover:text-text-secondary hover:bg-[var(--sidebar-hover)]'
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-[0_2px_12px_rgba(59,130,246,0.4)]'
+                  : 'text-text-muted hover:text-text-primary hover:bg-white/5'
               }`}
             >
-              <MapPin className="h-3 w-3" />
+              <div className={`flex h-5 w-5 items-center justify-center rounded-md transition-all duration-300 ${
+                selectedSiteId === site.id
+                  ? 'bg-white/20'
+                  : 'bg-border/30'
+              }`}>
+                <Building2 className="h-3 w-3" />
+              </div>
               {site.name}
-            </button>
+              {selectedSiteId === site.id && (
+                <motion.div
+                  layoutId="site-active-dot"
+                  className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.6)]"
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                />
+              )}
+            </motion.button>
           ))}
         </div>
       </motion.div>

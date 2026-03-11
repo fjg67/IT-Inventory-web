@@ -27,6 +27,7 @@ import { alertsService } from '@/services/alerts.service'
 import { sitesService } from '@/services/sites.service'
 import { stockService } from '@/services/stock.service'
 import { articlesService } from '@/services/articles.service'
+import { useSiteStore } from '@/stores/siteStore'
 
 import { EmptyState } from '@/components/shared/EmptyState'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -63,6 +64,7 @@ const CATEGORY_EMOJI: Record<string, string> = {
 
 export default function AlertsPage() {
   const queryClient = useQueryClient()
+  const setFilterSiteName = useSiteStore((s) => s.setFilterSiteName)
   // Lire le siteId depuis l'URL si présent
   const urlSiteId = new URLSearchParams(window.location.search).get('siteId')
   const [selectedSite, setSelectedSite] = useState<string>(urlSiteId || '_all')
@@ -237,7 +239,11 @@ export default function AlertsPage() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--sidebar-hover)] ring-1 ring-border">
             <MapPin className="h-3.5 w-3.5 text-text-secondary" />
           </div>
-          <Select value={selectedSite} onValueChange={setSelectedSite}>
+          <Select value={selectedSite} onValueChange={(value) => {
+            setSelectedSite(value)
+            const siteName = value === '_all' ? 'Tous les sites' : (sites.find((s: Site) => s.id === value)?.name ?? 'Tous les sites')
+            setFilterSiteName(siteName)
+          }}>
             <SelectTrigger className="w-40 sm:w-52 h-9 bg-[var(--sidebar-hover)] border-border rounded-xl text-sm">
               <SelectValue placeholder="Tous les sites" />
             </SelectTrigger>

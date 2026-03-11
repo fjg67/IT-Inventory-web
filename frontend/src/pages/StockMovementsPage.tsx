@@ -176,14 +176,16 @@ export default function StockMovementsPage() {
   const queryClient = useQueryClient()
   const { user } = useAuth()
 
-  // Lire le siteId depuis l'URL si présent
+  // Lire le siteId depuis l'URL si présent, sinon utiliser le workspace
   const urlSiteId = new URLSearchParams(window.location.search).get('siteId') || undefined
+  const workspaceSite = useSiteStore((s) => s.selectedSite)
+  const initialSiteId = urlSiteId || (workspaceSite?.parentSiteId ? workspaceSite.id : undefined)
 
   // État des filtres et pagination
   const [filters, setFilters] = useState<MovementFilters>({
     page: 1,
     limit: PAGE_SIZE,
-    siteId: urlSiteId,
+    siteId: initialSiteId,
   })
   const [searchInput, setSearchInput] = useState('')
 
@@ -225,12 +227,24 @@ export default function StockMovementsPage() {
 
   const articles = articlesData?.articles ?? []
   const selectedWorkspace = useSiteStore((s) => s.selectedSite)
+  const setFilterSiteName = useSiteStore((s) => s.setFilterSiteName)
   const allSites = (sitesData?.sites ?? []).filter((s: Site) => s.isActive)
   const sites = selectedWorkspace?.parentSiteId
     ? allSites.filter((s: Site) => s.parentSiteId === selectedWorkspace.parentSiteId)
     : selectedWorkspace
       ? allSites.filter((s: Site) => s.parentSiteId === selectedWorkspace.id || s.id === selectedWorkspace.id)
       : allSites
+
+  // Auto-sélectionner le premier site si aucun n'est choisi
+  useEffect(() => {
+    if (!filters.siteId && sites.length > 0) {
+      const first = sites[0]
+      if (first) {
+        setFilters((prev) => ({ ...prev, siteId: first.id, page: 1 }))
+        setFilterSiteName(first.name)
+      }
+    }
+  }, [sites, filters.siteId, setFilterSiteName])
 
   // Celebration state
   const [showCelebration, setShowCelebration] = useState(false)
@@ -282,12 +296,14 @@ export default function StockMovementsPage() {
   }, [])
 
   const handleFilterSite = useCallback((value: string) => {
+    const siteName = sites.find((s: Site) => s.id === value)?.name ?? ''
+    setFilterSiteName(siteName)
     setFilters((prev) => ({
       ...prev,
-      siteId: value === '_all' ? undefined : value,
+      siteId: value,
       page: 1,
     }))
-  }, [])
+  }, [sites, setFilterSiteName])
 
   const handlePageChange = useCallback((page: number) => {
     setFilters((prev) => ({ ...prev, page }))
@@ -412,12 +428,11 @@ export default function StockMovementsPage() {
           <div className="hidden sm:block h-6 w-px bg-[var(--sidebar-hover)]" />
 
           {/* Filtre par site */}
-          <Select value={filters.siteId ?? '_all'} onValueChange={handleFilterSite}>
+          <Select value={filters.siteId ?? ''} onValueChange={handleFilterSite}>
             <SelectTrigger className="w-32 sm:w-40 h-8 text-xs bg-[var(--sidebar-hover)] border-border rounded-lg">
               <SelectValue placeholder="Site" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="_all">Tous les sites</SelectItem>
               {sites.map((site: Site) => (
                 <SelectItem key={site.id} value={site.id}>
                   {site.name}
