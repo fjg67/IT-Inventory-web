@@ -211,7 +211,7 @@ export function TopBar() {
                   {user?.name ? getInitials(user.name) : '??'}
                 </p>
                 <p className="text-xs text-text-secondary">
-                  {user?.role === 'ADMIN' ? 'Administrateur' : 'Technicien'}
+                  {user?.role === 'ADMIN' ? 'Superviseur' : 'Technicien'}
                 </p>
               </div>
             </DropdownMenuLabel>

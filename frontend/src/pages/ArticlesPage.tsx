@@ -269,7 +269,7 @@ export default function ArticlesPage() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
-  const { isAdmin } = useAuth()
+  const { canWriteInventory } = useAuth()
   const searchInputRef = useRef<HTMLInputElement>(null)
 
   // Lire le siteId depuis l'URL si présent, sinon utiliser le workspace sélectionné
@@ -398,14 +398,16 @@ export default function ArticlesPage() {
   }, [])
 
   const handleOpenCreate = useCallback(() => {
+    if (!canWriteInventory) return
     setEditingArticle(null)
     setFormOpen(true)
-  }, [])
+  }, [canWriteInventory])
 
   const handleOpenEdit = useCallback((article: Article) => {
+    if (!canWriteInventory) return
     setEditingArticle(article)
     setFormOpen(true)
-  }, [])
+  }, [canWriteInventory])
 
   const handleFilterCategory = useCallback((value: string) => {
     setFilters((prev) => ({
@@ -445,12 +447,12 @@ export default function ArticlesPage() {
       <PageHeader
         title="Articles"
         description="Gestion de l'inventaire des articles informatiques"
-        action={
+        action={canWriteInventory ? (
           <Button onClick={handleOpenCreate}>
             <Plus className="mr-2 h-4 w-4" />
             Nouvel article
           </Button>
-        }
+        ) : undefined}
       />
 
       {/* Barre de recherche et filtres */}
@@ -562,7 +564,7 @@ export default function ArticlesPage() {
                   : "Commencez par ajouter votre premier article à l'inventaire."
               }
               action={
-                !filters.search && !filters.category && !filters.site && !filters.status ? (
+                canWriteInventory && !filters.search && !filters.category && !filters.site && !filters.status ? (
                   <Button onClick={handleOpenCreate}>
                     <Plus className="mr-2 h-4 w-4" />
                     Nouvel article
@@ -631,7 +633,7 @@ export default function ArticlesPage() {
                                 <Eye className="mr-2 h-4 w-4" />
                                 Voir
                               </DropdownMenuItem>
-                              {isAdmin && (
+                              {canWriteInventory && (
                                 <>
                                   <DropdownMenuItem onClick={() => handleOpenEdit(article)}>
                                     <Pencil className="mr-2 h-4 w-4" />
@@ -757,6 +759,7 @@ export default function ArticlesPage() {
           }
         }}
         loading={createMutation.isPending || updateMutation.isPending}
+        allowScanner={canWriteInventory}
       />
 
       {/* Celebration animation */}
@@ -793,6 +796,7 @@ interface ArticleFormDialogProps {
   article: Article | null
   onSubmit: (data: ArticleFormData) => void
   loading: boolean
+  allowScanner: boolean
 }
 
 function ArticleFormDialog({
@@ -801,6 +805,7 @@ function ArticleFormDialog({
   article,
   onSubmit,
   loading,
+  allowScanner,
 }: ArticleFormDialogProps) {
   const isEditing = !!article
   const [imagePreview, setImagePreview] = useState<string | null>(null)
@@ -1031,7 +1036,7 @@ function ArticleFormDialog({
                 placeholder="EAN13, Code128..."
                 error={errors.reference?.message}
                 prefixIcon={Tag}
-                suffixSlot={
+                suffixSlot={allowScanner ? (
                   <button
                     type="button"
                     onClick={() => setScannerOpen(true)}
@@ -1040,13 +1045,13 @@ function ArticleFormDialog({
                   >
                     <ScanBarcode className="h-5 w-5 text-white" />
                   </button>
-                }
+                ) : undefined}
                 {...register('reference', { required: 'La référence est requise' })}
               />
             </div>
 
             {/* Scanner de code-barres */}
-            {scannerOpen && (
+            {allowScanner && scannerOpen && (
               <BarcodeScanner
                 onScan={(code) => {
                   setValue('reference', code, { shouldValidate: true })

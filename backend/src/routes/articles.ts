@@ -11,7 +11,7 @@ import {
   deleteArticle,
   getArticleHistory,
 } from '../controllers/articles.controller';
-import { authenticate, requireAdmin } from '../middleware/auth';
+import { authenticate, requireTechnician } from '../middleware/auth';
 
 const router = Router();
 
@@ -48,7 +48,7 @@ router.get('/', getArticles);
 router.get('/:id', getArticleById);
 
 // Upload d'image pour un article
-router.post('/upload-image', upload.single('image'), (req, res) => {
+router.post('/upload-image', requireTechnician, upload.single('image'), (req, res) => {
   if (!req.file) {
     res.status(400).json({ success: false, message: 'Aucune image fournie' });
     return;
@@ -58,13 +58,13 @@ router.post('/upload-image', upload.single('image'), (req, res) => {
 });
 
 // Création d'un article (tous les utilisateurs authentifiés)
-router.post('/', createArticle);
+router.post('/', requireTechnician, createArticle);
 
-// Modification d'un article (admin uniquement)
-router.put('/:id', requireAdmin, updateArticle);
+// Modification d'un article (technicien uniquement)
+router.put('/:id', requireTechnician, updateArticle);
 
-// Suppression logique d'un article (admin uniquement)
-router.delete('/:id', requireAdmin, deleteArticle);
+// Suppression logique d'un article (technicien uniquement)
+router.delete('/:id', requireTechnician, deleteArticle);
 
 // Historique des mouvements d'un article
 router.get('/:id/history', getArticleHistory);

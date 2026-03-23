@@ -263,7 +263,7 @@ export default function ArticleDetailPage() {
 
   const queryClient = useQueryClient()
 
-  const { isAdmin } = useAuth()
+  const { canWriteInventory } = useAuth()
 
 
 
@@ -356,12 +356,10 @@ export default function ArticleDetailPage() {
 
 
   const handleOpenMovement = useCallback((type: MovementType) => {
-
+    if (!canWriteInventory) return
     setMovementType(type)
-
     setMovementOpen(true)
-
-  }, [])
+  }, [canWriteInventory])
 
 
 
@@ -503,7 +501,7 @@ export default function ArticleDetailPage() {
 
               </motion.button>
 
-              {isAdmin && (
+              {canWriteInventory && (
 
                 <motion.button
 
@@ -938,7 +936,7 @@ export default function ArticleDetailPage() {
 
 
         {/* ── ACTIONS RAPIDES ── */}
-
+        {canWriteInventory && (
         <motion.section
 
           initial={{ opacity: 0, y: 16 }}
@@ -962,6 +960,7 @@ export default function ArticleDetailPage() {
           </div>
 
         </motion.section>
+        )}
 
 
 
@@ -1122,7 +1121,7 @@ export default function ArticleDetailPage() {
 
 
       {/* ── MOVEMENT DIALOG ── */}
-
+      {canWriteInventory && (
       <MovementDialog
 
         open={movementOpen}
@@ -1156,11 +1155,12 @@ export default function ArticleDetailPage() {
         }}
 
       />
+      )}
 
 
 
       {/* Celebration animation */}
-
+      {canWriteInventory && (
       <MovementSuccessCelebration
 
         show={showCelebration}
@@ -1174,6 +1174,7 @@ export default function ArticleDetailPage() {
         onComplete={() => setShowCelebration(false)}
 
       />
+      )}
 
     </motion.div>
 

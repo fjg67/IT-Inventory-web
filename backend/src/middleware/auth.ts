@@ -89,3 +89,34 @@ export const requireAdmin = (
 
   next();
 };
+
+/**
+ * Middleware de contrôle d'accès technicien (écriture)
+ * Le rôle ADMIN (superviseur) est en lecture seule.
+ */
+export const requireTechnician = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      message: 'Authentification requise',
+    });
+    return;
+  }
+
+  if (req.user.role !== 'TECHNICIAN') {
+    logger.warn(
+      `Accès écriture refusé (lecture seule superviseur) pour l'utilisateur ${req.user.userId}`
+    );
+    res.status(403).json({
+      success: false,
+      message: 'Accès refusé : profil superviseur en lecture seule',
+    });
+    return;
+  }
+
+  next();
+};

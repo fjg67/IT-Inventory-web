@@ -28,6 +28,7 @@ import { sitesService } from '@/services/sites.service'
 import { stockService } from '@/services/stock.service'
 import { articlesService } from '@/services/articles.service'
 import { useSiteStore } from '@/stores/siteStore'
+import { useAuth } from '@/hooks/useAuth'
 
 import { EmptyState } from '@/components/shared/EmptyState'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -64,6 +65,7 @@ const CATEGORY_EMOJI: Record<string, string> = {
 
 export default function AlertsPage() {
   const queryClient = useQueryClient()
+  const { canWriteInventory } = useAuth()
   const setFilterSiteName = useSiteStore((s) => s.setFilterSiteName)
   // Lire le siteId depuis l'URL si présent
   const urlSiteId = new URLSearchParams(window.location.search).get('siteId')
@@ -122,10 +124,11 @@ export default function AlertsPage() {
   })
 
   const handleReplenish = useCallback((articleId: string, siteId?: string) => {
+    if (!canWriteInventory) return
     setReplenishArticleId(articleId)
     setReplenishSiteId(siteId ?? '')
     setReplenishOpen(true)
-  }, [])
+  }, [canWriteInventory])
 
   /* ─────────────────────── Render ─────────────────────── */
   return (
@@ -276,6 +279,7 @@ export default function AlertsPage() {
                 alert={alert}
                 index={index}
                 onReplenish={handleReplenish}
+                canReplenish={canWriteInventory}
               />
             ))}
           </AnimatePresence>
@@ -290,6 +294,7 @@ export default function AlertsPage() {
                 alert={alert}
                 index={index}
                 onReplenish={handleReplenish}
+                canReplenish={canWriteInventory}
               />
             ))}
           </AnimatePresence>
@@ -297,17 +302,19 @@ export default function AlertsPage() {
       )}
 
       {/* ═══════ Replenish Dialog ═══════ */}
-      <MovementFormDialog
-        open={replenishOpen}
-        onOpenChange={setReplenishOpen}
-        articles={articlesData?.articles ?? []}
-        sites={sites}
-        onSubmit={(data) => replenishMutation.mutate(data)}
-        loading={replenishMutation.isPending}
-        defaultArticleId={replenishArticleId}
-        defaultSiteId={replenishSiteId}
-        defaultType="ENTRY"
-      />
+      {canWriteInventory && (
+        <MovementFormDialog
+          open={replenishOpen}
+          onOpenChange={setReplenishOpen}
+          articles={articlesData?.articles ?? []}
+          sites={sites}
+          onSubmit={(data) => replenishMutation.mutate(data)}
+          loading={replenishMutation.isPending}
+          defaultArticleId={replenishArticleId}
+          defaultSiteId={replenishSiteId}
+          defaultType="ENTRY"
+        />
+      )}
     </div>
   )
 }
@@ -375,9 +382,10 @@ interface AlertCardProps {
   alert: AlertItem
   index: number
   onReplenish: (articleId: string, siteId?: string) => void
+  canReplenish: boolean
 }
 
-function AlertCardGrid({ alert, index, onReplenish }: AlertCardProps) {
+function AlertCardGrid({ alert, index, onReplenish, canReplenish }: AlertCardProps) {
   const isOutOfStock = alert.quantity === 0
   const minStock = alert.article.minStock
   const pct = minStock > 0 ? Math.min(Math.round((alert.quantity / minStock) * 100), 100) : 0
@@ -472,20 +480,21 @@ function AlertCardGrid({ alert, index, onReplenish }: AlertCardProps) {
           </div>
         </div>
 
-        {/* Replenish button */}
-        <motion.button
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => onReplenish(alert.articleId, alert.siteId)}
-          className={`relative w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 overflow-hidden ${
-            isOutOfStock
-              ? 'bg-gradient-to-r from-red-500/20 via-red-500/25 to-rose-500/20 text-red-300 ring-1 ring-red-500/20 hover:ring-red-500/40 hover:from-red-500/30 hover:to-rose-500/30'
-              : 'bg-gradient-to-r from-amber-500/20 via-amber-500/25 to-orange-500/20 text-amber-300 ring-1 ring-amber-500/20 hover:ring-amber-500/40 hover:from-amber-500/30 hover:to-orange-500/30'
-          }`}
-        >
-          <ArrowDownCircle className="h-3.5 w-3.5" />
-          Réapprovisionner
-        </motion.button>
+        {canReplenish && (
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => onReplenish(alert.articleId, alert.siteId)}
+            className={`relative w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 overflow-hidden ${
+              isOutOfStock
+                ? 'bg-gradient-to-r from-red-500/20 via-red-500/25 to-rose-500/20 text-red-300 ring-1 ring-red-500/20 hover:ring-red-500/40 hover:from-red-500/30 hover:to-rose-500/30'
+                : 'bg-gradient-to-r from-amber-500/20 via-amber-500/25 to-orange-500/20 text-amber-300 ring-1 ring-amber-500/20 hover:ring-amber-500/40 hover:from-amber-500/30 hover:to-orange-500/30'
+            }`}
+          >
+            <ArrowDownCircle className="h-3.5 w-3.5" />
+            Réapprovisionner
+          </motion.button>
+        )}
       </div>
     </motion.div>
   )
@@ -495,7 +504,7 @@ function AlertCardGrid({ alert, index, onReplenish }: AlertCardProps) {
    Alert Card — List
    ═══════════════════════════════════════════════════════════════ */
 
-function AlertCardList({ alert, index, onReplenish }: AlertCardProps) {
+function AlertCardList({ alert, index, onReplenish, canReplenish }: AlertCardProps) {
   const isOutOfStock = alert.quantity === 0
   const minStock = alert.article.minStock
   const pct = minStock > 0 ? Math.min(Math.round((alert.quantity / minStock) * 100), 100) : 0
@@ -572,19 +581,21 @@ function AlertCardList({ alert, index, onReplenish }: AlertCardProps) {
         </span>
 
         {/* Action */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => onReplenish(alert.articleId, alert.siteId)}
-          className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
-            isOutOfStock
-              ? 'bg-red-500/15 text-red-300 ring-1 ring-red-500/20 hover:bg-red-500/25'
-              : 'bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/20 hover:bg-amber-500/25'
-          }`}
-        >
-          <Zap className="h-3 w-3" />
-          <span className="hidden lg:inline">Réapprovisionner</span>
-        </motion.button>
+        {canReplenish && (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => onReplenish(alert.articleId, alert.siteId)}
+            className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+              isOutOfStock
+                ? 'bg-red-500/15 text-red-300 ring-1 ring-red-500/20 hover:bg-red-500/25'
+                : 'bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/20 hover:bg-amber-500/25'
+            }`}
+          >
+            <Zap className="h-3 w-3" />
+            <span className="hidden lg:inline">Réapprovisionner</span>
+          </motion.button>
+        )}
       </div>
     </motion.div>
   )

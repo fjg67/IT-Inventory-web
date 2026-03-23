@@ -2,7 +2,7 @@
 
 import { Router } from 'express';
 import { getStock, createMovement } from '../controllers/stock.controller';
-import { authenticate } from '../middleware/auth';
+import { authenticate, requireTechnician } from '../middleware/auth';
 
 const router = Router();
 
@@ -12,6 +12,6 @@ router.use(authenticate);
 router.get('/', getStock);
 
 // Création d'un mouvement de stock
-router.post('/movements', createMovement);
+router.post('/movements', requireTechnician, createMovement);
 
 export default router;

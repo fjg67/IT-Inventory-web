@@ -238,7 +238,7 @@ export function Sidebar() {
                   {user?.name ? getInitials(user.name) : '??'}
                 </p>
                 <p className="truncate text-xs text-text-secondary">
-                  {user?.role === 'ADMIN' ? 'Administrateur' : 'Technicien'}
+                  {user?.role === 'ADMIN' ? 'Superviseur' : 'Technicien'}
                 </p>
               </div>
               <Tooltip>
@@ -371,7 +371,7 @@ export function Sidebar() {
                 {user?.name ? getInitials(user.name) : '??'}
               </p>
               <p className="truncate text-xs text-text-secondary">
-                {user?.role === 'ADMIN' ? 'Administrateur' : 'Technicien'}
+                {user?.role === 'ADMIN' ? 'Superviseur' : 'Technicien'}
               </p>
             </div>
             <Button

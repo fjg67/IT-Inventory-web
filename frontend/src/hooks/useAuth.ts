@@ -82,6 +82,8 @@ export function useAuth() {
     isAuthenticated,
     isLoading,
     isAdmin: user?.role === 'ADMIN',
+    isSupervisor: user?.role === 'ADMIN',
+    canWriteInventory: user?.role === 'TECHNICIAN',
     login: loginMutation.mutate,
     loginLoading: loginMutation.isPending,
     logout,

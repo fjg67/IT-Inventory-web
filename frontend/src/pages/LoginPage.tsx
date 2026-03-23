@@ -46,7 +46,7 @@ function getInitials(name: string): string {
 }
 
 function getRoleBadge(role: string) {
-  if (role === 'ADMIN') return { label: 'Admin', color: 'bg-amber-500/15 text-amber-400' }
+  if (role === 'ADMIN') return { label: 'Superviseur', color: 'bg-amber-500/15 text-amber-400' }
   return { label: 'Technicien', color: 'bg-blue-500/15 text-blue-400' }
 }
 

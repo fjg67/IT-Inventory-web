@@ -82,7 +82,7 @@ export function AvatarHero({ initials, role, isActive }: AvatarHeroProps) {
               className="text-[12px] font-medium text-indigo-300"
               style={{ fontFamily: "'Outfit', sans-serif" }}
             >
-              {role === 'ADMIN' ? 'Administrateur' : 'Technicien'}
+              {role === 'ADMIN' ? 'Superviseur' : 'Technicien'}
             </span>
           </span>
 

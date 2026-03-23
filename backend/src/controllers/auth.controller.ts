@@ -12,14 +12,47 @@ import {
 } from '../utils/jwt';
 import { loginSchema } from '../utils/validation';
 
+type NormalizedRole = 'ADMIN' | 'TECHNICIAN';
+type LegacyAuthUser = {
+  id: string;
+  technicianId: string;
+  name: string;
+  password: string;
+  role: string;
+  isActive: boolean;
+  lastLoginAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+const normalizeRole = (role: string): NormalizedRole => {
+  const normalized = role.trim().toUpperCase();
+
+  if (normalized === 'ADMIN' || normalized === 'SUPERVISEUR' || normalized === 'SUPERVISOR') {
+    return 'ADMIN';
+  }
+
+  if (normalized === 'TECHNICIAN' || normalized === 'TECHNICIEN') {
+    return 'TECHNICIAN';
+  }
+
+  return 'TECHNICIAN';
+};
+
+const isRoleEnumError = (error: unknown): boolean => {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.includes("not found in enum 'Role'");
+};
+
 /**
  * Liste des profils actifs (endpoint public pour le sélecteur de profil)
  * Retourne uniquement id, technicianId, name et role — pas de mot de passe
+ * Inclut les techniciens et superviseurs (admins)
  */
 export const getProfiles = async (_req: Request, res: Response): Promise<void> => {
   try {
     const users = await prisma.user.findMany({
-      where: { isActive: true, role: 'TECHNICIAN' },
+      where: { isActive: true },
       select: {
         id: true,
         technicianId: true,
@@ -34,6 +67,42 @@ export const getProfiles = async (_req: Request, res: Response): Promise<void> =
       users,
     });
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+
+    // Fallback pour anciennes valeurs de rôle non conformes au schéma Prisma
+    if (message.includes("not found in enum 'Role'")) {
+      try {
+        type LegacyProfileRow = {
+          id: string;
+          technicianId: string;
+          name: string;
+          role: string;
+        };
+
+        const legacyUsers = await prisma.$queryRaw<LegacyProfileRow[]>`
+          SELECT id, "technicianId", name, role
+          FROM "User"
+          WHERE "isActive" = true
+          ORDER BY name ASC
+        `;
+
+        const users = legacyUsers.map((user) => ({
+          id: user.id,
+          technicianId: user.technicianId,
+          name: user.name,
+          role: normalizeRole(user.role),
+        }));
+
+        res.status(200).json({
+          success: true,
+          users,
+        });
+        return;
+      } catch (fallbackError) {
+        logger.error('Erreur fallback récupération des profils :', fallbackError);
+      }
+    }
+
     logger.error('Erreur lors de la récupération des profils :', error);
     res.status(500).json({
       success: false,
@@ -175,10 +244,37 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const { technicianId, password } = parsed.data;
 
+    let user:
+      | {
+        id: string;
+        technicianId: string;
+        name: string;
+        password: string;
+        role: string;
+        isActive: boolean;
+      }
+      | null = null;
+    let usedLegacyFallback = false;
+
     // Recherche de l'utilisateur par identifiant technicien
-    const user = await prisma.user.findUnique({
-      where: { technicianId },
-    });
+    try {
+      user = await prisma.user.findUnique({
+        where: { technicianId },
+      });
+    } catch (error) {
+      if (!isRoleEnumError(error)) {
+        throw error;
+      }
+
+      usedLegacyFallback = true;
+      const legacyUsers = await prisma.$queryRaw<LegacyAuthUser[]>`
+        SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt"
+        FROM "User"
+        WHERE "technicianId" = ${technicianId}
+        LIMIT 1
+      `;
+      user = legacyUsers[0] ?? null;
+    }
 
     if (!user) {
       logger.warn(`Tentative de connexion échouée : identifiant ${technicianId} introuvable`);
@@ -211,7 +307,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Génération des tokens
-    const accessToken = generateAccessToken(user.id, user.role);
+    const normalizedRole = normalizeRole(user.role);
+    const accessToken = generateAccessToken(user.id, normalizedRole);
     const refreshToken = generateRefreshToken(user.id);
 
     // Définition du cookie httpOnly pour le refresh token
@@ -225,10 +322,18 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     });
 
     // Mise à jour de la date de dernière connexion
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { lastLoginAt: new Date() },
-    });
+    if (usedLegacyFallback) {
+      await prisma.$executeRaw`
+        UPDATE "User"
+        SET "lastLoginAt" = NOW(), "updatedAt" = NOW()
+        WHERE id = ${user.id}
+      `;
+    } else {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { lastLoginAt: new Date() },
+      });
+    }
 
     // Enregistrement dans le journal d'audit
     await createAuditLog({
@@ -246,7 +351,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         id: user.id,
         technicianId: user.technicianId,
         name: user.name,
-        role: user.role,
+        role: normalizedRole,
       },
       accessToken,
     });
@@ -316,9 +421,32 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Recherche de l'utilisateur associé
-    const user = await prisma.user.findUnique({
-      where: { id: payload.userId },
-    });
+    let user:
+      | {
+        id: string;
+        role: string;
+        isActive: boolean;
+      }
+      | null = null;
+
+    try {
+      user = await prisma.user.findUnique({
+        where: { id: payload.userId },
+      });
+    } catch (error) {
+      if (!isRoleEnumError(error)) {
+        throw error;
+      }
+
+      const legacyUsers = await prisma.$queryRaw<LegacyAuthUser[]>`
+        SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt"
+        FROM "User"
+        WHERE id = ${payload.userId}
+        LIMIT 1
+      `;
+      const legacy = legacyUsers[0];
+      user = legacy ? { id: legacy.id, role: legacy.role, isActive: legacy.isActive } : null;
+    }
 
     if (!user || !user.isActive) {
       res.status(401).json({
@@ -329,7 +457,7 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Génération d'un nouveau token d'accès
-    const accessToken = generateAccessToken(user.id, user.role);
+    const accessToken = generateAccessToken(user.id, normalizeRole(user.role));
 
     res.status(200).json({
       success: true,
@@ -359,19 +487,58 @@ export const me = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Récupération complète de l'utilisateur depuis la base de données
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.userId },
-      select: {
-        id: true,
-        technicianId: true,
-        name: true,
-        role: true,
-        isActive: true,
-        lastLoginAt: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    let user:
+      | {
+        id: string;
+        technicianId: string;
+        name: string;
+        role: string;
+        isActive: boolean;
+        lastLoginAt: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
+      }
+      | null = null;
+
+    try {
+      user = await prisma.user.findUnique({
+        where: { id: req.user.userId },
+        select: {
+          id: true,
+          technicianId: true,
+          name: true,
+          role: true,
+          isActive: true,
+          lastLoginAt: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+    } catch (error) {
+      if (!isRoleEnumError(error)) {
+        throw error;
+      }
+
+      const legacyUsers = await prisma.$queryRaw<LegacyAuthUser[]>`
+        SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt"
+        FROM "User"
+        WHERE id = ${req.user.userId}
+        LIMIT 1
+      `;
+      const legacy = legacyUsers[0];
+      user = legacy
+        ? {
+          id: legacy.id,
+          technicianId: legacy.technicianId,
+          name: legacy.name,
+          role: legacy.role,
+          isActive: legacy.isActive,
+          lastLoginAt: legacy.lastLoginAt,
+          createdAt: legacy.createdAt,
+          updatedAt: legacy.updatedAt,
+        }
+        : null;
+    }
 
     if (!user) {
       res.status(404).json({
@@ -383,7 +550,10 @@ export const me = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({
       success: true,
-      user,
+      user: {
+        ...user,
+        role: normalizeRole(user.role),
+      },
     });
   } catch (error) {
     logger.error('Erreur lors de la récupération du profil :', error);

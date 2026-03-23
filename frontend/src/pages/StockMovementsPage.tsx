@@ -174,7 +174,7 @@ function timeAgo(dateStr: string): string {
 
 export default function StockMovementsPage() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { canWriteInventory } = useAuth()
 
   // Lire le siteId depuis l'URL si présent, sinon utiliser le workspace
   const urlSiteId = new URLSearchParams(window.location.search).get('siteId') || undefined
@@ -361,14 +361,16 @@ export default function StockMovementsPage() {
             )}
             <span className="hidden sm:inline">Exporter</span>
           </Button>
-          <Button
-            onClick={() => setFormOpen(true)}
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/25 border-0 transition-all hover:shadow-blue-500/40"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Nouveau mouvement</span>
-            <span className="sm:hidden">Nouveau</span>
-          </Button>
+          {canWriteInventory && (
+            <Button
+              onClick={() => setFormOpen(true)}
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/25 border-0 transition-all hover:shadow-blue-500/40"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Nouveau mouvement</span>
+              <span className="sm:hidden">Nouveau</span>
+            </Button>
+          )}
         </div>
       </motion.div>
 
@@ -641,23 +643,27 @@ export default function StockMovementsPage() {
       </motion.div>
 
       {/* Modal de création de mouvement */}
-      <MovementFormDialog
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        articles={articles}
-        sites={sites}
-        onSubmit={(data) => createMutation.mutate(data)}
-        loading={createMutation.isPending}
-      />
+      {canWriteInventory && (
+        <MovementFormDialog
+          open={formOpen}
+          onOpenChange={setFormOpen}
+          articles={articles}
+          sites={sites}
+          onSubmit={(data) => createMutation.mutate(data)}
+          loading={createMutation.isPending}
+        />
+      )}
 
       {/* Celebration animation */}
-      <MovementSuccessCelebration
-        show={showCelebration}
-        type={celebrationType}
-        articleName={celebrationArticle}
-        quantity={celebrationQty}
-        onComplete={() => setShowCelebration(false)}
-      />
+      {canWriteInventory && (
+        <MovementSuccessCelebration
+          show={showCelebration}
+          type={celebrationType}
+          articleName={celebrationArticle}
+          quantity={celebrationQty}
+          onComplete={() => setShowCelebration(false)}
+        />
+      )}
     </div>
   )
 }
