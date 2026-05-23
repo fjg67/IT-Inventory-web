@@ -37,6 +37,7 @@ const AVATAR_COLORS = [
 ]
 
 const EPINAL_ALLOWED_PROFILE_INITIALS = new Set(['BI', 'RT', 'EB', 'RL'])
+const EPINAL_ONLY_PROFILE_INITIALS = new Set(['BI', 'EB'])
 
 const FALLBACK_PROFILES: ProfileUser[] = [
   {
@@ -197,12 +198,16 @@ export default function LoginPage() {
   const fetchedProfiles = profilesData?.users ?? []
   const profiles = fetchedProfiles.length > 0 ? fetchedProfiles : FALLBACK_PROFILES
   const visibleProfiles = useMemo(() => {
-    if (!selectedWorkspaceSite || normalizeSiteName(selectedWorkspaceSite.name) !== 'epinal') {
-      return profiles
+    const currentWorkspaceName = selectedWorkspaceSite ? normalizeSiteName(selectedWorkspaceSite.name) : ''
+
+    if (currentWorkspaceName === 'epinal') {
+      return profiles.filter((profile) =>
+        EPINAL_ALLOWED_PROFILE_INITIALS.has(normalizeInitials(getInitials(profile.name)))
+      )
     }
 
     return profiles.filter((profile) =>
-      EPINAL_ALLOWED_PROFILE_INITIALS.has(normalizeInitials(getInitials(profile.name)))
+      !EPINAL_ONLY_PROFILE_INITIALS.has(normalizeInitials(getInitials(profile.name)))
     )
   }, [profiles, selectedWorkspaceSite])
 
@@ -747,6 +752,26 @@ export default function LoginPage() {
               transition={{ duration: 0.3, ease: 'easeOut' }}
               className="space-y-3"
             >
+              <motion.button
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                onClick={() => {
+                  setSelectedUser(null)
+                  setStep('workspace')
+                }}
+                className="group relative w-full glass-card p-3 flex items-center justify-between border-primary/20 hover:border-primary/45 hover:shadow-[0_0_28px_rgba(16,185,129,0.22)] transition-all duration-300 cursor-pointer"
+              >
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-500/10 via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                <div className="relative flex items-center gap-2.5 text-text-secondary group-hover:text-text-primary transition-colors">
+                  <span className="w-7 h-7 rounded-lg bg-emerald-500/15 group-hover:bg-emerald-500/25 flex items-center justify-center transition-colors">
+                    <ArrowLeft className="h-4 w-4 text-emerald-300" />
+                  </span>
+                  <span className="text-sm font-medium">Retour au choix de l&apos;espace</span>
+                </div>
+                <ChevronRight className="relative w-4 h-4 text-emerald-300/70 group-hover:text-emerald-300 group-hover:translate-x-0.5 transition-all" />
+              </motion.button>
+
               {profilesLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <div key={i} className="glass-card p-4 flex items-center gap-4 animate-pulse">

@@ -2,13 +2,14 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { Package, AlertTriangle, TrendingDown, Activity, MapPin, LayoutDashboard, Building2 } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { dashboardService } from '@/services/dashboard.service'
 import { alertsService } from '@/services/alerts.service'
 import { stockService } from '@/services/stock.service'
 import { sitesService } from '@/services/sites.service'
+import { useAuthStore } from '@/stores/authStore'
 import { useSidebarStore } from '@/stores/sidebarStore'
 import { useSiteStore } from '@/stores/siteStore'
 import { StatsCard } from '@/components/dashboard/StatsCard'
@@ -16,8 +17,28 @@ import { MovementChart, TopArticlesChart, CategoryChart } from '@/components/das
 import { AlertList } from '@/components/dashboard/AlertList'
 import { RecentMovements } from '@/components/dashboard/RecentMovements'
 
+const EPINAL_RESTRICTED_TECHNICIAN_IDS = new Set(['T099999', 'T097966'])
+
+function normalizeSiteName(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase()
+}
+
+function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
+
 export default function DashboardPage() {
   const navigate = useNavigate()
+  const user = useAuthStore((s) => s.user)
   const { setAlertCount } = useSidebarStore()
   const selectedWorkspace = useSiteStore((s) => s.selectedSite)
   const setFilterSiteName = useSiteStore((s) => s.setFilterSiteName)
@@ -34,14 +55,40 @@ export default function DashboardPage() {
 
   // Filtrer les sites selon le workspace sélectionné
   const allSites = sitesData?.sites ?? []
-  const sites = selectedWorkspace
+  const workspaceSites = selectedWorkspace
     ? selectedWorkspace.parentSiteId
       ? allSites.filter((s) => s.parentSiteId === selectedWorkspace.parentSiteId)
       : allSites.filter((s) => s.parentSiteId === selectedWorkspace.id || s.id === selectedWorkspace.id)
     : allSites.filter((s) => !s.parentSiteId)
 
+  const isEpinalRestrictedTechnician = useMemo(() => {
+    if (!user) return false
+
+    const technicianId = user.technicianId.toUpperCase()
+    const initials = getInitials(user.name)
+
+    return EPINAL_RESTRICTED_TECHNICIAN_IDS.has(technicianId) || initials === 'BI' || initials === 'EB'
+  }, [user])
+
+  const sites = useMemo(() => {
+    if (!isEpinalRestrictedTechnician) {
+      return workspaceSites
+    }
+
+    return workspaceSites.filter((s) => normalizeSiteName(s.name) === 'epinal')
+  }, [isEpinalRestrictedTechnician, workspaceSites])
+
   // Auto-sélectionner le premier site si aucun n'est choisi
   useEffect(() => {
+    if (isEpinalRestrictedTechnician) {
+      const epinalSite = sites.find((s) => normalizeSiteName(s.name) === 'epinal')
+      if (epinalSite && selectedSiteId !== epinalSite.id) {
+        setSelectedSiteId(epinalSite.id)
+        setFilterSiteName(epinalSite.name)
+      }
+      return
+    }
+
     if (!selectedSiteId && sites.length > 0) {
       const first = sites[0]
       if (first) {
@@ -49,7 +96,7 @@ export default function DashboardPage() {
         setFilterSiteName(first.name)
       }
     }
-  }, [sites, selectedSiteId, setFilterSiteName])
+  }, [isEpinalRestrictedTechnician, sites, selectedSiteId, setFilterSiteName])
 
   const siteId = selectedSiteId || undefined
 
