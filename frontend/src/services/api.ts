@@ -14,11 +14,24 @@ const api = axios.create({
   },
 })
 
+const PUBLIC_AUTH_ENDPOINTS = [
+  '/auth/login',
+  '/auth/refresh',
+  '/auth/profiles',
+  '/auth/sites',
+  '/auth/agencies',
+]
+
+function isPublicAuthEndpoint(url?: string): boolean {
+  if (!url) return false
+  return PUBLIC_AUTH_ENDPOINTS.some((endpoint) => url.startsWith(endpoint))
+}
+
 // Intercepteur de requête — ajoute le token d'accès
 api.interceptors.request.use(
   (config) => {
     const { accessToken } = useAuthStore.getState()
-    if (accessToken) {
+    if (accessToken && !isPublicAuthEndpoint(config.url)) {
       config.headers.Authorization = `Bearer ${accessToken}`
     }
     return config
