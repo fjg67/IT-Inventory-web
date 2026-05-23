@@ -156,8 +156,21 @@ const serveFrontend = (): void => {
         logger.info(`Assets trouvés (${assets.length}): ${assets.slice(0, 5).join(', ')}...`);
       }
 
-      // Servir les fichiers statiques
-      app.use(express.static(frontendPath));
+      // Servir les fichiers statiques avec politique de cache adaptée.
+      // - HTML: jamais en cache (évite les index.html obsolètes qui pointent vers des bundles supprimés)
+      // - Assets hashés: cache long
+      app.use(express.static(frontendPath, {
+        setHeaders: (res, filePath) => {
+          if (filePath.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+            return;
+          }
+
+          if (filePath.includes(`${path.sep}assets${path.sep}`)) {
+            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+          }
+        },
+      }));
       
       // SPA catch-all : SEULEMENT pour les routes qui ne sont PAS /api/* et pas des fichiers statiques
       app.get('*', (req: Request, res: Response, next: NextFunction) => {
@@ -169,7 +182,8 @@ const serveFrontend = (): void => {
         if (path.extname(req.path)) {
           return next();
         }
-        // Sinon, c'est une route SPA -> servir index.html
+        // Sinon, c'est une route SPA -> servir index.html (sans cache)
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
         res.sendFile(path.join(frontendPath, 'index.html'));
       });
       
