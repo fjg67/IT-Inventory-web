@@ -20,16 +20,14 @@ services:
         sync: false  # À configurer manuellement avec l'URL Supabase
       - key: DIRECT_URL
         sync: false  # À configurer manuellement avec l'URL Supabase
-      - key: JWT_SECRET
+      - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
         generateValue: true
-      - key: JWT_EXPIRES_IN
-        value: "15m"
-      - key: JWT_REFRESH_EXPIRES_IN
-        value: "7d"
       - key: CORS_ORIGINS
         value: ""
+      - key: UPLOAD_DIR
+        value: "./uploads"
       - key: RATE_LIMIT_WINDOW_MS
         value: "900000"
       - key: RATE_LIMIT_MAX

@@ -194,6 +194,20 @@ npm run build
 # Déployer sur Render/Railway avec les variables d'environnement
 ```
 
+Variables minimales à configurer pour Render :
+
+- `DATABASE_URL`
+- `DIRECT_URL`
+- `JWT_ACCESS_SECRET`
+- `JWT_REFRESH_SECRET`
+- `NODE_ENV=production`
+- `PORT=3001`
+- `CORS_ORIGINS=https://votre-domaine-render.onrender.com`
+- `UPLOAD_DIR=./uploads`
+- `MAX_FILE_SIZE=5242880`
+- `RATE_LIMIT_WINDOW_MS=900000`
+- `RATE_LIMIT_MAX=100`
+
 ### Base de données
 PostgreSQL hébergée sur Supabase ou auto-hébergée.
 
