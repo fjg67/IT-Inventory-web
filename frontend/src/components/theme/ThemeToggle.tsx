@@ -29,7 +29,7 @@ export function ThemeToggle() {
       {/* Track qui change de couleur */}
       <div className={`
         absolute inset-0 rounded-full transition-colors duration-300
-        ${isDark ? 'bg-surface-elevated' : 'bg-blue-50'}
+        ${isDark ? 'bg-surface-elevated' : 'bg-[var(--green-subtle)]'}
       `} />
 
       {/* Thumb qui glisse */}
@@ -51,7 +51,7 @@ export function ThemeToggle() {
           transition={{ duration: 0.3 }}
         >
           {isDark
-            ? <Moon size={11} className="text-blue-300" />
+            ? <Moon size={11} className="text-brand-light" />
             : <Sun size={11} className="text-amber-500" />
           }
         </motion.div>

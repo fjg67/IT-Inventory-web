@@ -22,14 +22,14 @@ interface StatsCardProps {
 
 const colorMap = {
   blue: {
-    gradient: 'from-blue-500/20 via-blue-600/10 to-transparent',
-    iconBg: 'bg-gradient-to-br from-blue-500 to-blue-600',
-    iconGlow: 'shadow-[0_0_20px_rgba(59,130,246,0.4)]',
-    ring: 'ring-blue-500/20',
-    accent: 'text-blue-400',
-    bar: 'from-blue-500 to-blue-400',
-    sparkStroke: '#3B82F6',
-    sparkFill: 'rgba(59,130,246,0.15)',
+    gradient: 'from-emerald-500/20 via-emerald-600/10 to-transparent',
+    iconBg: 'bg-gradient-to-br from-brand to-brand-light',
+    iconGlow: 'shadow-[0_0_20px_rgba(34,197,94,0.35)]',
+    ring: 'ring-[var(--green-border)]',
+    accent: 'text-brand-light',
+    bar: 'from-brand to-brand-light',
+    sparkStroke: '#22C55E',
+    sparkFill: 'rgba(34,197,94,0.15)',
   },
   green: {
     gradient: 'from-emerald-500/20 via-emerald-600/10 to-transparent',

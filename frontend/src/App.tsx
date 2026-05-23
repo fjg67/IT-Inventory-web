@@ -15,6 +15,7 @@ const ArticlesPage = lazy(() => import('@/pages/ArticlesPage'))
 const ArticleDetailPage = lazy(() => import('@/pages/ArticleDetailPage'))
 const StockMovementsPage = lazy(() => import('@/pages/StockMovementsPage'))
 const AlertsPage = lazy(() => import('@/pages/AlertsPage'))
+const ParcPCPage = lazy(() => import('@/pages/ParcPCPage'))
 const SitesPage = lazy(() => import('@/pages/SitesPage'))
 const UsersPage = lazy(() => import('@/pages/UsersPage'))
 const AuditLogPage = lazy(() => import('@/pages/AuditLogPage'))
@@ -42,12 +43,15 @@ function App() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/articles" element={<ArticlesPage />} />
           <Route path="/articles/:id" element={<ArticleDetailPage />} />
+          <Route path="/parc-pc" element={<ParcPCPage />} />
           <Route path="/movements" element={<StockMovementsPage />} />
+          <Route path="/mouvements" element={<StockMovementsPage />} />
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/sites" element={<SitesPage />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/audit" element={<AuditLogPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/parametres" element={<SettingsPage />} />
           <Route path="/help" element={<HelpSupportPage />} />
           <Route path="/terms" element={<TermsPage />} />
         </Route>

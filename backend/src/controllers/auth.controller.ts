@@ -11,6 +11,13 @@ import {
   verifyRefreshToken,
 } from '../utils/jwt';
 import { loginSchema } from '../utils/validation';
+import {
+  DEMO_PROFILES,
+  findDemoProfileById,
+  findDemoProfileByTechnicianId,
+  isPrismaConnectionError,
+  toPublicDemoSites,
+} from '../utils/offlineFallback';
 
 type NormalizedRole = 'ADMIN' | 'TECHNICIAN';
 type LegacyAuthUser = {
@@ -44,6 +51,25 @@ const isRoleEnumError = (error: unknown): boolean => {
   return message.includes("not found in enum 'Role'");
 };
 
+type RawUserRow = {
+  id: string;
+  technicianId: string;
+  name: string;
+  password: string;
+  role: string;
+  isActive: boolean;
+  lastLoginAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+async function getRawUsersByWhere(whereClause: string, params: unknown[]): Promise<RawUserRow[]> {
+  return prisma.$queryRawUnsafe<RawUserRow[]>(
+    `SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt" FROM "User" WHERE ${whereClause}`,
+    ...params,
+  );
+}
+
 /**
  * Liste des profils actifs (endpoint public pour le sélecteur de profil)
  * Retourne uniquement id, technicianId, name et role — pas de mot de passe
@@ -70,21 +96,9 @@ export const getProfiles = async (_req: Request, res: Response): Promise<void> =
     const message = error instanceof Error ? error.message : String(error);
 
     // Fallback pour anciennes valeurs de rôle non conformes au schéma Prisma
-    if (message.includes("not found in enum 'Role'")) {
+    if (message.includes("not found in enum 'Role'") || isPrismaConnectionError(error)) {
       try {
-        type LegacyProfileRow = {
-          id: string;
-          technicianId: string;
-          name: string;
-          role: string;
-        };
-
-        const legacyUsers = await prisma.$queryRaw<LegacyProfileRow[]>`
-          SELECT id, "technicianId", name, role
-          FROM "User"
-          WHERE "isActive" = true
-          ORDER BY name ASC
-        `;
+        const legacyUsers = await getRawUsersByWhere('"isActive" = true ORDER BY name ASC', []);
 
         const users = legacyUsers.map((user) => ({
           id: user.id,
@@ -104,6 +118,22 @@ export const getProfiles = async (_req: Request, res: Response): Promise<void> =
     }
 
     logger.error('Erreur lors de la récupération des profils :', error);
+
+    if (isPrismaConnectionError(error)) {
+      const users = DEMO_PROFILES.map((profile) => ({
+        id: profile.id,
+        technicianId: profile.technicianId,
+        name: profile.name,
+        role: profile.role,
+      }));
+
+      res.status(200).json({
+        success: true,
+        users,
+      });
+      return;
+    }
+
     res.status(500).json({
       success: false,
       message: 'Erreur interne du serveur',
@@ -138,6 +168,15 @@ export const getSitesPublic = async (_req: Request, res: Response): Promise<void
     });
   } catch (error) {
     logger.error('Erreur lors de la récupération des sites publics :', error);
+
+    if (isPrismaConnectionError(error)) {
+      res.status(200).json({
+        success: true,
+        sites: toPublicDemoSites(),
+      });
+      return;
+    }
+
     res.status(500).json({
       success: false,
       message: 'Erreur interne du serveur',
@@ -255,6 +294,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       }
       | null = null;
     let usedLegacyFallback = false;
+    let usedDemoFallback = false;
 
     // Recherche de l'utilisateur par identifiant technicien
     try {
@@ -262,18 +302,57 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         where: { technicianId },
       });
     } catch (error) {
-      if (!isRoleEnumError(error)) {
-        throw error;
-      }
+      if (isPrismaConnectionError(error)) {
+        try {
+          const legacyUsers = await getRawUsersByWhere('"technicianId" = $1 LIMIT 1', [technicianId]);
+          const legacyUser = legacyUsers[0];
 
-      usedLegacyFallback = true;
-      const legacyUsers = await prisma.$queryRaw<LegacyAuthUser[]>`
-        SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt"
-        FROM "User"
-        WHERE "technicianId" = ${technicianId}
-        LIMIT 1
-      `;
-      user = legacyUsers[0] ?? null;
+          if (legacyUser) {
+            usedLegacyFallback = true;
+            user = legacyUser;
+          }
+        } catch {
+          const demoUser = findDemoProfileByTechnicianId(technicianId);
+          if (demoUser) {
+            usedDemoFallback = true;
+            user = {
+              id: demoUser.id,
+              technicianId: demoUser.technicianId,
+              name: demoUser.name,
+              password: demoUser.password,
+              role: demoUser.role,
+              isActive: demoUser.isActive,
+            };
+          }
+        }
+
+        if (!user) {
+          logger.warn(`Tentative de connexion hors ligne : identifiant ${technicianId} introuvable`);
+        }
+
+        if (!user) {
+          res.status(401).json({
+            success: false,
+            message: 'Identifiant ou mot de passe incorrect',
+          });
+          return;
+        }
+
+        // Continuer avec la donnée de secours.
+      } else {
+        if (!isRoleEnumError(error)) {
+          throw error;
+        }
+
+        usedLegacyFallback = true;
+        const legacyUsers = await prisma.$queryRaw<LegacyAuthUser[]>`
+          SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt"
+          FROM "User"
+          WHERE "technicianId" = ${technicianId}
+          LIMIT 1
+        `;
+        user = legacyUsers[0] ?? null;
+      }
     }
 
     if (!user) {
@@ -328,11 +407,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         SET "lastLoginAt" = NOW(), "updatedAt" = NOW()
         WHERE id = ${user.id}
       `;
+    } else if (!usedDemoFallback) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        });
     } else {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { lastLoginAt: new Date() },
-      });
+        // Mode hors ligne : pas d'écriture en base.
     }
 
     // Enregistrement dans le journal d'audit
@@ -434,18 +515,47 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
         where: { id: payload.userId },
       });
     } catch (error) {
-      if (!isRoleEnumError(error)) {
-        throw error;
-      }
+      if (isPrismaConnectionError(error)) {
+        try {
+          const legacyUsers = await getRawUsersByWhere('id = $1 LIMIT 1', [payload.userId]);
+          const legacyUser = legacyUsers[0];
+          if (legacyUser) {
+            user = { id: legacyUser.id, role: legacyUser.role, isActive: legacyUser.isActive };
+          }
+        } catch {
+          const demoUser = findDemoProfileById(payload.userId);
+          if (demoUser) {
+            user = {
+              id: demoUser.id,
+              role: demoUser.role,
+              isActive: demoUser.isActive,
+            };
+          }
+        }
 
-      const legacyUsers = await prisma.$queryRaw<LegacyAuthUser[]>`
-        SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt"
-        FROM "User"
-        WHERE id = ${payload.userId}
-        LIMIT 1
-      `;
-      const legacy = legacyUsers[0];
-      user = legacy ? { id: legacy.id, role: legacy.role, isActive: legacy.isActive } : null;
+        if (!user) {
+          res.status(401).json({
+            success: false,
+            message: 'Utilisateur introuvable ou désactivé',
+          });
+          return;
+        }
+
+        // Continuer avec l'utilisateur de secours.
+      } else {
+        if (!isRoleEnumError(error)) {
+          throw error;
+        }
+
+        const legacyUsers = await prisma.$queryRaw<LegacyAuthUser[]>`
+          SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt"
+          FROM "User"
+          WHERE id = ${payload.userId}
+          LIMIT 1
+        `;
+        const legacy = legacyUsers[0];
+        user = legacy ? { id: legacy.id, role: legacy.role, isActive: legacy.isActive } : null;
+      }
     }
 
     if (!user || !user.isActive) {
@@ -515,29 +625,72 @@ export const me = async (req: Request, res: Response): Promise<void> => {
         },
       });
     } catch (error) {
-      if (!isRoleEnumError(error)) {
-        throw error;
-      }
-
-      const legacyUsers = await prisma.$queryRaw<LegacyAuthUser[]>`
-        SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt"
-        FROM "User"
-        WHERE id = ${req.user.userId}
-        LIMIT 1
-      `;
-      const legacy = legacyUsers[0];
-      user = legacy
-        ? {
-          id: legacy.id,
-          technicianId: legacy.technicianId,
-          name: legacy.name,
-          role: legacy.role,
-          isActive: legacy.isActive,
-          lastLoginAt: legacy.lastLoginAt,
-          createdAt: legacy.createdAt,
-          updatedAt: legacy.updatedAt,
+      if (isPrismaConnectionError(error)) {
+        try {
+          const legacyUsers = await getRawUsersByWhere('id = $1 LIMIT 1', [req.user.userId]);
+          const legacyUser = legacyUsers[0];
+          if (legacyUser) {
+            user = {
+              id: legacyUser.id,
+              technicianId: legacyUser.technicianId,
+              name: legacyUser.name,
+              role: legacyUser.role,
+              isActive: legacyUser.isActive,
+              lastLoginAt: legacyUser.lastLoginAt,
+              createdAt: legacyUser.createdAt,
+              updatedAt: legacyUser.updatedAt,
+            };
+          }
+        } catch {
+          const demoUser = findDemoProfileById(req.user.userId);
+          if (demoUser) {
+            user = {
+              id: demoUser.id,
+              technicianId: demoUser.technicianId,
+              name: demoUser.name,
+              role: demoUser.role,
+              isActive: demoUser.isActive,
+              lastLoginAt: null,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            };
+          }
         }
-        : null;
+
+        if (!user) {
+          res.status(404).json({
+            success: false,
+            message: 'Utilisateur introuvable',
+          });
+          return;
+        }
+
+        // Continuer avec l'utilisateur de secours.
+      } else {
+        if (!isRoleEnumError(error)) {
+          throw error;
+        }
+
+        const legacyUsers = await prisma.$queryRaw<LegacyAuthUser[]>`
+          SELECT id, "technicianId", name, password, role, "isActive", "lastLoginAt", "createdAt", "updatedAt"
+          FROM "User"
+          WHERE id = ${req.user.userId}
+          LIMIT 1
+        `;
+        const legacy = legacyUsers[0];
+        user = legacy
+          ? {
+            id: legacy.id,
+            technicianId: legacy.technicianId,
+            name: legacy.name,
+            role: legacy.role,
+            isActive: legacy.isActive,
+            lastLoginAt: legacy.lastLoginAt,
+            createdAt: legacy.createdAt,
+            updatedAt: legacy.updatedAt,
+          }
+          : null;
+      }
     }
 
     if (!user) {

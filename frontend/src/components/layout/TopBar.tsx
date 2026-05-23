@@ -30,12 +30,14 @@ import {
 const routeTitles: Record<string, string> = {
   '/': 'Dashboard',
   '/articles': 'Articles',
+  '/parc-pc': 'Parc PC',
   '/movements': 'Mouvements',
   '/alerts': 'Alertes',
   '/sites': 'Sites',
   '/users': 'Utilisateurs',
   '/audit': "Journal d'audit",
   '/settings': 'Paramètres',
+  '/parametres': 'Paramètres',
 }
 
 // Regex pour détecter un UUID
@@ -103,7 +105,7 @@ export function TopBar() {
   const breadcrumbs = getBreadcrumbs()
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 sm:h-16 items-center gap-2 sm:gap-4 border-b border-border bg-surface/60 backdrop-blur-xl px-3 sm:px-6 transition-colors duration-300">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-[var(--border-subtle)] bg-bg-primary/95 px-3 backdrop-blur-xl transition-colors duration-300 sm:h-16 sm:gap-4 sm:px-6">
       {/* Gauche : bouton toggle + fil d'Ariane */}
       <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         {/* Bouton menu mobile */}
@@ -111,7 +113,7 @@ export function TopBar() {
           variant="ghost"
           size="icon"
           onClick={() => setMobileOpen(true)}
-          className="h-9 w-9 text-text-secondary hover:text-text-primary lg:hidden"
+          className="h-9 w-9 text-[var(--text-muted)] hover:bg-bg-elevated hover:text-[var(--text-primary)] lg:hidden"
         >
           <Menu className="h-5 w-5" />
         </Button>
@@ -120,22 +122,22 @@ export function TopBar() {
           variant="ghost"
           size="icon"
           onClick={toggle}
-          className="h-9 w-9 text-text-secondary hover:text-text-primary hidden lg:flex"
+          className="hidden h-9 w-9 text-[var(--text-muted)] hover:bg-bg-elevated hover:text-[var(--text-primary)] lg:flex"
         >
           <Menu className="h-5 w-5" />
         </Button>
 
         {/* Fil d'Ariane — masqué sur mobile */}
         <nav className="hidden sm:flex items-center gap-1.5 text-sm min-w-0">
-          <span className="text-text-muted">Accueil</span>
+          <span className="text-[var(--text-muted)]">Accueil</span>
           {breadcrumbs.map((crumb, index) => (
             <span key={index} className="flex items-center gap-1.5">
-              <ChevronRight className="h-3.5 w-3.5 text-text-muted" />
+              <ChevronRight className="h-3.5 w-3.5 text-[var(--text-muted)]" />
               <span
                 className={cn(
                   index === breadcrumbs.length - 1
-                    ? 'font-medium text-text-primary'
-                    : 'text-text-muted'
+                    ? 'font-medium text-[var(--text-primary)]'
+                    : 'text-[var(--text-muted)]'
                 )}
               >
                 {crumb}
@@ -144,8 +146,8 @@ export function TopBar() {
           ))}
           {breadcrumbs.length === 0 && (
             <>
-              <ChevronRight className="h-3.5 w-3.5 text-text-muted" />
-              <span className="font-medium text-text-primary">
+              <ChevronRight className="h-3.5 w-3.5 text-[var(--text-muted)]" />
+              <span className="font-medium text-[var(--text-primary)]">
                 {getPageTitle()}
               </span>
             </>
@@ -153,7 +155,7 @@ export function TopBar() {
         </nav>
 
         {/* Titre de page sur mobile */}
-        <span className="sm:hidden font-medium text-text-primary text-sm truncate">
+        <span className="truncate text-sm font-medium text-[var(--text-primary)] sm:hidden">
           {getPageTitle()}
         </span>
       </div>
@@ -164,7 +166,7 @@ export function TopBar() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 text-text-secondary hover:text-text-primary"
+          className="h-9 w-9 text-[var(--text-muted)] hover:bg-bg-elevated hover:text-[var(--text-primary)]"
           onClick={() => navigate('/articles?focus=search')}
         >
           <Search className="h-4 w-4" />
@@ -177,7 +179,7 @@ export function TopBar() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative h-9 w-9 text-text-secondary hover:text-text-primary"
+          className="relative h-9 w-9 text-[var(--text-muted)] hover:bg-bg-elevated hover:text-[var(--text-primary)]"
           onClick={() => navigate('/alerts')}
         >
           <Bell className="h-4 w-4" />
@@ -194,10 +196,10 @@ export function TopBar() {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="flex items-center gap-2 px-2 hover:bg-[var(--sidebar-hover)]"
+              className="flex items-center gap-2 rounded-xl border border-transparent px-2 hover:border-[var(--border-subtle)] hover:bg-bg-elevated"
             >
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-primary/20 text-primary text-xs">
+                <AvatarFallback className="bg-[var(--green-subtle)] text-brand-light text-xs">
                   {user?.name ? getInitials(user.name) : '??'}
                 </AvatarFallback>
               </Avatar>
@@ -217,7 +219,7 @@ export function TopBar() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => navigate('/settings')}
+              onClick={() => navigate('/parametres')}
               className="cursor-pointer"
             >
               <Settings className="mr-2 h-4 w-4" />

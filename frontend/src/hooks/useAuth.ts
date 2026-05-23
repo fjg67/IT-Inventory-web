@@ -24,6 +24,7 @@ export function useAuth() {
         return
       }
       sessionRestored = true
+      setLoading(true)
       try {
         const response = await authService.refresh()
         if (response.accessToken) {
@@ -40,11 +41,7 @@ export function useAuth() {
       }
     }
 
-    if (!isAuthenticated) {
-      restoreSession()
-    } else {
-      setLoading(false)
-    }
+    restoreSession()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

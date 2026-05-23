@@ -36,7 +36,7 @@ export function SettingRow({
         className={cn(
           'flex items-center justify-between w-full px-5 py-[14px]',
           'transition-colors duration-150',
-          onClick && 'hover:bg-[var(--sidebar-hover)] cursor-pointer group'
+          onClick && 'hover:bg-bg-hover cursor-pointer group'
         )}
         {...(onClick ? { type: 'button' as const, 'aria-label': label } : {})}
       >
@@ -80,7 +80,7 @@ export function SettingRow({
       </Wrapper>
 
       {/* Séparateur */}
-      {!isLast && <div className="h-px bg-[var(--sidebar-hover)] mx-5" />}
+      {!isLast && <div className="h-px bg-[var(--border-subtle)] mx-5" />}
     </>
   )
 }

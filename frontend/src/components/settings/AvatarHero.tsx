@@ -22,7 +22,7 @@ export function AvatarHero({ initials, role, isActive }: AvatarHeroProps) {
       <div
         className="absolute top-[-40px] left-1/2 -translate-x-1/2 w-[200px] h-[200px] pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%)',
         }}
       />
 
@@ -42,7 +42,7 @@ export function AvatarHero({ initials, role, isActive }: AvatarHeroProps) {
               cy="54"
               r="52"
               fill="none"
-              stroke="rgba(99,102,241,0.3)"
+              stroke="rgba(34,197,94,0.3)"
               strokeWidth="1"
               strokeDasharray="4 6"
             />
@@ -52,9 +52,9 @@ export function AvatarHero({ initials, role, isActive }: AvatarHeroProps) {
           <div
             className="relative flex h-[88px] w-[88px] items-center justify-center rounded-full"
             style={{
-              background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%)',
+              background: 'linear-gradient(135deg, #1B8A3E 0%, #22C55E 50%, #16A34A 100%)',
               boxShadow:
-                '0 0 0 3px rgba(99,102,241,0.2), 0 0 0 6px rgba(99,102,241,0.08), 0 8px 32px rgba(99,102,241,0.4)',
+                '0 0 0 3px rgba(34,197,94,0.2), 0 0 0 6px rgba(34,197,94,0.08), 0 8px 32px rgba(34,197,94,0.35)',
             }}
           >
             <span
@@ -76,10 +76,10 @@ export function AvatarHero({ initials, role, isActive }: AvatarHeroProps) {
 
         {/* Badges rôle + statut */}
         <div className="flex items-center gap-2 flex-wrap justify-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 bg-indigo-500/[0.1] border-indigo-500/30">
-            <Wrench className="h-3 w-3 text-indigo-300" />
+          <span className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 bg-[var(--green-subtle)] border-[var(--green-border)]">
+            <Wrench className="h-3 w-3 text-brand-light" />
             <span
-              className="text-[12px] font-medium text-indigo-300"
+              className="text-[12px] font-medium text-brand-light"
               style={{ fontFamily: "'Outfit', sans-serif" }}
             >
               {role === 'ADMIN' ? 'Superviseur' : 'Technicien'}
@@ -94,7 +94,7 @@ export function AvatarHero({ initials, role, isActive }: AvatarHeroProps) {
       <div
         className="absolute bottom-0 left-[20%] right-[20%] h-px"
         style={{
-          background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.4), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(34,197,94,0.4), transparent)',
         }}
       />
     </motion.div>

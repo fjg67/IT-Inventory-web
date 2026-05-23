@@ -12,8 +12,8 @@ import type { MovementChartData, TopArticleData, CategoryData } from '@/types'
 
 // Palette premium pour le donut chart
 const CATEGORY_COLORS = [
-  '#6366F1', '#3B82F6', '#10B981', '#F59E0B', '#EF4444',
-  '#EC4899', '#8B5CF6', '#06B6D4',
+  '#22C55E', '#16A34A', '#10B981', '#84CC16', '#F59E0B',
+  '#EF4444', '#0EA5E9', '#14B8A6',
 ]
 
 // Émojis catégories
@@ -104,8 +104,8 @@ export function MovementChart({ data, loading }: MovementChartProps) {
           <ChartHeader
             icon={TrendingUp}
             title="Mouvements — 30 jours"
-            iconBg="bg-blue-500/15 text-blue-400"
-            glowColor="bg-blue-500"
+            iconBg="bg-[var(--green-subtle)] text-brand-light"
+            glowColor="bg-brand"
           />
           {/* Mini stats */}
           <div className="flex items-center gap-2 sm:gap-4">
@@ -218,7 +218,7 @@ export function TopArticlesChart({ data, loading }: TopArticlesChartProps) {
     { bg: 'from-amber-700/15 to-amber-800/5', bar: 'from-amber-600 to-amber-700', text: 'text-amber-600', badge: 'bg-amber-700/20 text-amber-500 ring-amber-700/30', medal: '🥉' },
   ]
 
-  const defaultColor = { bg: 'from-blue-500/10 to-blue-500/[0.02]', bar: 'from-blue-500/80 to-indigo-500/60', text: 'text-blue-400', badge: 'bg-blue-500/15 text-blue-400 ring-blue-500/20', medal: '' }
+  const defaultColor = { bg: 'from-emerald-500/10 to-emerald-500/[0.02]', bar: 'from-emerald-500/80 to-green-500/60', text: 'text-brand-light', badge: 'bg-[var(--green-subtle)] text-brand-light ring-[var(--green-border)]', medal: '' }
 
   return (
     <motion.div
@@ -369,7 +369,7 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
             </ResponsiveContainer>
             {/* Center text with glow */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <div className="absolute w-20 h-20 bg-indigo-500/10 rounded-full blur-xl" />
+              <div className="absolute w-20 h-20 bg-[var(--green-subtle)] rounded-full blur-xl" />
               <span className="relative text-3xl font-bold text-text-primary tabular-nums">{total}</span>
               <span className="relative text-[10px] text-text-muted uppercase tracking-widest font-semibold mt-0.5">articles</span>
             </div>
@@ -421,3 +421,4 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
     </motion.div>
   )
 }
+

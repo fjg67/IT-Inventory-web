@@ -6,27 +6,31 @@ import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border text-sm font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)] disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-md hover:bg-primary-hover hover:shadow-glow active:scale-[0.98]",
+          "border-transparent bg-[var(--green-primary)] text-white shadow-green hover:bg-[#187737] active:scale-[0.98]",
+        primary:
+          "border-transparent bg-[var(--green-primary)] text-white shadow-green hover:bg-[#187737] active:scale-[0.98]",
         destructive:
-          "bg-danger text-white shadow-md hover:bg-danger/90 active:scale-[0.98]",
+          "border-[var(--danger-border)] bg-[var(--danger-subtle)] text-[var(--danger)] hover:bg-[rgba(239,68,68,0.18)] active:scale-[0.98]",
+        danger:
+          "border-[var(--danger-border)] bg-[var(--danger-subtle)] text-[var(--danger)] hover:bg-[rgba(239,68,68,0.18)] active:scale-[0.98]",
         outline:
-          "border border-border bg-transparent text-text-primary hover:bg-surface-elevated hover:border-primary/50",
+          "border-[var(--border-card)] bg-transparent text-[var(--text-primary)] hover:bg-bg-elevated hover:border-[var(--border-accent)]",
         secondary:
-          "bg-surface-elevated text-text-primary hover:bg-surface-elevated/80",
+          "border-[var(--border-card)] bg-bg-elevated text-[var(--text-primary)] hover:bg-bg-hover",
         ghost:
-          "text-text-secondary hover:bg-[var(--sidebar-hover)] hover:text-text-primary",
+          "border-transparent bg-transparent text-[var(--text-muted)] hover:bg-bg-elevated hover:text-[var(--text-primary)]",
         link:
-          "text-primary underline-offset-4 hover:underline",
+          "border-transparent p-0 text-brand-light underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-8 rounded-sm px-3 text-xs",
-        lg: "h-12 rounded-md px-8 text-base",
+        default: "h-10 px-4 py-2.5",
+        sm: "h-8 rounded-[10px] px-3 text-xs",
+        lg: "h-12 rounded-xl px-8 text-base",
         icon: "h-10 w-10",
       },
     },

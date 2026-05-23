@@ -332,7 +332,7 @@ export default function StockMovementsPage() {
       >
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="relative">
-            <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/25">
+            <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-brand-light shadow-[0_10px_24px_rgba(34,197,94,0.25)]">
               <Zap className="h-5 w-5 sm:h-7 sm:w-7 text-white" />
             </div>
             <div className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-emerald-400 border-2 border-background animate-pulse" />
@@ -364,7 +364,7 @@ export default function StockMovementsPage() {
           {canWriteInventory && (
             <Button
               onClick={() => setFormOpen(true)}
-              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/25 border-0 transition-all hover:shadow-blue-500/40"
+              className="border-0 bg-gradient-to-r from-brand to-brand-light shadow-[0_10px_24px_rgba(34,197,94,0.25)] transition-all hover:from-[#187737] hover:to-[#22C55E] hover:shadow-[0_12px_28px_rgba(34,197,94,0.35)]"
             >
               <Plus className="mr-2 h-4 w-4" />
               <span className="hidden sm:inline">Nouveau mouvement</span>
@@ -382,14 +382,14 @@ export default function StockMovementsPage() {
         className="relative overflow-hidden rounded-2xl border border-border bg-[var(--sidebar-hover)] backdrop-blur-xl p-4"
       >
         {/* Glow decoratif */}
-        <div className="absolute top-0 left-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+        <div className="absolute top-0 left-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-brand-light/30 to-transparent" />
 
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--sidebar-hover)] border border-border">
-            <Filter className="h-3.5 w-3.5 text-blue-400" />
+            <Filter className="h-3.5 w-3.5 text-brand-light" />
             <span className="text-xs font-medium text-text-secondary">Filtres</span>
             {activeFiltersCount > 0 && (
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white">
                 {activeFiltersCount}
               </span>
             )}
@@ -793,11 +793,11 @@ function MovementFormDialog({
         {/* En-tête avec gradient */}
         <div className="relative overflow-hidden px-6 pt-6 pb-4">
           {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent" />
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[var(--green-subtle)] via-emerald-500/5 to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-light/50 to-transparent" />
           
           <div className="relative flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/25">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-light shadow-[0_8px_20px_rgba(34,197,94,0.25)]">
               <Zap className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -1056,7 +1056,7 @@ function MovementFormDialog({
                 {...register('reason')}
                 rows={2}
                 placeholder="Optionnel…"
-                className="w-full resize-none rounded-lg border border-border bg-surface-elevated px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50"
+                className="w-full resize-none rounded-lg border border-border bg-surface-elevated px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-[var(--border-focus)]/40 focus:border-[var(--border-focus)]"
               />
             </div>
           </div>
@@ -1096,3 +1096,4 @@ function MovementFormDialog({
 }
 
 export { MovementFormDialog }
+

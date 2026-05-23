@@ -30,11 +30,28 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  color?: string
+  bgSubtle?: string
+  borderColor?: string
+  icon?: React.ReactNode
+}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+function Badge({ className, variant, color, bgSubtle, borderColor, icon, children, style, ...props }: BadgeProps) {
+  const customStyle = color || bgSubtle || borderColor
+    ? {
+        color: color,
+        background: bgSubtle,
+        borderColor: borderColor,
+        ...(style || {}),
+      }
+    : style
+
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div className={cn(badgeVariants({ variant }), customStyle ? 'border' : '', className)} style={customStyle} {...props}>
+      {icon && <span className="text-[10px]">{icon}</span>}
+      {children}
+    </div>
   )
 }
 

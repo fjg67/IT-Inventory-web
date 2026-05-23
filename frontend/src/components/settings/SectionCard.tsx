@@ -14,7 +14,7 @@ interface SectionCardProps {
 export function SectionCard({
   children,
   label,
-  accentColor = 'bg-indigo-500',
+  accentColor = 'bg-brand-light',
   className,
   delay = 0,
 }: SectionCardProps) {
@@ -25,8 +25,8 @@ export function SectionCard({
       transition={{ delay, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
       className={cn(
         'rounded-xl overflow-hidden',
-        'border border-border',
-        'bg-surface',
+        'border border-[var(--border-subtle)]',
+        'bg-bg-card',
         'shadow-[0_1px_3px_rgba(0,0,0,0.5),0_8px_24px_rgba(0,0,0,0.3)]',
         className
       )}

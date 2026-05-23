@@ -1,0 +1,20 @@
+<svg width="560" height="240" viewBox="0 0 560 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="560" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3A2A06"/>
+      <stop offset="1" stop-color="#A16207"/>
+    </linearGradient>
+    <linearGradient id="line" x1="140" y1="70" x2="430" y2="185" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#FACC15"/>
+    </linearGradient>
+  </defs>
+  <rect width="560" height="240" rx="26" fill="url(#bg)"/>
+  <circle cx="456" cy="58" r="50" fill="#F59E0B" fill-opacity="0.18"/>
+  <circle cx="103" cy="186" r="62" fill="#FDE68A" fill-opacity="0.12"/>
+  <rect x="142" y="69" width="276" height="98" rx="14" stroke="url(#line)" stroke-width="5"/>
+  <rect x="117" y="176" width="327" height="15" rx="7.5" fill="#FEF3C7" fill-opacity="0.36"/>
+  <circle cx="282" cy="119" r="24" stroke="#FDE68A" stroke-width="6"/>
+  <path d="M282 95V119L297 129" stroke="#FDE68A" stroke-width="6" stroke-linecap="round"/>
+  <text x="30" y="40" fill="#FEF9C3" font-size="20" font-family="Arial, sans-serif" font-weight="700" letter-spacing="2">A REUSINER</text>
+</svg>

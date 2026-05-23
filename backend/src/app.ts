@@ -109,6 +109,7 @@ const mountRoutes = async (): Promise<void> => {
     const auditRoutes = await import('./routes/audit');
     const exportRoutes = await import('./routes/export');
     const dashboardRoutes = await import('./routes/dashboard');
+    const parcPCRoutes = await import('./routes/parcpc');
 
     app.use('/api/auth', authRoutes.default);
     app.use('/api/articles', articleRoutes.default);
@@ -120,6 +121,7 @@ const mountRoutes = async (): Promise<void> => {
     app.use('/api/audit', auditRoutes.default);
     app.use('/api/export', exportRoutes.default);
     app.use('/api/dashboard', dashboardRoutes.default);
+    app.use('/api/parc-pc', parcPCRoutes.default);
 
     logger.info('Toutes les routes API ont été montées avec succès');
   } catch (error) {

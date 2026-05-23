@@ -50,7 +50,7 @@ export function AlertList({ alerts, loading }: AlertListProps) {
         </div>
         <Link
           to="/alerts"
-          className="text-xs text-text-muted hover:text-primary transition-colors flex items-center gap-1 group"
+          className="text-xs text-text-muted hover:text-brand-light transition-colors flex items-center gap-1 group"
         >
           Voir tout
           <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />

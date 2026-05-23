@@ -115,7 +115,7 @@ export default function DashboardPage() {
       >
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-brand to-brand-light shadow-[0_0_20px_rgba(34,197,94,0.25)]">
               <LayoutDashboard className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -130,7 +130,7 @@ export default function DashboardPage() {
         {/* Site selector pills — premium design */}
         <div className="relative flex items-center gap-1 p-1.5 rounded-2xl bg-surface/60 backdrop-blur-xl border border-border/50 shadow-lg shadow-black/5 overflow-x-auto scrollbar-hide">
           {/* Fond glassmorphism subtil */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/[0.03] via-transparent to-violet-500/[0.03]" />
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-brand-light/[0.05] via-transparent to-brand/[0.05]" />
 
           {sites.map((site) => (
             <motion.button
@@ -140,7 +140,7 @@ export default function DashboardPage() {
               whileTap={{ scale: 0.97 }}
               className={`relative z-10 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 ${
                 selectedSiteId === site.id
-                  ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-[0_2px_12px_rgba(59,130,246,0.4)]'
+                  ? 'bg-gradient-to-r from-brand to-brand-light text-white shadow-[0_2px_12px_rgba(34,197,94,0.32)]'
                   : 'text-text-muted hover:text-text-primary hover:bg-white/5'
               }`}
             >
@@ -171,7 +171,7 @@ export default function DashboardPage() {
           value={stats?.totalArticles ?? 0}
           delta={deltaArticles}
           icon={Package}
-          color="blue"
+          color="green"
           loading={statsLoading}
           index={0}
           onClick={() => navigate(siteId ? `/articles?siteId=${siteId}` : '/articles')}

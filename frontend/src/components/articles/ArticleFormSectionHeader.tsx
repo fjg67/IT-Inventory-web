@@ -10,10 +10,10 @@ interface ArticleFormSectionHeaderProps {
 
 const ACCENT_MAP: Record<string, { iconBg: string; iconText: string; lineFrom: string; labelText: string }> = {
   blue: {
-    iconBg: 'bg-blue-500/10',
-    iconText: 'text-blue-400',
-    lineFrom: 'from-blue-500/25',
-    labelText: 'text-blue-400/90',
+    iconBg: 'bg-[var(--green-subtle)]',
+    iconText: 'text-brand-light',
+    lineFrom: 'from-brand-light/25',
+    labelText: 'text-brand-light/90',
   },
   amber: {
     iconBg: 'bg-amber-500/10',
@@ -62,3 +62,4 @@ export function ArticleFormSectionHeader({ icon: Icon, label, accentColor = 'blu
     </div>
   )
 }
+

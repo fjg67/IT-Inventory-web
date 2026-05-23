@@ -6,6 +6,7 @@ import { createAuditLog } from '../middleware/audit';
 import logger from '../utils/logger';
 import { siteSchema } from '../utils/validation';
 import { Prisma } from '@prisma/client';
+import { DEMO_SITES, isPrismaConnectionError, toFullDemoSite } from '../utils/offlineFallback';
 
 /**
  * Récupération de tous les sites
@@ -68,6 +69,21 @@ export const getSites = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error) {
     logger.error('Erreur lors de la récupération des sites :', error);
+
+    if (isPrismaConnectionError(error)) {
+      const demoSites = DEMO_SITES.map((site) => toFullDemoSite(site)).map((site) => ({
+        ...site,
+        articleCount: 0,
+        lastMovementAt: null,
+      }));
+
+      res.status(200).json({
+        success: true,
+        sites: demoSites,
+      });
+      return;
+    }
+
     res.status(500).json({
       success: false,
       message: 'Erreur interne du serveur',

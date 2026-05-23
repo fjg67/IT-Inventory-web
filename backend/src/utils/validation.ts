@@ -84,6 +84,42 @@ export const articleSchema = z.object({
     .optional(),
 });
 
+export const pcStatusSchema = z.enum([
+  'a_chaud',
+  'a_reusiner',
+  'en_usinage',
+  'disponible',
+  'envoye',
+], {
+  errorMap: () => ({ message: 'Le statut PC est invalide' }),
+});
+
+export const pcCategorySchema = z.enum([
+  'portable_siege',
+  'portable_agence',
+], {
+  errorMap: () => ({ message: 'La catégorie PC est invalide' }),
+});
+
+export const pcSchema = z.object({
+  hostname: z.string().min(1, 'Le hostname est obligatoire').trim(),
+  asset: z.string().min(1, 'L\'asset est obligatoire').trim(),
+  model: z.string().min(1, 'Le modèle est obligatoire').trim(),
+  category: pcCategorySchema,
+  status: pcStatusSchema.optional(),
+  site: z.string().min(1, 'Le site est obligatoire').trim(),
+  sentTo: z.string().trim().optional().or(z.literal('')),
+  sentRecipient: z.string().trim().optional().or(z.literal('')),
+  notes: z.string().trim().optional().or(z.literal('')),
+});
+
+export const pcStatusUpdateSchema = z.object({
+  status: pcStatusSchema,
+  sentTo: z.string().trim().optional().or(z.literal('')),
+  sentRecipient: z.string().trim().optional().or(z.literal('')),
+  notes: z.string().trim().optional().or(z.literal('')),
+});
+
 // --- Mouvements de stock ---
 
 const baseMovementSchema = z.object({

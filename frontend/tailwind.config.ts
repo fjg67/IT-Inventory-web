@@ -10,6 +10,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        bg: {
+          primary: '#0A0F0D',
+          card: '#111A14',
+          elevated: '#16231A',
+          hover: '#1E2D22',
+        },
+        brand: {
+          DEFAULT: '#1B8A3E',
+          light: '#22C55E',
+        },
         background: 'var(--background)',
         surface: 'var(--surface)',
         'surface-elevated': 'var(--surface-elevated)',
@@ -50,11 +60,16 @@ const config: Config = {
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       borderRadius: {
+        card: '16px',
+        xl2: '20px',
+        xl3: '24px',
         lg: '16px',
         md: '12px',
         sm: '8px',
       },
       boxShadow: {
+        green: '0 4px 20px rgba(34,197,94,0.15)',
+        'green-lg': '0 8px 32px rgba(34,197,94,0.20)',
         glow: '0 0 20px rgba(59,130,246,0.3)',
         'glow-lg': '0 0 40px rgba(59,130,246,0.4)',
         card: '0 8px 32px rgba(0, 0, 0, 0.4)',

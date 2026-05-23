@@ -6,6 +6,15 @@ import prisma from '../utils/prisma';
 import logger from '../utils/logger';
 import { Prisma } from '@prisma/client';
 
+const csvEscape = (value: unknown): string => {
+  const text = value === null || value === undefined ? '' : String(value);
+  return `"${text.replace(/"/g, '""')}"`;
+};
+
+const csvLine = (values: unknown[]): string => values.map(csvEscape).join(';');
+
+const toFrDateTime = (date: Date): string => date.toLocaleString('fr-FR');
+
 /**
  * Export Excel de la liste des articles
  * Colonnes : Référence, Nom, Catégorie, Marque, Modèle, Stock Total, Stock Min, Statut
@@ -100,6 +109,202 @@ export const exportArticles = async (req: Request, res: Response): Promise<void>
     logger.info(`Export Excel des articles généré (${articles.length} articles)`);
   } catch (error) {
     logger.error('Erreur lors de l\'export des articles :', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur interne du serveur',
+    });
+  }
+};
+
+/**
+ * Export CSV "fiche article" (résumé + stock actuel + historique complet des mouvements)
+ */
+export const exportArticleCsv = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const article = await prisma.article.findUnique({
+      where: { id },
+      include: {
+        stocks: {
+          include: {
+            site: {
+              select: { id: true, name: true },
+            },
+          },
+          orderBy: {
+            site: {
+              name: 'asc',
+            },
+          },
+        },
+      },
+    });
+
+    if (!article || article.isArchived) {
+      res.status(404).json({
+        success: false,
+        message: 'Article introuvable',
+      });
+      return;
+    }
+
+    const movements = await prisma.stockMovement.findMany({
+      where: { articleId: article.id },
+      include: {
+        fromSite: { select: { id: true, name: true } },
+        toSite: { select: { id: true, name: true } },
+        user: { select: { technicianId: true, name: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const totalStock = article.stocks.reduce((sum, stock) => sum + stock.quantity, 0);
+    const status =
+      totalStock === 0 ? 'Rupture' : totalStock <= article.minStock ? 'Stock bas' : 'OK';
+    const movementsAsc = [...movements].reverse();
+    const movementStats = movements.reduce(
+      (acc, movement) => {
+        acc.total += 1;
+        if (movement.type === 'ENTRY') acc.entries += 1;
+        if (movement.type === 'EXIT') acc.exits += 1;
+        if (movement.type === 'TRANSFER') acc.transfers += 1;
+        if (movement.type === 'ADJUSTMENT') acc.adjustments += 1;
+        return acc;
+      },
+      { total: 0, entries: 0, exits: 0, transfers: 0, adjustments: 0 }
+    );
+
+    const lines: string[] = [];
+
+    // En-tête de document
+    lines.push(csvLine(['==============================================================']));
+    lines.push(csvLine(['IT-Inventory - FICHE ARTICLE - EXPORT CSV PREMIUM']));
+    lines.push(csvLine(['==============================================================']));
+    lines.push(csvLine(['Genere le', toFrDateTime(new Date())]));
+    lines.push(csvLine(['']));
+
+    // Section 1: Résumé
+    lines.push(csvLine(['[1] RESUME ARTICLE']));
+    lines.push(csvLine(['Champ', 'Valeur']));
+    lines.push(csvLine(['Reference', article.reference]));
+    lines.push(csvLine(['Nom', article.name]));
+    lines.push(csvLine(['Categorie', article.category]));
+    lines.push(csvLine(['Marque', article.brand ?? '']));
+    lines.push(csvLine(['Modele', article.model ?? '']));
+    lines.push(csvLine(['Unite', article.unit]));
+    lines.push(csvLine(['Stock minimum', article.minStock]));
+    lines.push(csvLine(['Stock actuel total', totalStock]));
+    lines.push(csvLine(['Statut', status]));
+    lines.push(csvLine(['']));
+
+    // Section 1B: KPIs historiques
+    lines.push(csvLine(['[1B] KPIs MOUVEMENTS']));
+    lines.push(csvLine(['Indicateur', 'Valeur']));
+    lines.push(csvLine(['Mouvements (total)', movementStats.total]));
+    lines.push(csvLine(['Entrees', movementStats.entries]));
+    lines.push(csvLine(['Sorties', movementStats.exits]));
+    lines.push(csvLine(['Transferts', movementStats.transfers]));
+    lines.push(csvLine(['Ajustements', movementStats.adjustments]));
+    lines.push(csvLine(['']));
+
+    // Section 2: Stocks par site
+    lines.push(csvLine(['[2] STOCK ACTUEL PAR SITE']));
+    lines.push(csvLine(['Site', 'Quantite', 'Part du stock total']));
+    if (article.stocks.length === 0) {
+      lines.push(csvLine(['Aucun stock enregistre', 0, '0%']));
+    } else {
+      for (const stock of article.stocks) {
+        const ratio = totalStock > 0 ? `${Math.round((stock.quantity / totalStock) * 100)}%` : '0%';
+        lines.push(csvLine([stock.site.name, stock.quantity, ratio]));
+      }
+    }
+    lines.push(csvLine(['']));
+
+    // Section 3: Historique complet
+    lines.push(csvLine(['[3] HISTORIQUE COMPLET DES MOUVEMENTS']));
+    lines.push(
+      csvLine([
+        '#',
+        'Date',
+        'Type',
+        'Sens',
+        'Variation',
+        'Quantite',
+        'Stock apres mouvement',
+        'Site source',
+        'Site destination',
+        'Technicien',
+        'Raison',
+      ])
+    );
+
+    if (movements.length === 0) {
+      lines.push(csvLine(['Aucun mouvement enregistre', '', '', '', '', '', '', '', '', '']));
+    } else {
+      const typeLabels: Record<string, string> = {
+        ENTRY: 'Entree',
+        EXIT: 'Sortie',
+        ADJUSTMENT: 'Ajustement',
+        TRANSFER: 'Transfert',
+      };
+      const sensLabels: Record<string, string> = {
+        ENTRY: 'IN',
+        EXIT: 'OUT',
+        ADJUSTMENT: 'ADJ',
+        TRANSFER: 'MOVE',
+      };
+      let runningStock = 0;
+
+      for (let index = 0; index < movementsAsc.length; index += 1) {
+        const movement = movementsAsc[index]!;
+        const signedDelta =
+          movement.type === 'ENTRY'
+            ? movement.quantity
+            : movement.type === 'EXIT'
+              ? -movement.quantity
+              : movement.type === 'ADJUSTMENT'
+                ? movement.quantity
+                : 0;
+        runningStock += signedDelta;
+        const variation =
+          movement.type === 'ENTRY'
+            ? `+${movement.quantity}`
+            : movement.type === 'EXIT'
+              ? `-${movement.quantity}`
+              : movement.type === 'ADJUSTMENT'
+                ? `${movement.quantity >= 0 ? '+' : ''}${movement.quantity}`
+                : `-${movement.quantity} puis +${movement.quantity}`;
+
+        lines.push(
+          csvLine([
+            index + 1,
+            toFrDateTime(movement.createdAt),
+            typeLabels[movement.type] ?? movement.type,
+            sensLabels[movement.type] ?? movement.type,
+            variation,
+            movement.quantity,
+            runningStock,
+            movement.fromSite?.name ?? '',
+            movement.toSite?.name ?? '',
+            `${movement.user.name} (${movement.user.technicianId})`,
+            movement.reason ?? '',
+          ])
+        );
+      }
+    }
+
+    const safeReference = article.reference.replace(/[^a-zA-Z0-9_-]/g, '_');
+    const filename = `article_${safeReference}_${new Date().toISOString().split('T')[0]}.csv`;
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    // UTF-8 BOM pour un affichage correct dans Excel (accents)
+    res.status(200).send(`\uFEFF${lines.join('\n')}`);
+
+    logger.info(`Export CSV fiche article généré (${article.reference}, ${movements.length} mouvements)`);
+  } catch (error) {
+    logger.error('Erreur lors de l\'export CSV fiche article :', error);
     res.status(500).json({
       success: false,
       message: 'Erreur interne du serveur',

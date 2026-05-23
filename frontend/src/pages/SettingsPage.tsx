@@ -4,10 +4,6 @@
 
 import { motion } from 'framer-motion'
 import {
-  Globe,
-  Wifi,
-  RefreshCw,
-  Activity,
   Tag,
   Code2,
   Shield,
@@ -15,22 +11,14 @@ import {
   Copyright,
   LifeBuoy,
   FileText,
-  ChevronRight,
-  Moon,
-  Sun,
-  Palette,
 } from 'lucide-react'
 
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
-import { useTheme } from '@/contexts/ThemeContext'
 import { AvatarHero } from '@/components/settings/AvatarHero'
 import { SectionCard } from '@/components/settings/SectionCard'
 import { SettingRow } from '@/components/settings/SettingRow'
-import { StatusBadge } from '@/components/settings/StatusBadge'
 import { LogoutButton } from '@/components/settings/LogoutButton'
-import { ThemeSelector } from '@/components/theme/ThemeSelector'
-import { ThemePreview } from '@/components/theme/ThemePreview'
 
 // --- Animation variants ---
 const containerVariants = {
@@ -53,8 +41,7 @@ const itemVariants = {
 // --- Composant principal ---
 export default function SettingsPage() {
   const navigate = useNavigate()
-  const { user, isAdmin, logout } = useAuth()
-  const { theme, resolvedTheme, isDark } = useTheme()
+  const { user, logout } = useAuth()
 
   const initials = (user?.name ?? 'U')
     .split(' ')
@@ -69,7 +56,7 @@ export default function SettingsPage() {
       <div
         className="pointer-events-none absolute top-0 right-0 w-[400px] h-[400px] z-0 hidden sm:block"
         style={{
-          background: 'radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 70%)',
         }}
       />
 
@@ -131,46 +118,21 @@ export default function SettingsPage() {
             />
           </motion.div>
 
-          {/* === APPARENCE === */}
-          <motion.div variants={itemVariants}>
-            <SectionCard label="Apparence" accentColor="bg-indigo-500" delay={0.05}>
-              {/* Thème de l'interface */}
-              <SettingRow
-                icon={isDark ? Moon : Sun}
-                iconBg={isDark ? 'bg-indigo-500/[0.1]' : 'bg-amber-500/[0.08]'}
-                iconColor={isDark ? 'text-indigo-400' : 'text-amber-500'}
-                label="Thème de l'interface"
-                sublabel={
-                  theme === 'system'
-                    ? `Automatique (${resolvedTheme === 'dark' ? 'sombre' : 'clair'} actuellement)`
-                    : resolvedTheme === 'dark' ? 'Mode sombre' : 'Mode clair'
-                }
-                value={<ThemeSelector />}
-                isLast
-              />
-
-              {/* Aperçu live */}
-              <div className="px-5 pb-5 pt-2">
-                <ThemePreview />
-              </div>
-            </SectionCard>
-          </motion.div>
-
           {/* === À PROPOS === */}
           <motion.div variants={itemVariants}>
-            <SectionCard label="À propos" accentColor="bg-violet-500" delay={0.2}>
+            <SectionCard label="À propos" accentColor="bg-brand-light" delay={0.05}>
               {/* Version */}
               <SettingRow
                 icon={Tag}
-                iconBg="bg-indigo-500/[0.1]"
-                iconColor="text-indigo-300"
+                iconBg="bg-[var(--green-subtle)]"
+                iconColor="text-brand-light"
                 label="Version"
                 value={
                   <span
                     className="text-[14px] font-bold"
                     style={{
                       fontFamily: "'JetBrains Mono', monospace",
-                      background: 'linear-gradient(90deg, #818CF8, #A5B4FC)',
+                      background: 'linear-gradient(90deg, #22C55E, #86EFAC)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                     }}
@@ -183,8 +145,8 @@ export default function SettingsPage() {
               {/* Créateur */}
               <SettingRow
                 icon={Code2}
-                iconBg="bg-violet-500/[0.1]"
-                iconColor="text-violet-400"
+                iconBg="bg-[var(--green-subtle)]"
+                iconColor="text-brand-light"
                 label="Florian JOVE GARCIA"
                 sublabel="Créateur & Développeur"
               />
@@ -208,8 +170,8 @@ export default function SettingsPage() {
               {/* Application */}
               <SettingRow
                 icon={Monitor}
-                iconBg="bg-indigo-500/[0.1]"
-                iconColor="text-indigo-300"
+                iconBg="bg-[var(--green-subtle)]"
+                iconColor="text-brand-light"
                 label="IT-Inventory"
                 value={
                   <span className="text-[12px] text-text-secondary">
@@ -230,12 +192,12 @@ export default function SettingsPage() {
 
           {/* === LIENS === */}
           <motion.div variants={itemVariants}>
-            <SectionCard delay={0.3}>
+            <SectionCard delay={0.15}>
               {/* Aide et support */}
               <SettingRow
                 icon={LifeBuoy}
-                iconBg="bg-amber-500/[0.08]"
-                iconColor="text-amber-400"
+                iconBg="bg-[var(--green-subtle)]"
+                iconColor="text-brand-light"
                 label="Aide et support"
                 sublabel="Documentation et FAQ"
                 showChevron

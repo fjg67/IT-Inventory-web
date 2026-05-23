@@ -1,0 +1,20 @@
+<svg width="560" height="240" viewBox="0 0 560 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="560" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#0E7490"/>
+    </linearGradient>
+    <linearGradient id="line" x1="140" y1="70" x2="430" y2="185" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A5F3FC"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+  </defs>
+  <rect width="560" height="240" rx="26" fill="url(#bg)"/>
+  <circle cx="456" cy="58" r="50" fill="#22D3EE" fill-opacity="0.18"/>
+  <circle cx="103" cy="186" r="62" fill="#67E8F9" fill-opacity="0.12"/>
+  <rect x="142" y="69" width="276" height="98" rx="14" stroke="url(#line)" stroke-width="5"/>
+  <rect x="117" y="176" width="327" height="15" rx="7.5" fill="#A5F3FC" fill-opacity="0.36"/>
+  <path d="M269 98L277 124L303 132L277 140L269 166L261 140L235 132L261 124L269 98Z" fill="#A5F3FC"/>
+  <path d="M295 93L300 110L317 115L300 120L295 137L290 120L273 115L290 110L295 93Z" fill="#67E8F9"/>
+  <text x="30" y="40" fill="#E0F2FE" font-size="20" font-family="Arial, sans-serif" font-weight="700" letter-spacing="2">EN USINAGE</text>
+</svg>

@@ -135,3 +135,18 @@ model AppConfig {
   value     String
   updatedAt DateTime? @default(now()) @db.Timestamptz(6)
 }
+
+model PC {
+  id            String   @id @default(cuid())
+  hostname      String   @unique
+  asset         String   @unique
+  model         String
+  category      String
+  status        String   @default("disponible")
+  site          String
+  sentTo        String?
+  sentRecipient String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

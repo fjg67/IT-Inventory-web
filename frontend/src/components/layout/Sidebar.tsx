@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import {
   LayoutDashboard,
   Package,
+  Monitor,
   ArrowLeftRight,
   AlertTriangle,
   Building2,
@@ -17,13 +18,12 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
-import logoImg from '@/assets/logo.png'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/useAuth'
 import { useSidebarStore } from '@/stores/sidebarStore'
 import { LogoutConfirmDialog } from '@/components/shared/LogoutConfirmDialog'
-import { ThemeToggle } from '@/components/theme/ThemeToggle'
 import { WorkspaceIndicator } from '@/components/layout/WorkspaceIndicator'
+import { LogoIcon } from '@/components/ui/LogoIcon'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -53,14 +53,15 @@ export function Sidebar() {
 
   // Liste des liens de navigation
   const navItems: NavItem[] = [
-    { label: 'Dashboard', path: '/', icon: LayoutDashboard },
+    { label: 'Accueil', path: '/', icon: LayoutDashboard },
     { label: 'Articles', path: '/articles', icon: Package },
+    { label: 'Parc PC', path: '/parc-pc', icon: Monitor },
     { label: 'Mouvements', path: '/movements', icon: ArrowLeftRight },
     { label: 'Alertes', path: '/alerts', icon: AlertTriangle, badge: alertCount },
     { label: 'Sites', path: '/sites', icon: Building2, adminOnly: true },
     { label: 'Utilisateurs', path: '/users', icon: Users, adminOnly: true },
     { label: "Journal d'audit", path: '/audit', icon: FileText, adminOnly: true },
-    { label: 'Paramètres', path: '/settings', icon: Settings, adminOnly: true },
+    { label: 'Paramètres', path: '/parametres', icon: Settings, adminOnly: true },
   ]
 
   // Filtrer les liens selon le rôle
@@ -81,6 +82,7 @@ export function Sidebar() {
   // Vérifier si un lien est actif
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/'
+    if (path === '/parametres') return location.pathname.startsWith('/parametres') || location.pathname.startsWith('/settings')
     return location.pathname.startsWith(path)
   }
 
@@ -89,22 +91,22 @@ export function Sidebar() {
       {/* Desktop sidebar */}
       <motion.aside
         initial={false}
-        animate={{ width: isOpen ? 260 : 72 }}
+        animate={{ width: isOpen ? 220 : 72 }}
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className="fixed left-0 top-0 z-40 h-screen hidden lg:flex flex-col border-r border-border bg-surface/80 backdrop-blur-xl"
+        className="fixed left-0 top-0 z-40 hidden h-screen flex-col border-r border-[var(--border-subtle)] bg-bg-primary lg:flex"
       >
         {/* En-tÃªte avec logo */}
-        <div className="flex h-16 items-center justify-between px-4">
+        <div className="flex h-16 items-center justify-between border-b border-[var(--border-subtle)] px-4">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-indigo-500/10 ring-1 ring-border shadow-lg shadow-primary/10 overflow-hidden">
-              <img src={logoImg} alt="Logo" className="h-8 w-8 object-contain drop-shadow-md" />
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px] border border-[var(--border-accent)] bg-[linear-gradient(155deg,#1B8A3E,#0D5C26)]">
+              <LogoIcon size={36} variant="sidebar" className="drop-shadow-md" />
             </div>
             {isOpen && (
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="whitespace-nowrap text-lg font-bold text-text-primary"
+                className="whitespace-nowrap text-base font-bold text-[var(--text-primary)]"
               >
                 IT-Inventory
               </motion.span>
@@ -114,17 +116,15 @@ export function Sidebar() {
             variant="ghost"
             size="icon"
             onClick={toggle}
-            className="h-8 w-8 shrink-0"
+            className="h-8 w-8 shrink-0 text-[var(--text-muted)] hover:bg-bg-elevated hover:text-[var(--text-primary)]"
           >
             {isOpen ? (
-              <ChevronLeft className="h-4 w-4 text-text-secondary" />
+                <ChevronLeft className="h-4 w-4" />
             ) : (
-              <ChevronRight className="h-4 w-4 text-text-secondary" />
+                <ChevronRight className="h-4 w-4" />
             )}
           </Button>
         </div>
-
-        <Separator />
 
         {/* Indicateur de workspace */}
         <div className="px-3 pt-3 pb-1">
@@ -143,22 +143,22 @@ export function Sidebar() {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                    'group relative flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all duration-150',
                     active
-                      ? 'bg-primary/15 text-primary shadow-sm'
-                      : 'text-text-secondary hover:bg-[var(--sidebar-hover)] hover:text-text-primary'
+                      ? 'border-[var(--green-border)] bg-[var(--green-subtle)] text-brand-light'
+                      : 'border-transparent text-[var(--text-muted)] hover:bg-bg-elevated hover:text-[var(--text-primary)]'
                   )}
                 >
                   {/* Indicateur de lien actif */}
                   {active && (
                     <motion.div
                       layoutId="sidebar-active"
-                      className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-primary"
+                      className="absolute left-1 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-brand-light"
                       transition={{ duration: 0.2 }}
                     />
                   )}
 
-                  <Icon className={cn('h-5 w-5 shrink-0', active ? 'text-primary' : 'text-text-secondary group-hover:text-text-primary')} />
+                  <Icon className={cn('h-5 w-5 shrink-0', active ? 'text-brand-light' : 'text-[var(--text-muted)] group-hover:text-[var(--text-primary)]')} />
 
                   {isOpen && (
                     <motion.span
@@ -172,14 +172,14 @@ export function Sidebar() {
 
                   {/* Badge pour les alertes */}
                   {isOpen && item.badge !== undefined && item.badge > 0 && (
-                    <Badge variant="danger" className="ml-auto text-[10px] px-1.5 py-0">
+                    <Badge variant="danger" className="ml-auto border-[var(--danger-border)] text-[10px] px-1.5 py-0">
                       {item.badge}
                     </Badge>
                   )}
 
                   {/* Badge compact quand la sidebar est fermée */}
                   {!isOpen && item.badge !== undefined && item.badge > 0 && (
-                    <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[9px] font-bold text-white">
+                    <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--danger)] text-[9px] font-bold text-white">
                       {item.badge > 9 ? '9+' : item.badge}
                     </span>
                   )}
@@ -206,38 +206,22 @@ export function Sidebar() {
           </nav>
         </ScrollArea>
 
-        <Separator />
-
-        {/* Toggle thème */}
-        <div className="px-3 py-2">
-          {isOpen ? (
-            <div className="flex items-center justify-between rounded-lg px-3 py-2">
-              <span className="text-xs font-medium text-text-secondary" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                Thème
-              </span>
-              <ThemeToggle />
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <ThemeToggle />
-            </div>
-          )}
-        </div>
+        <Separator className="bg-[var(--border-subtle)]" />
 
         {/* Section utilisateur en bas */}
         <div className="p-3">
           {isOpen ? (
-            <div className="flex items-center gap-3 rounded-lg bg-[var(--sidebar-hover)] p-3">
+            <div className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-bg-elevated/80 p-3">
               <Avatar className="h-9 w-9 shrink-0">
-                <AvatarFallback className="bg-primary/20 text-primary text-xs">
+                <AvatarFallback className="bg-[var(--green-subtle)] text-brand-light text-xs">
                   {user?.name ? getInitials(user.name) : '??'}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 overflow-hidden">
-                <p className="truncate text-sm font-medium text-text-primary">
+                <p className="truncate text-sm font-medium text-[var(--text-primary)]">
                   {user?.name ? getInitials(user.name) : '??'}
                 </p>
-                <p className="truncate text-xs text-text-secondary">
+                <p className="truncate text-xs text-[var(--text-muted)]">
                   {user?.role === 'ADMIN' ? 'Superviseur' : 'Technicien'}
                 </p>
               </div>
@@ -247,7 +231,7 @@ export function Sidebar() {
                     variant="ghost"
                     size="icon"
                     onClick={() => setShowLogoutDialog(true)}
-                    className="h-8 w-8 shrink-0 text-text-secondary hover:text-danger"
+                    className="h-8 w-8 shrink-0 text-[var(--text-muted)] hover:text-[var(--danger)]"
                   >
                     <LogOut className="h-4 w-4" />
                   </Button>
@@ -262,7 +246,7 @@ export function Sidebar() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setShowLogoutDialog(true)}
-                  className="mx-auto flex h-10 w-10 text-text-secondary hover:text-danger"
+                  className="mx-auto flex h-10 w-10 text-[var(--text-muted)] hover:text-[var(--danger)]"
                 >
                   <LogOut className="h-5 w-5" />
                 </Button>
@@ -278,15 +262,15 @@ export function Sidebar() {
         initial={{ x: -280 }}
         animate={{ x: isMobileOpen ? 0 : -280 }}
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className="fixed left-0 top-0 z-50 h-screen w-[260px] flex lg:hidden flex-col border-r border-border bg-surface/95 backdrop-blur-xl"
+        className="fixed left-0 top-0 z-50 flex h-screen w-[220px] flex-col border-r border-[var(--border-subtle)] bg-bg-primary lg:hidden"
       >
         {/* En-tÃªte avec logo */}
-        <div className="flex h-16 items-center justify-between px-4">
+        <div className="flex h-16 items-center justify-between border-b border-[var(--border-subtle)] px-4">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-indigo-500/10 ring-1 ring-border shadow-lg shadow-primary/10 overflow-hidden">
-              <img src={logoImg} alt="Logo" className="h-8 w-8 object-contain drop-shadow-md" />
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px] border border-[var(--border-accent)] bg-[linear-gradient(155deg,#1B8A3E,#0D5C26)]">
+              <LogoIcon size={36} variant="sidebar" className="drop-shadow-md" />
             </div>
-            <span className="whitespace-nowrap text-lg font-bold text-text-primary">
+            <span className="whitespace-nowrap text-base font-bold text-[var(--text-primary)]">
               IT-Inventory
             </span>
           </div>
@@ -294,13 +278,11 @@ export function Sidebar() {
             variant="ghost"
             size="icon"
             onClick={() => setMobileOpen(false)}
-            className="h-8 w-8 shrink-0"
+            className="h-8 w-8 shrink-0 text-[var(--text-muted)] hover:bg-bg-elevated hover:text-[var(--text-primary)]"
           >
-            <ChevronLeft className="h-4 w-4 text-text-secondary" />
+            <ChevronLeft className="h-4 w-4" />
           </Button>
         </div>
-
-        <Separator />
 
         {/* Indicateur de workspace mobile */}
         <div className="px-3 pt-3 pb-1">
@@ -320,23 +302,23 @@ export function Sidebar() {
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                    'group relative flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all duration-150',
                     active
-                      ? 'bg-primary/15 text-primary shadow-sm'
-                      : 'text-text-secondary hover:bg-[var(--sidebar-hover)] hover:text-text-primary'
+                      ? 'border-[var(--green-border)] bg-[var(--green-subtle)] text-brand-light'
+                      : 'border-transparent text-[var(--text-muted)] hover:bg-bg-elevated hover:text-[var(--text-primary)]'
                   )}
                 >
                   {active && (
                     <motion.div
                       layoutId="sidebar-mobile-active"
-                      className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-primary"
+                      className="absolute left-1 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-brand-light"
                       transition={{ duration: 0.2 }}
                     />
                   )}
-                  <Icon className={cn('h-5 w-5 shrink-0', active ? 'text-primary' : 'text-text-secondary group-hover:text-text-primary')} />
+                  <Icon className={cn('h-5 w-5 shrink-0', active ? 'text-brand-light' : 'text-[var(--text-muted)] group-hover:text-[var(--text-primary)]')} />
                   <span className="truncate">{item.label}</span>
                   {item.badge !== undefined && item.badge > 0 && (
-                    <Badge variant="danger" className="ml-auto text-[10px] px-1.5 py-0">
+                    <Badge variant="danger" className="ml-auto border-[var(--danger-border)] text-[10px] px-1.5 py-0">
                       {item.badge}
                     </Badge>
                   )}
@@ -346,31 +328,21 @@ export function Sidebar() {
           </nav>
         </ScrollArea>
 
-        <Separator />
-
-        {/* Toggle thème mobile */}
-        <div className="px-3 py-2">
-          <div className="flex items-center justify-between rounded-lg px-3 py-2">
-            <span className="text-xs font-medium text-text-secondary" style={{ fontFamily: "'Outfit', sans-serif" }}>
-              Thème
-            </span>
-            <ThemeToggle />
-          </div>
-        </div>
+        <Separator className="bg-[var(--border-subtle)]" />
 
         {/* Section utilisateur mobile */}
         <div className="p-3">
-          <div className="flex items-center gap-3 rounded-lg bg-[var(--sidebar-hover)] p-3">
+          <div className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-bg-elevated/80 p-3">
             <Avatar className="h-9 w-9 shrink-0">
-              <AvatarFallback className="bg-primary/20 text-primary text-xs">
+              <AvatarFallback className="bg-[var(--green-subtle)] text-brand-light text-xs">
                 {user?.name ? getInitials(user.name) : '??'}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 overflow-hidden">
-              <p className="truncate text-sm font-medium text-text-primary">
+              <p className="truncate text-sm font-medium text-[var(--text-primary)]">
                 {user?.name ? getInitials(user.name) : '??'}
               </p>
-              <p className="truncate text-xs text-text-secondary">
+              <p className="truncate text-xs text-[var(--text-muted)]">
                 {user?.role === 'ADMIN' ? 'Superviseur' : 'Technicien'}
               </p>
             </div>
@@ -378,7 +350,7 @@ export function Sidebar() {
               variant="ghost"
               size="icon"
               onClick={() => setShowLogoutDialog(true)}
-              className="h-8 w-8 shrink-0 text-text-secondary hover:text-danger"
+              className="h-8 w-8 shrink-0 text-[var(--text-muted)] hover:text-[var(--danger)]"
             >
               <LogOut className="h-4 w-4" />
             </Button>

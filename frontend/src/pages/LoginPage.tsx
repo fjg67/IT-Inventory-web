@@ -50,6 +50,16 @@ function getRoleBadge(role: string) {
   return { label: 'Technicien', color: 'bg-blue-500/15 text-blue-400' }
 }
 
+function isAgenciesGroup(site: Site): boolean {
+  const normalizedName = site.name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase()
+
+  return !site.parentSiteId && normalizedName === 'agences'
+}
+
 type Step = 'password' | 'workspace' | 'agencies' | 'profiles'
 
 export default function LoginPage() {
@@ -159,11 +169,15 @@ export default function LoginPage() {
   const childSites = selectedParentSite
     ? allSites.filter((s) => s.parentSiteId === selectedParentSite.id)
     : []
-  const displayedSites = selectedParentSite ? childSites : topLevelSites
+  const displayedSites = selectedParentSite
+    ? childSites
+    : topLevelSites.length > 0
+      ? topLevelSites
+      : allSites
 
   const handleSelectSite = (site: Site) => {
-    // Si c'est "Agences", aller vers l'étape agences (même sans enfants)
-    if (site.name.toLowerCase().includes('agence') && !site.parentSiteId) {
+    // Si c'est le groupe racine "Agences", aller vers l'étape agences (même sans enfants)
+    if (isAgenciesGroup(site)) {
       setSelectedParentSite(site)
       setStep('agencies')
       return

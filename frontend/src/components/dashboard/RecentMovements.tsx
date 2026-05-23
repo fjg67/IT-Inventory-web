@@ -32,18 +32,18 @@ const typeConfig = {
   ADJUSTMENT: {
     icon: RefreshCw,
     label: 'Ajustement',
-    bg: 'bg-blue-500/10',
-    text: 'text-blue-400',
-    ring: 'ring-blue-500/20',
-    iconBg: 'bg-blue-500/15',
+    bg: 'bg-amber-500/10',
+    text: 'text-amber-400',
+    ring: 'ring-amber-500/20',
+    iconBg: 'bg-amber-500/15',
   },
   TRANSFER: {
     icon: ArrowLeftRight,
     label: 'Transfert',
-    bg: 'bg-violet-500/10',
-    text: 'text-violet-400',
-    ring: 'ring-violet-500/20',
-    iconBg: 'bg-violet-500/15',
+    bg: 'bg-sky-500/10',
+    text: 'text-sky-400',
+    ring: 'ring-sky-500/20',
+    iconBg: 'bg-sky-500/15',
   },
 }
 
@@ -87,14 +87,14 @@ export function RecentMovements({ movements, loading }: RecentMovementsProps) {
     >
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-blue-500/15">
-            <Zap className="h-4 w-4 text-blue-400" />
+          <div className="p-2 rounded-lg bg-[var(--green-subtle)]">
+            <Zap className="h-4 w-4 text-brand-light" />
           </div>
           <h3 className="text-base font-semibold text-text-primary">Derniers mouvements</h3>
         </div>
         <Link
           to="/movements"
-          className="text-xs text-text-muted hover:text-primary transition-colors flex items-center gap-1 group"
+          className="text-xs text-text-muted hover:text-brand-light transition-colors flex items-center gap-1 group"
         >
           Voir tout
           <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
@@ -158,3 +158,4 @@ export function RecentMovements({ movements, loading }: RecentMovementsProps) {
     </motion.div>
   )
 }
+

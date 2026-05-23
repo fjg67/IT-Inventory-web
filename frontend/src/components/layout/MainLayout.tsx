@@ -43,7 +43,7 @@ export default function MainLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="grid-bg min-h-screen bg-bg-primary text-[var(--text-primary)]">
       {/* Sidebar */}
       <Sidebar />
 
@@ -61,15 +61,17 @@ export default function MainLayout() {
         <TopBar />
 
         {/* Contenu de la page */}
-        <main className="flex-1 p-3 sm:p-4 md:p-6">
-          <Outlet />
+        <main className="flex-1 px-3 py-4 sm:px-4 sm:py-5 md:px-6 md:py-6">
+          <div className="mx-auto w-full max-w-[1400px]">
+            <Outlet />
+          </div>
         </main>
       </div>
 
       {/* Zone principale — desktop avec margin animée */}
       <motion.div
         initial={false}
-        animate={{ marginLeft: isOpen ? 260 : 72 }}
+        animate={{ marginLeft: isOpen ? 220 : 72 }}
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         className="hidden lg:flex min-h-screen flex-col"
       >
@@ -77,8 +79,10 @@ export default function MainLayout() {
         <TopBar />
 
         {/* Contenu de la page */}
-        <main className="flex-1 p-6">
-          <Outlet />
+        <main className="flex-1 px-6 py-6">
+          <div className="mx-auto w-full max-w-[1400px]">
+            <Outlet />
+          </div>
         </main>
       </motion.div>
     </div>

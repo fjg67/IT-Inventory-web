@@ -6,6 +6,7 @@ import { createAuditLog } from '../middleware/audit';
 import logger from '../utils/logger';
 import { articleSchema } from '../utils/validation';
 import { Prisma } from '@prisma/client';
+import { isPcArticle, isTabletArticle } from '../utils/pcClassification';
 
 /**
  * Récupération paginée des articles
@@ -28,6 +29,23 @@ export const getArticles = async (req: Request, res: Response): Promise<void> =>
     const where: Prisma.ArticleWhereInput = {
       isArchived: false,
     };
+
+    // Exclure les articles PC de la liste Articles
+    where.NOT = [
+      {
+        OR: [
+          { category: { contains: 'pc portable', mode: 'insensitive' } },
+          { articleType: { equals: 'PC', mode: 'insensitive' } },
+          { sousType: { contains: 'portable siège', mode: 'insensitive' } },
+          { sousType: { contains: 'portable siege', mode: 'insensitive' } },
+          { sousType: { contains: 'portable agence', mode: 'insensitive' } },
+          { sousType: { contains: 'mini uc', mode: 'insensitive' } },
+          { category: { contains: 'tablette', mode: 'insensitive' } },
+          { articleType: { contains: 'tablette', mode: 'insensitive' } },
+          { sousType: { contains: 'tablette', mode: 'insensitive' } },
+        ],
+      },
+    ];
 
     // Recherche textuelle sur nom, référence et code-barres
     if (search) {
@@ -92,12 +110,14 @@ export const getArticles = async (req: Request, res: Response): Promise<void> =>
       ? articlesWithTotal.filter((a) => a.stockStatus === status)
       : articlesWithTotal;
 
+    const visibleArticles = filteredArticles.filter((article) => !isPcArticle(article) && !isTabletArticle(article));
+
     const totalPages = Math.ceil(total / limit);
 
     res.status(200).json({
       success: true,
-      articles: filteredArticles,
-      total: status ? filteredArticles.length : total,
+      articles: visibleArticles,
+      total: status ? visibleArticles.length : total,
       page,
       totalPages,
     });

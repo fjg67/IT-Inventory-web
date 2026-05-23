@@ -2,16 +2,26 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  accentColor?: string
+  elevated?: boolean
+}
+
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+  CardProps
+>(({ className, accentColor, elevated = false, style, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border border-border bg-surface/80 backdrop-blur-[20px] shadow-card",
+      "rounded-card border border-[var(--border-subtle)] shadow-card",
+      elevated ? 'bg-bg-elevated' : 'bg-bg-card',
       className
     )}
+    style={{
+      ...(accentColor ? { borderLeft: `3px solid ${accentColor}` } : {}),
+      ...(style || {}),
+    }}
     {...props}
   />
 ))

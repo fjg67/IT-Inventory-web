@@ -135,7 +135,6 @@ const SOUS_TYPES = [
   { value: 'Filtre de confidentialité 15.6', icon: '🛡️' },
   { value: 'Filtre de confidentialité 16', icon: '🛡️' },
   { value: 'Filtre de confidentialité VIP', icon: '🛡️' },
-  { value: 'Tablette', icon: '📱' },
   { value: 'Pour présentation', icon: '📊' },
   { value: 'Kit clavier souris', icon: '⌨️' },
   { value: 'Clavier / souris', icon: '⌨️' },
@@ -191,6 +190,26 @@ const EMPLACEMENTS = [
   { value: 'Stock 8 - Armoire', icon: '🗄️' },
   { value: 'Stock 8 - Tiroir', icon: '🗃️' },
 ]
+
+function isPcArticle(article: Article): boolean {
+  const haystack = [article.category, article.articleType ?? '', article.sousType ?? '', article.name, article.reference, article.description ?? '']
+    .join(' ')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+
+  return haystack.includes('pc portable') || haystack.includes('portable siege') || haystack.includes('portable agence') || haystack.includes('mini uc')
+}
+
+function isTabletArticle(article: Article): boolean {
+  const haystack = [article.category, article.articleType ?? '', article.sousType ?? '', article.name, article.reference, article.description ?? '']
+    .join(' ')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+
+  return haystack.includes('tablette')
+}
 
 
 
@@ -262,6 +281,31 @@ function getBrandIcon(brand: string | null): string {
   const found = BRANDS.find((b) => b.value === brand)
   return found?.icon ?? '🏷️'
 }
+
+function getArticleImageUrl(imageUrl: string): string {
+  if (imageUrl.startsWith('http')) return imageUrl
+  if (imageUrl.startsWith('/uploads/')) return `http://localhost:3001${imageUrl}`
+  if (imageUrl.startsWith('uploads/')) return `http://localhost:3001/${imageUrl}`
+  return `http://localhost:3001/${imageUrl.replace(/^\/+/, '')}`
+}
+
+const ARTICLE_IMAGE_FALLBACK =
+  "data:image/svg+xml;charset=UTF-8," +
+  encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+      <defs>
+        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stop-color="#0f172a"/>
+          <stop offset="100%" stop-color="#1e293b"/>
+        </linearGradient>
+      </defs>
+      <rect width="240" height="240" rx="28" fill="url(#g)"/>
+      <rect x="64" y="52" width="112" height="136" rx="18" fill="#172554" stroke="#38bdf8" stroke-width="4"/>
+      <path d="M80 84h80M80 112h80M80 140h54" stroke="#93c5fd" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="158" cy="150" r="20" fill="#38bdf8" opacity="0.2"/>
+      <text x="120" y="214" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#94a3b8">IT-Inventory</text>
+    </svg>
+  `)
 
 // --- Composant principal ---
 
@@ -342,7 +386,7 @@ export default function ArticlesPage() {
     placeholderData: (prev) => prev,
   })
 
-  const articles = data?.articles ?? []
+  const articles = (data?.articles ?? []).filter((article) => !isPcArticle(article) && !isTabletArticle(article))
   const totalPages = data?.totalPages ?? 1
   const total = data?.total ?? 0
 
@@ -445,10 +489,12 @@ export default function ArticlesPage() {
     <div className="space-y-6">
       {/* En-tête */}
       <PageHeader
+        icon={<Package className="h-5 w-5" />}
         title="Articles"
         description="Gestion de l'inventaire des articles informatiques"
+        pills={[{ label: `${total} articles` }]}
         action={canWriteInventory ? (
-          <Button onClick={handleOpenCreate}>
+          <Button variant="primary" onClick={handleOpenCreate}>
             <Plus className="mr-2 h-4 w-4" />
             Nouvel article
           </Button>
@@ -595,17 +641,24 @@ export default function ArticlesPage() {
                 >
                   <div className="flex items-stretch">
                     {/* Image / Icône article — masqué sur mobile */}
-                    <div className="hidden sm:flex flex-shrink-0 w-20 items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 border-r border-border">
+                    <div className="hidden sm:flex flex-shrink-0 w-24 h-24 items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 border-r border-border overflow-hidden">
                       {article.imageUrl ? (
                         <img
-                          src={article.imageUrl.startsWith('http') ? article.imageUrl : `http://localhost:3001${article.imageUrl}`}
+                          src={getArticleImageUrl(article.imageUrl)}
                           alt={article.name}
                           className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(event) => {
+                            const target = event.currentTarget
+                            target.onerror = null
+                            target.src = ARTICLE_IMAGE_FALLBACK
+                          }}
                         />
                       ) : (
-                        <div className="flex flex-col items-center gap-1">
+                        <div className="flex flex-col items-center gap-1 text-center px-2">
                           <Package className="h-8 w-8 text-primary/60" strokeWidth={1.5} />
-                          <span className="text-lg">{getFamilleIcon(article.category)}</span>
+                          <span className="text-lg leading-none">{getFamilleIcon(article.category)}</span>
+                          <span className="text-[10px] text-text-muted uppercase tracking-[0.2em]">Photo</span>
                         </div>
                       )}
                     </div>
@@ -657,13 +710,13 @@ export default function ArticlesPage() {
                       {/* Ligne 2 : Badges métadonnées */}
                       <div className="flex flex-wrap items-center gap-1.5 mb-2">
                         {/* Référence (code-barres) */}
-                        <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-md bg-[var(--green-subtle)] text-brand-light border border-[var(--green-border)]">
                           <Tag className="h-3 w-3" />
                           {article.reference}
                         </span>
 
                         {/* Famille */}
-                        <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                        <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md bg-[var(--green-subtle)] text-blue-300 border border-[var(--green-border)]">
                           {getFamilleIcon(article.category)} {article.category}
                         </span>
 
@@ -972,23 +1025,23 @@ function ArticleFormDialog({
         <div
           className="absolute inset-0 rounded-lg pointer-events-none opacity-[0.02]"
           style={{
-            backgroundImage: 'linear-gradient(rgba(59,130,246,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.6) 1px, transparent 1px)',
+            backgroundImage: 'linear-gradient(rgba(34,197,94,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.6) 1px, transparent 1px)',
             backgroundSize: '32px 32px',
           }}
         />
 
         {/* Orbe décoratif */}
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-500/[0.04] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 -right-20 w-64 h-64 bg-[var(--green-subtle)] rounded-full blur-3xl pointer-events-none" />
 
         {/* ── Sticky Header ── */}
         <div className="sticky top-0 z-20 bg-surface/95 backdrop-blur-xl border-b border-border px-6 pt-6 pb-4">
           <div className="flex items-center gap-3.5">
             <div className="relative">
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-[0_0_25px_rgba(59,130,246,0.25)]">
+              <div className="p-2.5 rounded-xl bg-gradient-to-br from-brand to-brand-light shadow-[0_0_25px_rgba(59,130,246,0.25)]">
                 <Package className="h-5 w-5 text-white" />
               </div>
               {/* Glow ring */}
-              <div className="absolute inset-0 rounded-xl bg-blue-500/20 blur-md -z-10" />
+              <div className="absolute inset-0 rounded-xl bg-[var(--green-subtle)] blur-md -z-10" />
             </div>
             <div className="flex-1 min-w-0">
               <DialogHeader className="p-0 space-y-0">
@@ -1013,7 +1066,7 @@ function ArticleFormDialog({
           {/* Progress bar in header */}
           <div className="mt-4 h-[2px] bg-[var(--sidebar-hover)] rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-blue-500 via-blue-400 to-cyan-400 rounded-full"
+              className="h-full bg-gradient-to-r from-brand via-brand-light to-emerald-300 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ type: 'spring', stiffness: 120, damping: 25 }}
@@ -1025,7 +1078,7 @@ function ArticleFormDialog({
         <form onSubmit={onFormSubmit} className="relative px-6 pb-0 space-y-1">
 
           {/* ═══ INFORMATIONS PRINCIPALES ═══ */}
-          <ArticleFormSectionHeader icon={Tag} label="Informations principales" accentColor="blue" />
+          <ArticleFormSectionHeader icon={Tag} label="Informations principales" accentColor="emerald" />
 
           <div className="space-y-3">
             {/* Référence + Scanner */}
@@ -1040,7 +1093,7 @@ function ArticleFormDialog({
                   <button
                     type="button"
                     onClick={() => setScannerOpen(true)}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/35 transition-all active:scale-95"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-light hover:from-[#187737] hover:to-[#22C55E] shadow-[0_8px_20px_rgba(34,197,94,0.25)] hover:shadow-[0_10px_24px_rgba(34,197,94,0.35)] transition-all active:scale-95"
                     title="Scanner un code-barres"
                   >
                     <ScanBarcode className="h-5 w-5 text-white" />
@@ -1245,7 +1298,7 @@ function ArticleFormDialog({
                 placeholder="Détails supplémentaires..."
                 maxLength={200}
                 rows={3}
-                className="w-full rounded-xl border border-border bg-surface-elevated px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/40 focus:shadow-[0_0_15px_rgba(59,130,246,0.06)] transition-all resize-none"
+                className="w-full rounded-xl border border-border bg-surface-elevated px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-[var(--border-focus)]/20 focus:border-[var(--border-focus)] focus:shadow-[0_0_15px_rgba(34,197,94,0.1)] transition-all resize-none"
                 style={{ fontFamily: 'JetBrains Mono, monospace' }}
                 {...register('description')}
               />
@@ -1305,3 +1358,4 @@ function CardSkeleton() {
     </div>
   )
 }
+

@@ -1,0 +1,19 @@
+<svg width="560" height="240" viewBox="0 0 560 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="560" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#052E16"/>
+      <stop offset="1" stop-color="#166534"/>
+    </linearGradient>
+    <linearGradient id="line" x1="140" y1="70" x2="430" y2="185" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#BBF7D0"/>
+      <stop offset="1" stop-color="#4ADE80"/>
+    </linearGradient>
+  </defs>
+  <rect width="560" height="240" rx="26" fill="url(#bg)"/>
+  <circle cx="456" cy="58" r="50" fill="#4ADE80" fill-opacity="0.18"/>
+  <circle cx="103" cy="186" r="62" fill="#86EFAC" fill-opacity="0.12"/>
+  <rect x="142" y="69" width="276" height="98" rx="14" stroke="url(#line)" stroke-width="5"/>
+  <rect x="117" y="176" width="327" height="15" rx="7.5" fill="#DCFCE7" fill-opacity="0.34"/>
+  <path d="M250 124L272 145L314 103" stroke="#BBF7D0" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="30" y="40" fill="#DCFCE7" font-size="20" font-family="Arial, sans-serif" font-weight="700" letter-spacing="2">DISPONIBLE</text>
+</svg>

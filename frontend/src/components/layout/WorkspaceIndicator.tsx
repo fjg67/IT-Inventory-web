@@ -41,7 +41,7 @@ export function WorkspaceIndicator({ isOpen }: WorkspaceIndicatorProps) {
           'absolute inset-0 rounded-xl opacity-90 transition-opacity duration-300 group-hover:opacity-100',
           isAgence
             ? 'bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-rose-500/15'
-            : 'bg-gradient-to-br from-blue-500/15 via-indigo-500/10 to-violet-500/15',
+            : 'bg-gradient-to-br from-emerald-500/15 via-green-500/10 to-lime-500/15',
         )}
       />
 
@@ -51,7 +51,7 @@ export function WorkspaceIndicator({ isOpen }: WorkspaceIndicatorProps) {
           'absolute inset-0 rounded-xl ring-1 transition-all duration-300',
           isAgence
             ? 'ring-amber-500/30 group-hover:ring-amber-500/50 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.15)]'
-            : 'ring-blue-500/30 group-hover:ring-blue-500/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]',
+            : 'ring-emerald-500/30 group-hover:ring-emerald-500/50 group-hover:shadow-[0_0_20px_rgba(34,197,94,0.15)]',
         )}
       />
 
@@ -64,7 +64,7 @@ export function WorkspaceIndicator({ isOpen }: WorkspaceIndicatorProps) {
               'flex h-8 w-8 items-center justify-center rounded-lg transition-all duration-300',
               isAgence
                 ? 'bg-gradient-to-br from-amber-500 to-orange-500 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
-                : 'bg-gradient-to-br from-blue-500 to-indigo-500 shadow-[0_0_12px_rgba(59,130,246,0.3)]',
+                : 'bg-gradient-to-br from-emerald-500 to-green-600 shadow-[0_0_12px_rgba(34,197,94,0.3)]',
             )}
           >
             <Icon className="h-4 w-4 text-white" />
@@ -74,7 +74,7 @@ export function WorkspaceIndicator({ isOpen }: WorkspaceIndicatorProps) {
           <motion.div
             className={cn(
               'absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full ring-2 ring-surface',
-              isAgence ? 'bg-amber-400' : 'bg-blue-400',
+              isAgence ? 'bg-amber-400' : 'bg-emerald-400',
             )}
             animate={{
               scale: [1, 1.2, 1],
@@ -103,7 +103,7 @@ export function WorkspaceIndicator({ isOpen }: WorkspaceIndicatorProps) {
                 <span
                   className={cn(
                     'text-[10px] font-bold uppercase tracking-widest',
-                    isAgence ? 'text-amber-400' : 'text-blue-400',
+                    isAgence ? 'text-amber-400' : 'text-emerald-400',
                   )}
                 >
                   {label}
@@ -136,7 +136,7 @@ export function WorkspaceIndicator({ isOpen }: WorkspaceIndicatorProps) {
         <TooltipContent side="right" className="flex flex-col gap-0.5">
           <span className={cn(
             'text-[10px] font-bold uppercase tracking-wider',
-            isAgence ? 'text-amber-400' : 'text-blue-400',
+            isAgence ? 'text-amber-400' : 'text-emerald-400',
           )}>
             {label}
           </span>

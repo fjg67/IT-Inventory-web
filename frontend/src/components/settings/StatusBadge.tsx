@@ -16,10 +16,10 @@ const BADGE_STYLES = {
     dot: 'bg-emerald-400',
   },
   info: {
-    bg: 'bg-blue-500/[0.08]',
-    border: 'border-blue-500/25',
-    text: 'text-blue-400',
-    dot: 'bg-blue-400',
+    bg: 'bg-[var(--green-subtle)]',
+    border: 'border-[var(--green-border)]',
+    text: 'text-brand-light',
+    dot: 'bg-brand-light',
   },
   warning: {
     bg: 'bg-amber-500/[0.08]',
@@ -28,10 +28,10 @@ const BADGE_STYLES = {
     dot: 'bg-amber-400',
   },
   role: {
-    bg: 'bg-indigo-500/[0.1]',
-    border: 'border-indigo-500/30',
-    text: 'text-indigo-300',
-    dot: 'bg-indigo-400',
+    bg: 'bg-[var(--green-subtle)]',
+    border: 'border-[var(--green-border)]',
+    text: 'text-brand-light',
+    dot: 'bg-brand-light',
   },
 }
 

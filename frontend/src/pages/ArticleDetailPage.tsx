@@ -79,6 +79,13 @@ import { useAuth } from '@/hooks/useAuth'
 
 import { MovementSuccessCelebration } from '@/components/articles/MovementSuccessCelebration'
 
+function getArticleImageUrl(imageUrl: string): string {
+  if (imageUrl.startsWith('http')) return imageUrl
+  if (imageUrl.startsWith('/uploads/')) return `http://localhost:3001${imageUrl}`
+  if (imageUrl.startsWith('uploads/')) return `http://localhost:3001/${imageUrl}`
+  return `http://localhost:3001/${imageUrl.replace(/^\/+/, '')}`
+}
+
 
 
 import { Badge } from '@/components/ui/badge'
@@ -547,7 +554,24 @@ export default function ArticleDetailPage() {
 
                   <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl overflow-hidden ring-4 ring-border shadow-2xl">
 
-                    <img src={article.imageUrl} alt={article.name} className="h-full w-full object-cover" />
+                    <img
+                      src={getArticleImageUrl(article.imageUrl)}
+                      alt={article.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      onError={(event) => {
+                        const target = event.currentTarget
+                        target.onerror = null
+                        target.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+                            <rect width="240" height="240" rx="28" fill="#0f172a"/>
+                            <circle cx="120" cy="98" r="30" fill="#1d4ed8" opacity="0.35"/>
+                            <path d="M70 160l35-35 24 24 22-22 19 19v24H70z" fill="#334155"/>
+                            <text x="120" y="210" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#94a3b8">Photo indisponible</text>
+                          </svg>
+                        `)
+                      }}
+                    />
 
                   </div>
 
@@ -902,8 +926,8 @@ export default function ArticleDetailPage() {
             whileTap={{ scale: 0.99 }}
 
             onClick={() => {
-
-              exportService.exportArticles()
+              if (!id || !article) return
+              exportService.exportArticleCsv(id, article.reference)
 
               toast.success('Export en cours de téléchargement...')
 

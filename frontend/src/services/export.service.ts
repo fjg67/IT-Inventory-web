@@ -22,6 +22,13 @@ export const exportService = {
     const response = await api.get(`/export/movements?${params.toString()}`, { responseType: 'blob' })
     downloadBlob(response.data, 'mouvements-it-inventory.xlsx')
   },
+
+  // Export CSV d'une fiche article (résumé + stock + historique des mouvements)
+  exportArticleCsv: async (articleId: string, articleReference?: string): Promise<void> => {
+    const response = await api.get(`/export/articles/${articleId}/csv`, { responseType: 'blob' })
+    const safeRef = (articleReference ?? articleId).replace(/[^a-zA-Z0-9_-]/g, '_')
+    downloadBlob(response.data, `fiche-article-${safeRef}.csv`)
+  },
 }
 
 // Utilitaire pour déclencher le téléchargement d'un blob

@@ -1,0 +1,19 @@
+<svg width="560" height="240" viewBox="0 0 560 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="560" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B0A0A"/>
+      <stop offset="1" stop-color="#991B1B"/>
+    </linearGradient>
+    <linearGradient id="line" x1="140" y1="70" x2="430" y2="185" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FECACA"/>
+      <stop offset="1" stop-color="#F87171"/>
+    </linearGradient>
+  </defs>
+  <rect width="560" height="240" rx="26" fill="url(#bg)"/>
+  <circle cx="456" cy="58" r="50" fill="#F87171" fill-opacity="0.18"/>
+  <circle cx="103" cy="186" r="62" fill="#FCA5A5" fill-opacity="0.12"/>
+  <rect x="142" y="69" width="276" height="98" rx="14" stroke="url(#line)" stroke-width="5"/>
+  <rect x="117" y="176" width="327" height="15" rx="7.5" fill="#FECACA" fill-opacity="0.32"/>
+  <path d="M282 96L292.806 117.132L316 121.04L299 137.368L302.012 160.46L282 150.32L261.988 160.46L265 137.368L248 121.04L271.194 117.132L282 96Z" fill="#FCA5A5"/>
+  <text x="30" y="40" fill="#FEE2E2" font-size="20" font-family="Arial, sans-serif" font-weight="700" letter-spacing="2">A CHAUD</text>
+</svg>
