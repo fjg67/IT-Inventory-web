@@ -1,7 +1,7 @@
 // Page de connexion — mot de passe d'abord, sélection du profil ensuite
 // Flux fidèle à l'app mobile
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Eye, EyeOff, Loader2, ChevronRight, ShieldCheck, Check, Sparkles, Unlock, XCircle, ShieldAlert, AlertTriangle, Building2, MapPin, ArrowLeft, Plus, Trash2, Hash, Lock } from 'lucide-react'
@@ -35,6 +35,8 @@ const AVATAR_COLORS = [
   'from-violet-500 to-purple-600',
   'from-pink-500 to-rose-500',
 ]
+
+const EPINAL_ALLOWED_PROFILE_INITIALS = new Set(['BI', 'RT', 'EB', 'RL'])
 
 const FALLBACK_PROFILES: ProfileUser[] = [
   {
@@ -75,6 +77,13 @@ function getInitials(name: string): string {
     .join('')
     .toUpperCase()
     .slice(0, 2)
+}
+
+function normalizeInitials(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
 }
 
 function getRoleBadge(role: string) {
@@ -119,6 +128,7 @@ export default function LoginPage() {
   const [showErrorAnim, setShowErrorAnim] = useState(false)
   const [shakeKey, setShakeKey] = useState(0)
   const [selectedParentSite, setSelectedParentSite] = useState<Site | null>(null)
+  const [selectedWorkspaceSite, setSelectedWorkspaceSite] = useState<Site | null>(null)
   const setSelectedSite = useSiteStore((s) => s.setSelectedSite)
   const queryClient = useQueryClient()
 
@@ -186,6 +196,15 @@ export default function LoginPage() {
 
   const fetchedProfiles = profilesData?.users ?? []
   const profiles = fetchedProfiles.length > 0 ? fetchedProfiles : FALLBACK_PROFILES
+  const visibleProfiles = useMemo(() => {
+    if (!selectedWorkspaceSite || normalizeSiteName(selectedWorkspaceSite.name) !== 'epinal') {
+      return profiles
+    }
+
+    return profiles.filter((profile) =>
+      EPINAL_ALLOWED_PROFILE_INITIALS.has(normalizeInitials(getInitials(profile.name)))
+    )
+  }, [profiles, selectedWorkspaceSite])
 
   const handlePasswordNext = (e: React.FormEvent) => {
     e.preventDefault()
@@ -240,12 +259,14 @@ export default function LoginPage() {
       setSelectedParentSite(site)
       return
     }
+    setSelectedWorkspaceSite(site)
     setSelectedSite(site)
     setStep('profiles')
   }
 
   const handleBackToParents = () => {
     setSelectedParentSite(null)
+    setSelectedWorkspaceSite(null)
   }
 
   const handleSelectUser = (user: ProfileUser) => {
@@ -271,6 +292,7 @@ export default function LoginPage() {
   }
 
   const handleAgencySelect = (agency: Site) => {
+    setSelectedWorkspaceSite(agency)
     setSelectedSite(agency)
     setStep('profiles')
   }
@@ -735,12 +757,12 @@ export default function LoginPage() {
                     </div>
                   </div>
                 ))
-              ) : profiles.length === 0 ? (
+              ) : visibleProfiles.length === 0 ? (
                 <div className="glass-card p-8 text-center">
                   <p className="text-text-secondary">Aucun profil disponible</p>
                 </div>
               ) : (
-                profiles.map((user, index) => {
+                visibleProfiles.map((user, index) => {
                   const badge = getRoleBadge(user.role)
                   const isSelected = selectedUser?.id === user.id
                   return (
