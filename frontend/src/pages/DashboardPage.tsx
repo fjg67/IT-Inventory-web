@@ -106,6 +106,11 @@ export default function DashboardPage() {
     queryFn: () => dashboardService.getStats(siteId),
   })
 
+  const { data: stockSummaryData, isLoading: stockSummaryLoading } = useQuery({
+    queryKey: ['stock', 'summary', siteId],
+    queryFn: () => stockService.getStock({ siteId }),
+  })
+
   // Données graphiques
   const { data: chartData, isLoading: chartLoading } = useQuery({
     queryKey: ['dashboard', 'movements-chart', siteId],
@@ -141,10 +146,39 @@ export default function DashboardPage() {
     }
   }, [alertsData, setAlertCount])
 
-  const stats = statsData?.stats
+  const apiStats = statsData?.stats
+  const hasChartActivity = (chartData?.data ?? []).some((point) => (point.entries + point.exits) > 0)
+  const hasAlerts = (alertsData?.alerts?.length ?? 0) > 0
+  const shouldUseStockFallback = (apiStats?.totalArticles ?? 0) === 0 && (hasChartActivity || hasAlerts)
+
+  const fallbackStats = useMemo(() => {
+    const stocks = stockSummaryData?.stocks ?? []
+    if (stocks.length === 0) return null
+
+    const outOfStock = stocks.filter((s) => s.quantity === 0).length
+    const lowStock = stocks.filter((s) => {
+      const minStock = s.article?.minStock ?? 0
+      return minStock > 0 && s.quantity > 0 && s.quantity <= minStock
+    }).length
+
+    const latestChartPoint = (chartData?.data ?? [])[chartData?.data.length ? chartData.data.length - 1 : 0]
+    const todayMovements = latestChartPoint ? latestChartPoint.entries + latestChartPoint.exits : 0
+
+    return {
+      totalArticles: stocks.length,
+      outOfStock,
+      lowStock,
+      todayMovements,
+      totalArticlesLastMonth: stocks.length,
+    }
+  }, [chartData, stockSummaryData])
+
+  const stats = shouldUseStockFallback && fallbackStats ? fallbackStats : apiStats
   const deltaArticles = stats && stats.totalArticlesLastMonth > 0
     ? Math.round(((stats.totalArticles - stats.totalArticlesLastMonth) / stats.totalArticlesLastMonth) * 100)
     : 0
+
+  const isStatsLoading = statsLoading || (shouldUseStockFallback && stockSummaryLoading)
 
   // Heure actuelle formatée
   const now = new Date()
@@ -219,7 +253,7 @@ export default function DashboardPage() {
           delta={deltaArticles}
           icon={Package}
           color="green"
-          loading={statsLoading}
+          loading={isStatsLoading}
           index={0}
           onClick={() => navigate(siteId ? `/articles?siteId=${siteId}` : '/articles')}
           sparklineData={stats?.sparklines?.totalArticles}
@@ -229,7 +263,7 @@ export default function DashboardPage() {
           value={stats?.outOfStock ?? 0}
           icon={TrendingDown}
           color="danger"
-          loading={statsLoading}
+          loading={isStatsLoading}
           index={1}
           onClick={() => navigate(siteId ? `/alerts?siteId=${siteId}` : '/alerts')}
           sparklineData={stats?.sparklines?.outOfStock}
@@ -239,7 +273,7 @@ export default function DashboardPage() {
           value={stats?.lowStock ?? 0}
           icon={AlertTriangle}
           color="warning"
-          loading={statsLoading}
+          loading={isStatsLoading}
           index={2}
           onClick={() => navigate(siteId ? `/alerts?siteId=${siteId}` : '/alerts')}
           sparklineData={stats?.sparklines?.lowStock}
@@ -249,7 +283,7 @@ export default function DashboardPage() {
           value={stats?.todayMovements ?? 0}
           icon={Activity}
           color="green"
-          loading={statsLoading}
+          loading={isStatsLoading}
           index={3}
           onClick={() => navigate(siteId ? `/movements?siteId=${siteId}` : '/movements')}
           sparklineData={stats?.sparklines?.movements}
