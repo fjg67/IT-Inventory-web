@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 import { dashboardService } from '@/services/dashboard.service'
 import { alertsService } from '@/services/alerts.service'
 import { stockService } from '@/services/stock.service'
-import { sitesService } from '@/services/sites.service'
+import { authService } from '@/services/auth.service'
 import { useAuthStore } from '@/stores/authStore'
 import { useSidebarStore } from '@/stores/sidebarStore'
 import { useSiteStore } from '@/stores/siteStore'
@@ -50,7 +50,7 @@ export default function DashboardPage() {
   // Récupération des sites
   const { data: sitesData } = useQuery({
     queryKey: ['sites'],
-    queryFn: () => sitesService.getAll(),
+    queryFn: () => authService.getSitesPublic(),
   })
 
   // Filtrer les sites selon le workspace sélectionné
