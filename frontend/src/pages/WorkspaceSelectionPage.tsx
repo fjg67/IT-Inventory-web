@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Building2, ChevronRight, ShieldCheck, Loader2, MapPin, Lock } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/hooks/useAuth'
-import { sitesService } from '@/services/sites.service'
+import { authService } from '@/services/auth.service'
 import { useSiteStore } from '@/stores/siteStore'
 import { LogoIcon } from '@/components/ui/LogoIcon'
 import type { Site } from '@/types'
@@ -49,7 +49,7 @@ export default function WorkspaceSelectionPage() {
 
   const { data: sitesData, isLoading: sitesLoading } = useQuery({
     queryKey: ['sites'],
-    queryFn: () => sitesService.getAll(),
+    queryFn: () => authService.getSitesPublic(),
     enabled: isAuthenticated,
     staleTime: 60_000,
   })

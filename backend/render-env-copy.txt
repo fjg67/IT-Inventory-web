@@ -1,0 +1,19 @@
+# Copier-coller dans Render > Environment
+# Remplace seulement VOTRE_MOT_DE_PASSE
+
+DATABASE_URL=postgresql://postgres.lghhzbkbwttvroxodlzd:VOTRE_MOT_DE_PASSE@aws-1-eu-west-3.pooler.supabase.com:5432/postgres
+DIRECT_URL=postgresql://postgres:VOTRE_MOT_DE_PASSE@db.lghhzbkbwttvroxodlzd.supabase.co:5432/postgres?sslmode=require
+
+JWT_ACCESS_SECRET=dev-jwt-secret-it-inventory-2026
+JWT_REFRESH_SECRET=dev-refresh-secret-it-inventory-2026
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+
+NODE_ENV=production
+PORT=3001
+
+CORS_ORIGINS=https://it-inventory-e6n0.onrender.com,http://localhost:5173
+UPLOAD_DIR=./uploads
+MAX_FILE_SIZE=5242880
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX=100
