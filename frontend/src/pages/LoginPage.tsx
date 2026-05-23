@@ -4,14 +4,14 @@
 import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Eye, EyeOff, Loader2, ChevronRight, ShieldCheck, Check, Sparkles, Unlock, XCircle, ShieldAlert, AlertTriangle, Building2, MapPin, ArrowLeft, Plus, Trash2, Hash } from 'lucide-react'
-import logoImg from '@/assets/logo.png'
+import { Eye, EyeOff, Loader2, ChevronRight, ShieldCheck, Check, Sparkles, Unlock, XCircle, ShieldAlert, AlertTriangle, Building2, MapPin, ArrowLeft, Plus, Trash2, Hash, Lock } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/hooks/useAuth'
 import { authService, type ProfileUser } from '@/services/auth.service'
 import { useSiteStore } from '@/stores/siteStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { LogoIcon } from '@/components/ui/LogoIcon'
 import type { Site } from '@/types'
 
 // Couleurs d'icône de site par index
@@ -50,14 +50,28 @@ function getRoleBadge(role: string) {
   return { label: 'Technicien', color: 'bg-blue-500/15 text-blue-400' }
 }
 
-function isAgenciesGroup(site: Site): boolean {
-  const normalizedName = site.name
+function normalizeSiteName(name: string): string {
+  return name
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .trim()
     .toLowerCase()
+}
 
-  return !site.parentSiteId && normalizedName === 'agences'
+function isAgenciesGroup(site: Site): boolean {
+  return !site.parentSiteId && normalizeSiteName(site.name) === 'agences'
+}
+
+function isStrasbourgGeneralSite(site: Site): boolean {
+  return !site.parentSiteId && normalizeSiteName(site.name) === 'strasbourg general'
+}
+
+function isLoginWorkspaceOption(site: Site): boolean {
+  return isAgenciesGroup(site) || isStrasbourgGeneralSite(site)
+}
+
+function isLockedWorkspaceOption(site: Site): boolean {
+  return isAgenciesGroup(site)
 }
 
 type Step = 'password' | 'workspace' | 'agencies' | 'profiles'
@@ -163,8 +177,8 @@ export default function LoginPage() {
   }
 
   const allSites = (sitesData?.sites ?? []).filter((s) => s.isActive)
-  // Sites de niveau supérieur (pas de parent)
-  const topLevelSites = allSites.filter((s) => !s.parentSiteId)
+  // Sites de niveau supérieur visibles a la connexion
+  const topLevelSites = allSites.filter(isLoginWorkspaceOption)
   // Sous-sites du parent sélectionné
   const childSites = selectedParentSite
     ? allSites.filter((s) => s.parentSiteId === selectedParentSite.id)
@@ -176,6 +190,10 @@ export default function LoginPage() {
       : allSites
 
   const handleSelectSite = (site: Site) => {
+    if (isLockedWorkspaceOption(site)) {
+      return
+    }
+
     // Si c'est le groupe racine "Agences", aller vers l'étape agences (même sans enfants)
     if (isAgenciesGroup(site)) {
       setSelectedParentSite(site)
@@ -264,9 +282,7 @@ export default function LoginPage() {
         >
           <div className="relative inline-flex items-center justify-center w-20 h-20 mb-5">
             <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-xl animate-pulse-glow" />
-            <div className="relative w-20 h-20 bg-gradient-to-br from-primary to-indigo-500 rounded-2xl flex items-center justify-center shadow-glow overflow-hidden">
-              <img src={logoImg} alt="Logo" className="h-12 w-12 object-contain" />
-            </div>
+            <LogoIcon size={80} className="relative h-20 w-20 shadow-glow" />
           </div>
           <h1 className="text-3xl font-bold text-text-primary tracking-tight">
             IT-Inventory
@@ -478,6 +494,7 @@ export default function LoginPage() {
               ) : (
                 displayedSites.map((site, index) => {
                   const color = SITE_COLORS[index % SITE_COLORS.length]!
+                  const isLocked = isLockedWorkspaceOption(site)
                   return (
                     <motion.button
                       key={site.id}
@@ -485,7 +502,12 @@ export default function LoginPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
                       onClick={() => handleSelectSite(site)}
-                      className="w-full glass-card p-5 flex items-center gap-4 cursor-pointer group hover:border-primary/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.1)] transition-all duration-300"
+                      disabled={isLocked}
+                      className={`w-full glass-card p-5 flex items-center gap-4 transition-all duration-300 ${
+                        isLocked
+                          ? 'cursor-not-allowed opacity-65 border-border/60'
+                          : 'cursor-pointer group hover:border-primary/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.1)]'
+                      }`}
                     >
                       <div
                         className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color.bg} flex items-center justify-center shadow-lg flex-shrink-0`}
@@ -495,7 +517,12 @@ export default function LoginPage() {
                       </div>
                       <div className="flex-1 text-left min-w-0">
                         <h3 className="text-base font-semibold text-text-primary truncate">{site.name}</h3>
-                        {site.address ? (
+                        {isLocked ? (
+                          <p className="text-sm text-amber-300 mt-0.5 flex items-center gap-1 truncate">
+                            <Lock className="h-3 w-3 flex-shrink-0" />
+                            Bientot disponible
+                          </p>
+                        ) : site.address ? (
                           <p className="text-sm text-text-secondary mt-0.5 flex items-center gap-1 truncate">
                             <MapPin className="h-3 w-3 flex-shrink-0" />
                             {site.address}
@@ -508,8 +535,12 @@ export default function LoginPage() {
                           </p>
                         )}
                       </div>
-                      <div className="w-9 h-9 rounded-xl bg-surface-elevated/60 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                        <ChevronRight className="w-5 h-5 text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${isLocked ? 'bg-amber-500/10' : 'bg-surface-elevated/60 group-hover:bg-primary/10'}`}>
+                        {isLocked ? (
+                          <Lock className="w-5 h-5 text-amber-300" />
+                        ) : (
+                          <ChevronRight className="w-5 h-5 text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                        )}
                       </div>
                     </motion.button>
                   )

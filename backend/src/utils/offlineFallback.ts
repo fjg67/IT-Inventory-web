@@ -31,14 +31,6 @@ export const DEMO_PROFILES: DemoProfile[] = [
     role: 'ADMIN',
     isActive: true,
   },
-  {
-    id: 'demo-tech',
-    technicianId: 'T097097',
-    name: 'Sophie Durand',
-    password: 'Tech!456',
-    role: 'TECHNICIAN',
-    isActive: true,
-  },
 ];
 
 export const DEMO_SITES: DemoSite[] = [
