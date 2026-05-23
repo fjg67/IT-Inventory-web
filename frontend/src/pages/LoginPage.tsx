@@ -36,6 +36,29 @@ const AVATAR_COLORS = [
   'from-pink-500 to-rose-500',
 ]
 
+const FALLBACK_WORKSPACE_SITES: Site[] = [
+  {
+    id: 'fallback-site-strasbourg-general',
+    name: 'Strasbourg Général',
+    address: 'Site principal',
+    edsNumber: null,
+    parentSiteId: null,
+    isActive: true,
+    createdAt: new Date('2026-03-08T19:06:15.838Z').toISOString(),
+    _count: { stocks: 0, children: 0 },
+  },
+  {
+    id: 'fallback-site-agences',
+    name: 'Agences',
+    address: 'Sites régionaux',
+    edsNumber: null,
+    parentSiteId: null,
+    isActive: true,
+    createdAt: new Date('2026-03-10T20:52:00.293Z').toISOString(),
+    _count: { stocks: 0, children: 2 },
+  },
+]
+
 function getInitials(name: string): string {
   return name
     .split(' ')
@@ -176,7 +199,8 @@ export default function LoginPage() {
     }, 1600)
   }
 
-  const allSites = (sitesData?.sites ?? []).filter((s) => s.isActive)
+  const fetchedSites = (sitesData?.sites ?? []).filter((s) => s.isActive)
+  const allSites = fetchedSites.length > 0 ? fetchedSites : FALLBACK_WORKSPACE_SITES
   // Sites de niveau supérieur visibles a la connexion
   const topLevelSites = allSites.filter(isLoginWorkspaceOption)
   // Sous-sites du parent sélectionné

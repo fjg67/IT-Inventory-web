@@ -21,6 +21,29 @@ const SITE_COLORS = [
   { bg: 'from-teal-500 to-cyan-500', glow: 'rgba(20,184,166,0.25)' },
 ]
 
+const FALLBACK_WORKSPACE_SITES: Site[] = [
+  {
+    id: 'fallback-site-strasbourg-general',
+    name: 'Strasbourg Général',
+    address: 'Site principal',
+    edsNumber: null,
+    parentSiteId: null,
+    isActive: true,
+    createdAt: new Date('2026-03-08T19:06:15.838Z').toISOString(),
+    _count: { stocks: 0, children: 0 },
+  },
+  {
+    id: 'fallback-site-agences',
+    name: 'Agences',
+    address: 'Sites régionaux',
+    edsNumber: null,
+    parentSiteId: null,
+    isActive: true,
+    createdAt: new Date('2026-03-10T20:52:00.293Z').toISOString(),
+    _count: { stocks: 0, children: 2 },
+  },
+]
+
 function normalizeSiteName(name: string): string {
   return name
     .normalize('NFD')
@@ -66,7 +89,8 @@ export default function WorkspaceSelectionPage() {
     return <Navigate to="/login" replace />
   }
 
-  const sites = (sitesData?.sites ?? []).filter(isAllowedWorkspaceSite)
+  const fetchedSites = (sitesData?.sites ?? []).filter(isAllowedWorkspaceSite)
+  const sites = fetchedSites.length > 0 ? fetchedSites : FALLBACK_WORKSPACE_SITES
 
   const handleSelectSite = (site: Site) => {
     setSelectedSite(site)
