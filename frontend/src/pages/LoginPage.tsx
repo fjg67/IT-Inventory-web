@@ -36,6 +36,15 @@ const AVATAR_COLORS = [
   'from-pink-500 to-rose-500',
 ]
 
+const FALLBACK_PROFILES: ProfileUser[] = [
+  {
+    id: 'fallback-admin',
+    technicianId: 'administrateur',
+    name: 'Administrateur',
+    role: 'ADMIN',
+  },
+]
+
 const FALLBACK_WORKSPACE_SITES: Site[] = [
   {
     id: 'fallback-site-strasbourg-general',
@@ -175,7 +184,8 @@ export default function LoginPage() {
     return <Navigate to="/" replace />
   }
 
-  const profiles = profilesData?.users ?? []
+  const fetchedProfiles = profilesData?.users ?? []
+  const profiles = fetchedProfiles.length > 0 ? fetchedProfiles : FALLBACK_PROFILES
 
   const handlePasswordNext = (e: React.FormEvent) => {
     e.preventDefault()
