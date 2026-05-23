@@ -147,11 +147,10 @@ export default function DashboardPage() {
   }, [alertsData, setAlertCount])
 
   const apiStats = statsData?.stats
-  const hasChartActivity = (chartData?.data ?? []).some((point) => (point.entries + point.exits) > 0)
-  const hasAlerts = (alertsData?.alerts?.length ?? 0) > 0
-  const shouldUseStockFallback = (apiStats?.totalArticles ?? 0) === 0 && (hasChartActivity || hasAlerts)
 
-  const fallbackStats = useMemo(() => {
+  const siteScopedStats = useMemo(() => {
+    if (!siteId) return null
+
     const stocks = stockSummaryData?.stocks ?? []
     if (stocks.length === 0) return null
 
@@ -169,16 +168,17 @@ export default function DashboardPage() {
       outOfStock,
       lowStock,
       todayMovements,
-      totalArticlesLastMonth: stocks.length,
+      totalArticlesLastMonth: apiStats?.totalArticlesLastMonth ?? stocks.length,
+      sparklines: apiStats?.sparklines,
     }
-  }, [chartData, stockSummaryData])
+  }, [apiStats, chartData, siteId, stockSummaryData])
 
-  const stats = shouldUseStockFallback && fallbackStats ? fallbackStats : apiStats
+  const stats = siteScopedStats ?? apiStats
   const deltaArticles = stats && stats.totalArticlesLastMonth > 0
     ? Math.round(((stats.totalArticles - stats.totalArticlesLastMonth) / stats.totalArticlesLastMonth) * 100)
     : 0
 
-  const isStatsLoading = statsLoading || (shouldUseStockFallback && stockSummaryLoading)
+  const isStatsLoading = statsLoading || (!!siteId && stockSummaryLoading)
 
   // Heure actuelle formatée
   const now = new Date()
