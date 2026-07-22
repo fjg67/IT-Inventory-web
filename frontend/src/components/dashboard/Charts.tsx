@@ -157,7 +157,7 @@ export function MovementChart({ data, loading }: MovementChartProps) {
                 <stop offset="100%" stopColor="#3B82F6" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis
               dataKey="date"
               stroke="transparent"
@@ -165,7 +165,7 @@ export function MovementChart({ data, loading }: MovementChartProps) {
               tickLine={false}
               axisLine={false}
               dy={8}
-              tick={{ fill: 'rgba(255,255,255,0.25)' }}
+              tick={{ fill: 'var(--text-muted)' }}
             />
             <YAxis
               stroke="transparent"
@@ -173,13 +173,13 @@ export function MovementChart({ data, loading }: MovementChartProps) {
               tickLine={false}
               axisLine={false}
               dx={-8}
-              tick={{ fill: 'rgba(255,255,255,0.25)' }}
+              tick={{ fill: 'var(--text-muted)' }}
             />
             <Tooltip content={<ChartTooltip />} />
             <Legend
               iconType="circle"
               iconSize={7}
-              wrapperStyle={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, paddingTop: 16 }}
+              wrapperStyle={{ color: 'var(--text-muted)', fontSize: 11, paddingTop: 16 }}
             />
             <Area
               type="monotone"
@@ -189,7 +189,7 @@ export function MovementChart({ data, loading }: MovementChartProps) {
               strokeWidth={2}
               fill="url(#gradientEntries)"
               dot={false}
-              activeDot={{ r: 5, fill: '#10B981', stroke: '#080d1c', strokeWidth: 3 }}
+              activeDot={{ r: 5, fill: '#10B981', stroke: 'var(--surface)', strokeWidth: 3 }}
             />
             <Area
               type="monotone"
@@ -199,7 +199,7 @@ export function MovementChart({ data, loading }: MovementChartProps) {
               strokeWidth={2}
               fill="url(#gradientExits)"
               dot={false}
-              activeDot={{ r: 5, fill: '#EF4444', stroke: '#080d1c', strokeWidth: 3 }}
+              activeDot={{ r: 5, fill: '#EF4444', stroke: 'var(--surface)', strokeWidth: 3 }}
             />
             <Area
               type="monotone"
@@ -209,7 +209,7 @@ export function MovementChart({ data, loading }: MovementChartProps) {
               strokeWidth={2}
               fill="url(#gradientAdjustments)"
               dot={false}
-              activeDot={{ r: 5, fill: '#F59E0B', stroke: '#080d1c', strokeWidth: 3 }}
+              activeDot={{ r: 5, fill: '#F59E0B', stroke: 'var(--surface)', strokeWidth: 3 }}
             />
             <Area
               type="monotone"
@@ -219,7 +219,7 @@ export function MovementChart({ data, loading }: MovementChartProps) {
               strokeWidth={2}
               fill="url(#gradientTransfers)"
               dot={false}
-              activeDot={{ r: 5, fill: '#3B82F6', stroke: '#080d1c', strokeWidth: 3 }}
+              activeDot={{ r: 5, fill: '#3B82F6', stroke: 'var(--surface)', strokeWidth: 3 }}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -398,7 +398,7 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
                   dataKey="count"
                   nameKey="category"
                   strokeWidth={2}
-                  stroke="#080d1c"
+                  stroke="var(--surface)"
                   animationDuration={1200}
                   animationEasing="ease-out"
                 >
