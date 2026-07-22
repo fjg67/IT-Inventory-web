@@ -1020,7 +1020,7 @@ function ArticleFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto border-border bg-surface/98 backdrop-blur-2xl shadow-[0_0_80px_rgba(0,0,0,0.3)] p-0">
+      <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto border-border bg-surface backdrop-blur-2xl shadow-[0_0_80px_rgba(0,0,0,0.3)] p-0">
         {/* Blueprint grid background overlay */}
         <div
           className="absolute inset-0 rounded-lg pointer-events-none opacity-[0.02]"
@@ -1034,7 +1034,7 @@ function ArticleFormDialog({
         <div className="absolute -top-20 -right-20 w-64 h-64 bg-[var(--green-subtle)] rounded-full blur-3xl pointer-events-none" />
 
         {/* ── Sticky Header ── */}
-        <div className="sticky top-0 z-20 bg-surface/95 backdrop-blur-xl border-b border-border px-6 pt-6 pb-4">
+        <div className="sticky top-0 z-20 bg-surface backdrop-blur-xl border-b border-border px-6 pt-6 pb-4">
           <div className="flex items-center gap-3.5">
             <div className="relative">
               <div className="p-2.5 rounded-xl bg-gradient-to-br from-brand to-brand-light shadow-[0_0_25px_rgba(59,130,246,0.25)]">

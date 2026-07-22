@@ -154,7 +154,7 @@ export function HelpHero({ onSearch, onTagClick }: HelpHeroProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -4, scale: 0.98 }}
                 transition={{ duration: 0.2 }}
-                className="absolute z-50 mt-2 w-full rounded-xl bg-surface/95 backdrop-blur-xl border border-border shadow-2xl overflow-hidden"
+                className="absolute z-50 mt-2 w-full rounded-xl bg-surface backdrop-blur-xl border border-border shadow-2xl overflow-hidden"
               >
                 {filteredSuggestions.map((s, i) => (
                   <button

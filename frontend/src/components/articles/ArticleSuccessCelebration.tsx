@@ -136,7 +136,7 @@ export function ArticleSuccessCelebration({ show, articleName, onComplete }: Art
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-background/70 backdrop-blur-md"
+            className="absolute inset-0 bg-background backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

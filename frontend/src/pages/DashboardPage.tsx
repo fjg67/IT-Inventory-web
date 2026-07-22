@@ -209,7 +209,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Site selector pills — premium design */}
-        <div className="relative flex items-center gap-1 p-1.5 rounded-2xl bg-surface/60 backdrop-blur-xl border border-border/50 shadow-lg shadow-black/5 overflow-x-auto scrollbar-hide">
+        <div className="relative flex items-center gap-1 p-1.5 rounded-2xl bg-surface backdrop-blur-xl border border-border/50 shadow-lg shadow-black/5 overflow-x-auto scrollbar-hide">
           {/* Fond glassmorphism subtil */}
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-brand-light/[0.05] via-transparent to-brand/[0.05]" />
 

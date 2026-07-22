@@ -979,7 +979,7 @@ export default function LoginPage() {
           >
             {/* Backdrop pulse */}
             <motion.div
-              className="absolute inset-0 bg-background/50 backdrop-blur-sm"
+              className="absolute inset-0 bg-background backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

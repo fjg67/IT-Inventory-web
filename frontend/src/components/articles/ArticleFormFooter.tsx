@@ -26,7 +26,7 @@ export function ArticleFormFooter({ isEditing, loading, onCancel, progress }: Ar
       </div>
 
       {/* Button bar */}
-      <div className="flex items-center justify-between px-6 py-4 bg-surface/90 backdrop-blur-xl border-t border-border">
+      <div className="flex items-center justify-between px-6 py-4 bg-surface backdrop-blur-xl border-t border-border">
         {/* Progress label */}
         <span className="text-[11px] text-text-muted font-medium" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
           {progress < 100 ? `${Math.round(progress)}% complété` : '✓ Prêt'}

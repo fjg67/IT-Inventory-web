@@ -687,7 +687,7 @@ export default function ArticleDetailPage() {
 
                 transition={{ type: 'spring', stiffness: 400 }}
 
-                className="relative overflow-hidden rounded-2xl bg-surface/90 backdrop-blur-xl border border-border p-4 sm:p-5 text-center shadow-xl"
+                className="relative overflow-hidden rounded-2xl bg-surface backdrop-blur-xl border border-border p-4 sm:p-5 text-center shadow-xl"
 
               >
 
@@ -749,7 +749,7 @@ export default function ArticleDetailPage() {
 
           transition={{ delay: 0.3 }}
 
-          className="rounded-2xl bg-surface/80 backdrop-blur-xl border border-border overflow-hidden"
+          className="rounded-2xl bg-surface backdrop-blur-xl border border-border overflow-hidden"
 
         >
 
@@ -823,7 +823,7 @@ export default function ArticleDetailPage() {
 
             transition={{ delay: 0.35 }}
 
-            className="rounded-2xl bg-surface/80 backdrop-blur-xl border border-border overflow-hidden"
+            className="rounded-2xl bg-surface backdrop-blur-xl border border-border overflow-hidden"
 
           >
 
@@ -998,7 +998,7 @@ export default function ArticleDetailPage() {
 
           transition={{ delay: 0.5 }}
 
-          className="rounded-2xl bg-surface/80 backdrop-blur-xl border border-border overflow-hidden"
+          className="rounded-2xl bg-surface backdrop-blur-xl border border-border overflow-hidden"
 
         >
 
@@ -1886,7 +1886,7 @@ function ArticleDetailSkeleton() {
 
             {[0, 1, 2].map((i) => (
 
-              <div key={i} className="rounded-2xl bg-surface/90 border border-border p-5 flex flex-col items-center">
+              <div key={i} className="rounded-2xl bg-surface border border-border p-5 flex flex-col items-center">
 
                 <Skeleton className="h-10 w-10 rounded-xl mb-2.5" />
 
@@ -1906,7 +1906,7 @@ function ArticleDetailSkeleton() {
 
       <div className="space-y-5 px-1">
 
-        <div className="rounded-2xl bg-surface/80 border border-border overflow-hidden">
+        <div className="rounded-2xl bg-surface border border-border overflow-hidden">
 
           <div className="px-5 py-3.5 border-b border-border">
 
@@ -1936,7 +1936,7 @@ function ArticleDetailSkeleton() {
 
             {[0, 1, 2].map((i) => (
 
-              <div key={i} className="rounded-2xl bg-surface/80 border border-border p-5 flex flex-col items-center gap-2">
+              <div key={i} className="rounded-2xl bg-surface border border-border p-5 flex flex-col items-center gap-2">
 
                 <Skeleton className="h-11 w-11 rounded-xl" />
 
@@ -1950,7 +1950,7 @@ function ArticleDetailSkeleton() {
 
         </div>
 
-        <div className="rounded-2xl bg-surface/80 border border-border overflow-hidden">
+        <div className="rounded-2xl bg-surface border border-border overflow-hidden">
 
           <div className="px-5 py-3.5 border-b border-border flex justify-between">
 

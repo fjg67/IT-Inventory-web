@@ -211,7 +211,7 @@ export function Sidebar() {
         {/* Section utilisateur en bas */}
         <div className="p-3">
           {isOpen ? (
-            <div className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-bg-elevated/80 p-3">
+            <div className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-bg-elevated p-3">
               <Avatar className="h-9 w-9 shrink-0">
                 <AvatarFallback className="bg-[var(--green-subtle)] text-brand-light text-xs">
                   {user?.name ? getInitials(user.name) : '??'}
@@ -332,7 +332,7 @@ export function Sidebar() {
 
         {/* Section utilisateur mobile */}
         <div className="p-3">
-          <div className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-bg-elevated/80 p-3">
+          <div className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-bg-elevated p-3">
             <Avatar className="h-9 w-9 shrink-0">
               <AvatarFallback className="bg-[var(--green-subtle)] text-brand-light text-xs">
                 {user?.name ? getInitials(user.name) : '??'}

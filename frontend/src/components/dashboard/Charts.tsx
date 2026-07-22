@@ -37,7 +37,7 @@ interface CustomTooltipProps {
 function ChartTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-surface/95 backdrop-blur-2xl border border-border rounded-2xl px-4 py-3 shadow-2xl shadow-black/40">
+    <div className="bg-surface backdrop-blur-2xl border border-border rounded-2xl px-4 py-3 shadow-2xl shadow-black/40">
       <p className="text-text-muted text-[10px] uppercase tracking-wider font-semibold mb-2">{label}</p>
       {payload.map((entry, i) => (
         <div key={i} className="flex items-center gap-2.5 text-sm py-0.5">
