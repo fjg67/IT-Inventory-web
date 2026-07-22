@@ -903,7 +903,7 @@ function ArticleFormDialog({
       barcode: '',
       unit: 'unité',
       minStock: 5,
-      siteId: '',
+      siteId: selectedWorkspace2?.id || '',
       initialStock: 0,
     },
   })
@@ -967,7 +967,7 @@ function ArticleFormDialog({
           barcode: '',
           unit: 'unité',
           minStock: 5,
-          siteId: '',
+          siteId: selectedWorkspace2?.id || '',
           initialStock: 0,
         })
         setImagePreview(null)
