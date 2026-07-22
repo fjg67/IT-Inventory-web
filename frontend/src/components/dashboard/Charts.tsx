@@ -7,7 +7,7 @@ import {
 } from 'recharts'
 import { motion } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
-import { TrendingUp, BarChart3, PieChart as PieChartIcon, ArrowUpRight, ArrowDownRight, Flame, Zap } from 'lucide-react'
+import { TrendingUp, BarChart3, PieChart as PieChartIcon, ArrowUpRight, ArrowDownRight, Flame, Zap, Settings2, ArrowRightLeft } from 'lucide-react'
 import type { MovementChartData, TopArticleData, CategoryData } from '@/types'
 
 // Palette premium pour le donut chart
@@ -86,8 +86,10 @@ export function MovementChart({ data, loading }: MovementChartProps) {
   }
 
   // Stats rapides
-  const totalEntries = data.reduce((s, d) => s + d.entries, 0)
-  const totalExits = data.reduce((s, d) => s + d.exits, 0)
+  const totalEntries = data.reduce((s, d) => s + (d.entries || 0), 0)
+  const totalExits = data.reduce((s, d) => s + (d.exits || 0), 0)
+  const totalAdjustments = data.reduce((s, d) => s + (d.adjustments || 0), 0)
+  const totalTransfers = data.reduce((s, d) => s + (d.transfers || 0), 0)
 
   return (
     <motion.div
@@ -119,6 +121,16 @@ export function MovementChart({ data, loading }: MovementChartProps) {
               <span className="text-xs font-bold text-red-400 tabular-nums">{totalExits}</span>
               <span className="text-[10px] text-red-400/50">sorties</span>
             </div>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg bg-amber-500/[0.08] ring-1 ring-amber-500/20">
+              <Settings2 className="h-3 w-3 text-amber-400" />
+              <span className="text-xs font-bold text-amber-400 tabular-nums">{totalAdjustments}</span>
+              <span className="text-[10px] text-amber-400/50">ajust.</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg bg-blue-500/[0.08] ring-1 ring-blue-500/20">
+              <ArrowRightLeft className="h-3 w-3 text-blue-400" />
+              <span className="text-xs font-bold text-blue-400 tabular-nums">{totalTransfers}</span>
+              <span className="text-[10px] text-blue-400/50">transf.</span>
+            </div>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
@@ -133,6 +145,16 @@ export function MovementChart({ data, loading }: MovementChartProps) {
                 <stop offset="0%" stopColor="#EF4444" stopOpacity={0.2} />
                 <stop offset="50%" stopColor="#EF4444" stopOpacity={0.06} />
                 <stop offset="100%" stopColor="#EF4444" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="gradientAdjustments" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#F59E0B" stopOpacity={0.2} />
+                <stop offset="50%" stopColor="#F59E0B" stopOpacity={0.06} />
+                <stop offset="100%" stopColor="#F59E0B" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="gradientTransfers" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.2} />
+                <stop offset="50%" stopColor="#3B82F6" stopOpacity={0.06} />
+                <stop offset="100%" stopColor="#3B82F6" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
@@ -178,6 +200,26 @@ export function MovementChart({ data, loading }: MovementChartProps) {
               fill="url(#gradientExits)"
               dot={false}
               activeDot={{ r: 5, fill: '#EF4444', stroke: '#080d1c', strokeWidth: 3 }}
+            />
+            <Area
+              type="monotone"
+              dataKey="adjustments"
+              name="Ajustements"
+              stroke="#F59E0B"
+              strokeWidth={2}
+              fill="url(#gradientAdjustments)"
+              dot={false}
+              activeDot={{ r: 5, fill: '#F59E0B', stroke: '#080d1c', strokeWidth: 3 }}
+            />
+            <Area
+              type="monotone"
+              dataKey="transfers"
+              name="Transferts"
+              stroke="#3B82F6"
+              strokeWidth={2}
+              fill="url(#gradientTransfers)"
+              dot={false}
+              activeDot={{ r: 5, fill: '#3B82F6', stroke: '#080d1c', strokeWidth: 3 }}
             />
           </AreaChart>
         </ResponsiveContainer>

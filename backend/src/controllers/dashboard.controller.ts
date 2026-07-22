@@ -173,13 +173,13 @@ export const getMovementChart = async (req: Request, res: Response): Promise<voi
     });
 
     // Initialisation d'une map pour chaque jour des 30 derniers jours
-    const chartData: Map<string, { entries: number; exits: number }> = new Map();
+    const chartData: Map<string, { entries: number; exits: number; adjustments: number; transfers: number }> = new Map();
 
     for (let i = 0; i < 30; i++) {
       const date = new Date(now);
       date.setDate(date.getDate() - (29 - i));
       const dateKey = date.toISOString().split('T')[0];
-      chartData.set(dateKey, { entries: 0, exits: 0 });
+      chartData.set(dateKey, { entries: 0, exits: 0, adjustments: 0, transfers: 0 });
     }
 
     // Agrégation des mouvements par jour et par type
@@ -192,6 +192,10 @@ export const getMovementChart = async (req: Request, res: Response): Promise<voi
           dayData.entries++;
         } else if (movement.type === 'EXIT') {
           dayData.exits++;
+        } else if (movement.type === 'ADJUSTMENT') {
+          dayData.adjustments++;
+        } else if (movement.type === 'TRANSFER') {
+          dayData.transfers++;
         }
       }
     }
@@ -201,6 +205,8 @@ export const getMovementChart = async (req: Request, res: Response): Promise<voi
       date,
       entries: data.entries,
       exits: data.exits,
+      adjustments: data.adjustments,
+      transfers: data.transfers,
     }));
 
     res.status(200).json({

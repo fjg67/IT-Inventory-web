@@ -140,6 +140,8 @@ export interface MovementChartData {
   date: string
   entries: number
   exits: number
+  adjustments: number
+  transfers: number
 }
 
 export interface TopArticleData {
