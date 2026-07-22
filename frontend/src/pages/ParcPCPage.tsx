@@ -181,7 +181,7 @@ export default function ParcPCPage() {
   }
 
   return (
-    <div className="relative min-h-full overflow-hidden bg-[linear-gradient(180deg,#0A0F0D_0%,#0D1511_40%,#0A0F0D_100%)] px-4 py-6 sm:px-6 lg:px-8">
+    <div className="relative min-h-full overflow-hidden bg-background px-4 py-6 sm:px-6 lg:px-8">
       <div className="pointer-events-none absolute inset-0 opacity-80">
         <div className="absolute left-[-12%] top-[-8%] h-[26rem] w-[26rem] rounded-full bg-emerald-400/12 blur-[110px]" />
         <div className="absolute right-[-8%] top-[8%] h-[22rem] w-[22rem] rounded-full bg-green-500/10 blur-[120px]" />
