@@ -961,6 +961,13 @@ function MovementFormDialog({
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-current bg-current/20">
                     <Check className="h-3.5 w-3.5" />
                   </div>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border/50 bg-surface-elevated/50 overflow-hidden">
+                    {lockedArticle.imageUrl ? (
+                      <img src={lockedArticle.imageUrl} alt={lockedArticle.name} className="h-full w-full object-cover" />
+                    ) : (
+                      <Package className="h-5 w-5 opacity-50" />
+                    )}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{lockedArticle.name}</p>
                     <p className="text-[10px] opacity-60 font-mono mt-0.5">{lockedArticle.reference}</p>
@@ -1008,6 +1015,13 @@ function MovementFormDialog({
                               : 'border-border bg-transparent'
                           }`}>
                             {isSelected && <Check className="h-3 w-3" />}
+                          </div>
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-surface-elevated overflow-hidden">
+                            {article.imageUrl ? (
+                              <img src={article.imageUrl} alt={article.name} className="h-full w-full object-cover" />
+                            ) : (
+                              <Package className="h-4 w-4 text-text-muted" />
+                            )}
                           </div>
                           <span className="truncate flex-1 font-medium text-[13px]">{article.name}</span>
                           <span className="text-[10px] text-text-muted font-mono shrink-0 bg-[var(--sidebar-hover)] px-1.5 py-0.5 rounded">
