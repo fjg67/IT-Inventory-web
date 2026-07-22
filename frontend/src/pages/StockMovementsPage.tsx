@@ -651,6 +651,7 @@ export default function StockMovementsPage() {
           sites={sites}
           onSubmit={(data) => createMutation.mutate(data)}
           loading={createMutation.isPending}
+          defaultSiteId={workspaceSite?.id}
         />
       )}
 
