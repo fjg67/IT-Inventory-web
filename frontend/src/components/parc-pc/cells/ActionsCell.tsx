@@ -29,7 +29,7 @@ export function ActionsCell({ pc, hovered, canWrite, onView, onEdit, onStatus, o
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="border-white/10 bg-slate-950/95 text-white">
+          <DropdownMenuContent align="end" className="border-border bg-surface text-text-primary">
             <DropdownMenuItem onClick={() => onView(pc)}>
               <Eye className="mr-2 h-4 w-4" />
               Voir le detail

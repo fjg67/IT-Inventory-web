@@ -1,140 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* === Design System IT-Inventory === */
-/* Thème clair / sombre avec CSS variables */
+/* === Design System Crédit Agricole === */
 
 @layer base {
-  /* ── Mode sombre (défaut) ── */
-  :root,
-  .dark {
-    --background: #0A0F1E;
-    --surface: #0F1629;
-    --surface-elevated: #141E35;
-    --border: #1E2D4A;
-    --primary: #3B82F6;
-    --primary-hover: #2563EB;
-    --primary-glow: rgba(59,130,246,0.15);
-    --primary-foreground: #FFFFFF;
-    --success: #10B981;
-    --warning: #F59E0B;
-    --danger: #EF4444;
-    --info: #6366F1;
-    --text-primary: #F1F5F9;
-    --text-secondary: #94A3B8;
-    --text-muted: #475569;
-    --card: #0F1629;
-    --card-foreground: #F1F5F9;
-    --popover: #141E35;
-    --popover-foreground: #F1F5F9;
-    --muted: #141E35;
-    --muted-foreground: #94A3B8;
-    --accent: #141E35;
-    --accent-foreground: #F1F5F9;
-    --destructive: #EF4444;
-    --destructive-foreground: #FFFFFF;
-    --input: #1E2D4A;
-    --ring: #3B82F6;
-    --radius: 12px;
-    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
-    --shadow-glow: 0 0 20px rgba(59,130,246,0.3);
-    --glass-bg: rgba(15, 22, 41, 0.8);
-    --glass-border: rgba(30, 45, 74, 0.8);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    --scrollbar-track: #0A0F1E;
-    --scrollbar-thumb: #1E2D4A;
-    --scrollbar-thumb-hover: #2D4366;
-    --overlay-bg: rgba(0, 0, 0, 0.6);
-    --toast-bg: #141E35;
-    --toast-border: #1E2D4A;
-    --toast-success: #141E35;
-    --toast-error: #141E35;
-    --sidebar-hover: rgba(255, 255, 255, 0.05);
-    --hover-active: rgba(255, 255, 255, 0.1);
-    --dialog-bg: #0c1222;
-
-    /* Couleurs sémantiques thème */
-    --color-bg:         #0A0F1E;
-    --color-surface:    #0F1629;
-    --color-surface-2:  #141E35;
-    --color-hover:      rgba(255, 255, 255, 0.04);
-    --color-border:     rgba(255, 255, 255, 0.07);
-    --color-border-md:  rgba(255, 255, 255, 0.12);
-    --color-text:       #F1F5F9;
-    --color-text-2:     #94A3B8;
-    --color-text-3:     #4B5563;
-    --color-blue:       #3B82F6;
-    --color-blue-light: #60A5FA;
-    --color-success:    #10B981;
-    --color-warning:    #F59E0B;
-    --color-danger:     #EF4444;
-    --color-indigo:     #6366F1;
-  }
-
-  /* ── Mode clair ── */
-  .light {
-    --background: #F8FAFC;
+  :root, .light, .dark {
+    /* ── Charte Crédit Agricole (Thème clair forcé) ── */
+    --background: #F8FAF9;
     --surface: #FFFFFF;
-    --surface-elevated: #F1F5F9;
-    --border: #E2E8F0;
-    --primary: #3B82F6;
-    --primary-hover: #2563EB;
-    --primary-glow: rgba(59,130,246,0.12);
+    --surface-elevated: #F4F6F5;
+    --border: #E5E7EB;
+    
+    /* Verts Crédit Agricole */
+    --primary: #007D6E;
+    --primary-hover: #006F69;
+    --primary-glow: rgba(0, 125, 110, 0.15);
     --primary-foreground: #FFFFFF;
+    
     --success: #10B981;
     --warning: #F59E0B;
-    --danger: #EF4444;
-    --info: #6366F1;
-    --text-primary: #0F172A;
-    --text-secondary: #475569;
-    --text-muted: #94A3B8;
+    --danger: #E32835; /* Rouge d'alerte/offre CA */
+    --info: #0EA5E9;
+    
+    /* Textes */
+    --text-primary: #2A3B45;
+    --text-secondary: #4B5563;
+    --text-muted: #6B7280;
+    
     --card: #FFFFFF;
-    --card-foreground: #0F172A;
+    --card-foreground: #2A3B45;
     --popover: #FFFFFF;
-    --popover-foreground: #0F172A;
-    --muted: #F1F5F9;
-    --muted-foreground: #475569;
-    --accent: #F1F5F9;
-    --accent-foreground: #0F172A;
-    --destructive: #EF4444;
+    --popover-foreground: #2A3B45;
+    --muted: #F3F4F6;
+    --muted-foreground: #6B7280;
+    --accent: #F4F6F5;
+    --accent-foreground: #2A3B45;
+    --destructive: #E32835;
     --destructive-foreground: #FFFFFF;
-    --input: #E2E8F0;
-    --ring: #3B82F6;
-    --radius: 12px;
-    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
-    --shadow-glow: 0 0 20px rgba(59,130,246,0.15);
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(226, 232, 240, 0.9);
-    --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    --scrollbar-track: #F1F5F9;
-    --scrollbar-thumb: #CBD5E1;
-    --scrollbar-thumb-hover: #94A3B8;
-    --overlay-bg: rgba(0, 0, 0, 0.3);
+    
+    --input: #E5E7EB;
+    --ring: #007D6E;
+    --radius: 8px; /* Rayons de bordure plus stricts / institutionnels */
+    
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.05);
+    --shadow-glow: 0 0 15px rgba(0, 125, 110, 0.2);
+    
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(229, 231, 235, 0.8);
+    --glass-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    
+    --scrollbar-track: #F8FAF9;
+    --scrollbar-thumb: #D1D5DB;
+    --scrollbar-thumb-hover: #9CA3AF;
+    
+    --overlay-bg: rgba(42, 59, 69, 0.5);
     --toast-bg: #FFFFFF;
-    --toast-border: #E2E8F0;
-    --toast-success: #FFFFFF;
-    --toast-error: #FFFFFF;
-    --sidebar-hover: rgba(0, 0, 0, 0.04);
-    --hover-active: rgba(0, 0, 0, 0.08);
+    --toast-border: #E5E7EB;
+    
+    --sidebar-hover: rgba(0, 125, 110, 0.05);
+    --hover-active: rgba(0, 125, 110, 0.1);
     --dialog-bg: #FFFFFF;
 
     /* Couleurs sémantiques thème */
-    --color-bg:         #F8FAFC;
+    --color-bg:         #F8FAF9;
     --color-surface:    #FFFFFF;
-    --color-surface-2:  #F1F5F9;
-    --color-hover:      rgba(0, 0, 0, 0.04);
-    --color-border:     rgba(0, 0, 0, 0.08);
-    --color-border-md:  rgba(0, 0, 0, 0.14);
-    --color-text:       #0F172A;
-    --color-text-2:     #475569;
-    --color-text-3:     #94A3B8;
-    --color-blue:       #2563EB;
-    --color-blue-light: #3B82F6;
-    --color-success:    #059669;
-    --color-warning:    #D97706;
-    --color-danger:     #DC2626;
-    --color-indigo:     #4F46E5;
+    --color-surface-2:  #F4F6F5;
+    --color-hover:      rgba(0, 125, 110, 0.05);
+    --color-border:     #E5E7EB;
+    --color-border-md:  #D1D5DB;
+    --color-text:       #2A3B45;
+    --color-text-2:     #4B5563;
+    --color-text-3:     #6B7280;
+    --color-blue:       #007D6E; /* On force le primary CA */
+    --color-blue-light: #009383;
+    --color-success:    #10B981;
+    --color-warning:    #F59E0B;
+    --color-danger:     #E32835;
+    --color-indigo:     #195F56; /* Secondaire CA */
   }
 }
 
@@ -146,9 +91,13 @@
   body {
     background-color: var(--background);
     color: var(--text-primary);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
   }
 
   /* Scrollbar personnalisée */

@@ -18,8 +18,8 @@ interface PCDetailsDrawerProps {
 export function PCDetailsDrawer({ open, onOpenChange, pc }: PCDetailsDrawerProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="left-auto right-0 top-0 h-screen max-w-xl translate-x-0 translate-y-0 rounded-none border-l border-white/10 bg-slate-950 text-white sm:max-w-xl">
-        <DialogHeader className="border-b border-white/10 pb-4">
+      <DialogContent className="left-auto right-0 top-0 h-screen max-w-xl translate-x-0 translate-y-0 rounded-none border-l border-border bg-surface text-text-primary sm:max-w-xl">
+        <DialogHeader className="border-b border-border pb-4">
           <DialogTitle className="text-2xl">{pc?.hostname || 'Fiche PC'}</DialogTitle>
           <DialogDescription>
             Vue detaillee du poste, de son statut et de son acheminement.
