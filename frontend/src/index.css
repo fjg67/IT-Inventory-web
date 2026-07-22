@@ -64,6 +64,19 @@
     --hover-active: rgba(0, 125, 110, 0.1);
     --dialog-bg: #FFFFFF;
 
+    /* Rétrocompatibilité avec les anciens composants (Suite suppression globals.css) */
+    --bg-primary: var(--background);
+    --bg-card: var(--surface);
+    --bg-elevated: var(--surface-elevated);
+    --bg-hover: var(--sidebar-hover);
+    --green-primary: var(--primary);
+    --green-subtle: rgba(0, 125, 110, 0.08);
+    --border-card: var(--border);
+    --border-subtle: var(--border);
+    --border-accent: rgba(0, 125, 110, 0.3);
+    --border-focus: var(--primary);
+    --text-dim: var(--text-muted);
+
     /* Couleurs sémantiques thème */
     --color-bg:         #F8FAF9;
     --color-surface:    #FFFFFF;
