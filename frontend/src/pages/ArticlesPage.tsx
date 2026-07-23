@@ -749,10 +749,14 @@ export default function ArticlesPage() {
                       {/* Ligne 3 : Sites, emplacement + date */}
                       <div className="flex items-center gap-2 flex-wrap">
                         {/* Sites où l'article est stocké */}
-                        {article.stocks && article.stocks.length > 0 && (
+                        {article.stocks && article.stocks.filter(s => s.site?.name && s.site.name !== 'Strasbourg Général' && s.site.name !== 'Agences').length > 0 && (
                           <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
                             <MapPin className="h-3 w-3" />
-                            {article.stocks.map(s => s.site?.name).filter(Boolean).join(', ') || '—'}
+                            {article.stocks
+                              .map(s => s.site?.name)
+                              .filter(Boolean)
+                              .filter(name => name !== 'Strasbourg Général' && name !== 'Agences')
+                              .join(', ')}
                           </span>
                         )}
 
