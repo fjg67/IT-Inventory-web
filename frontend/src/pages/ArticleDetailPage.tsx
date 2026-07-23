@@ -26,6 +26,8 @@ import {
 
   ArrowLeftRight,
 
+  Settings2,
+
   Calendar,
 
   MapPin,
@@ -973,13 +975,15 @@ export default function ArticleDetailPage() {
 
           <h2 className="text-sm font-semibold text-text-primary tracking-wide mb-3">Actions rapides</h2>
 
-          <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
 
             <ActionBtn icon={LogIn} label="Entrée" variant="emerald" onClick={() => handleOpenMovement('ENTRY')} />
 
             <ActionBtn icon={LogOut} label="Sortie" variant="red" onClick={() => handleOpenMovement('EXIT')} />
 
             <ActionBtn icon={ArrowLeftRight} label="Transfert" variant="violet" onClick={() => handleOpenMovement('TRANSFER')} />
+
+            <ActionBtn icon={Settings2} label="Ajustement" variant="amber" onClick={() => handleOpenMovement('ADJUSTMENT')} />
 
           </div>
 
@@ -1310,7 +1314,7 @@ function ActionBtn({
 
   label: string
 
-  variant: 'emerald' | 'red' | 'violet'
+  variant: 'emerald' | 'red' | 'violet' | 'amber'
 
   onClick: () => void
 
@@ -1345,6 +1349,16 @@ function ActionBtn({
       icon: 'bg-violet-500/20 text-violet-400',
 
       text: 'text-violet-400',
+
+    },
+
+    amber: {
+
+      card: 'bg-amber-500/[0.06] border-amber-500/15 hover:bg-amber-500/[0.12] hover:border-amber-500/25',
+
+      icon: 'bg-amber-500/20 text-amber-400',
+
+      text: 'text-amber-400',
 
     },
 
