@@ -285,13 +285,15 @@ function getBrandIcon(brand: string | null): string {
 function getArticleImageUrl(imageUrl: string): string {
   if (imageUrl.startsWith('http')) return imageUrl
   
-  // Utiliser l'URL de base configurée (VITE_API_URL) ou fallback sur localhost
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
-  const backendBaseUrl = apiUrl.replace(/\/api\/?$/, '')
+  const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`
   
-  if (imageUrl.startsWith('/uploads/')) return `${backendBaseUrl}${imageUrl}`
-  if (imageUrl.startsWith('uploads/')) return `${backendBaseUrl}/${imageUrl}`
-  return `${backendBaseUrl}/${imageUrl.replace(/^\/+/, '')}`
+  // En développement, on pointe vers le port du backend
+  if (import.meta.env.DEV) {
+    return `http://localhost:3001${path}`
+  }
+  
+  // En production, le chemin relatif suffit (servi par le backend sur le même domaine)
+  return path
 }
 
 const ARTICLE_IMAGE_FALLBACK =
