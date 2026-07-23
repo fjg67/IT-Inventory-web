@@ -22,6 +22,7 @@ const app = express();
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
 
 // Configuration CORS depuis la variable d'environnement
