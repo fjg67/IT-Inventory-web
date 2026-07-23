@@ -438,6 +438,16 @@ export default function ArticleDetailPage() {
 
 
 
+  // Stock par site filtré (masquer Strasbourg Général et Agences)
+
+  const displayStocks = article.stocks?.filter(
+
+    s => s.site?.name !== 'Strasbourg Général' && s.site?.name !== 'Agences'
+
+  ) || []
+
+
+
   return (
 
     <motion.div
@@ -815,7 +825,7 @@ export default function ArticleDetailPage() {
 
         {/* ── STOCK PAR SITE ── */}
 
-        {article.stocks && article.stocks.length > 0 && (
+        {displayStocks.length > 0 && (
 
           <motion.section
 
@@ -839,7 +849,7 @@ export default function ArticleDetailPage() {
 
             <div className="divide-y divide-border">
 
-              {article.stocks.map((stock) => {
+              {displayStocks.map((stock) => {
 
                 const qty = stock.quantity
 
