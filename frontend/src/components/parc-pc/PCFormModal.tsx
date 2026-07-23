@@ -130,37 +130,37 @@ export function PCFormModal({ open, onOpenChange, editingPC, selectedSite, onSub
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="overflow-hidden border-[var(--border-subtle)] bg-[linear-gradient(180deg,rgba(10,15,13,0.96),rgba(13,21,17,0.98))] text-white sm:max-w-2xl">
+      <DialogContent className="overflow-hidden border-[var(--border-subtle)] bg-surface text-text-primary sm:max-w-2xl">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-light/70 to-transparent" />
         <div className={cn('pointer-events-none absolute -right-14 -top-14 h-44 w-44 rounded-full blur-3xl', activeTheme.glow)} />
 
-        <DialogHeader className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+        <DialogHeader className="rounded-2xl border border-border bg-[var(--sidebar-hover)] p-5">
           <div className={cn('mb-3 inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-[11px] uppercase tracking-[0.28em]', activeTheme.badge)}>
             <BadgePlus className="h-3.5 w-3.5" />
             Fiche machine
           </div>
-          <DialogTitle className="text-2xl tracking-tight text-white">{editingPC ? 'Modifier le PC' : 'Ajouter un PC'}</DialogTitle>
+          <DialogTitle className="text-2xl tracking-tight text-text-primary">{editingPC ? 'Modifier le PC' : 'Ajouter un PC'}</DialogTitle>
           <DialogDescription>
             Renseigne le poste pour l'ajouter au parc PC centralise.
           </DialogDescription>
-          <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+          <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-[var(--sidebar-hover)]">
             <img src={activeTheme.image} alt={`Illustration ${PC_STATUS_LABELS[form.status || 'disponible']}`} className="h-32 w-full object-cover" />
           </div>
         </DialogHeader>
 
         <form className="grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
           <div className="space-y-2">
-            <Label htmlFor="pc-hostname" className="text-xs uppercase tracking-[0.24em] text-slate-400">Hostname</Label>
-            <Input id="pc-hostname" value={form.hostname} onChange={(event) => setForm((current) => ({ ...current, hostname: event.target.value }))} className="h-12 rounded-2xl border-white/10 bg-white/5 text-white" required />
+            <Label htmlFor="pc-hostname" className="text-xs uppercase tracking-[0.24em] text-text-muted">Hostname</Label>
+            <Input id="pc-hostname" value={form.hostname} onChange={(event) => setForm((current) => ({ ...current, hostname: event.target.value }))} className="h-12 rounded-2xl border-border bg-surface text-text-primary" required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="pc-asset" className="text-xs uppercase tracking-[0.24em] text-slate-400">Asset</Label>
-            <Input id="pc-asset" value={form.asset} onChange={(event) => setForm((current) => ({ ...current, asset: event.target.value }))} className="h-12 rounded-2xl border-white/10 bg-white/5 text-white" required />
+            <Label htmlFor="pc-asset" className="text-xs uppercase tracking-[0.24em] text-text-muted">Asset</Label>
+            <Input id="pc-asset" value={form.asset} onChange={(event) => setForm((current) => ({ ...current, asset: event.target.value }))} className="h-12 rounded-2xl border-border bg-surface text-text-primary" required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="pc-model" className="text-xs uppercase tracking-[0.24em] text-slate-400">Modele</Label>
+            <Label htmlFor="pc-model" className="text-xs uppercase tracking-[0.24em] text-text-muted">Modele</Label>
             <Select value={form.model} onValueChange={(value) => setForm((current) => ({ ...current, model: value }))}>
-              <SelectTrigger id="pc-model" className="h-12 rounded-2xl border-white/10 bg-white/5 text-white"><SelectValue placeholder="Choisir le modele" /></SelectTrigger>
+              <SelectTrigger id="pc-model" className="h-12 rounded-2xl border-border bg-surface text-text-primary"><SelectValue placeholder="Choisir le modele" /></SelectTrigger>
               <SelectContent>
                 {availableModelOptions.map((option) => <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>)}
                 {hasCustomModel && <SelectItem value={form.model}>{form.model}</SelectItem>}
@@ -168,7 +168,7 @@ export function PCFormModal({ open, onOpenChange, editingPC, selectedSite, onSub
             </Select>
           </div>
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-[0.24em] text-slate-400">Categorie</Label>
+            <Label className="text-xs uppercase tracking-[0.24em] text-text-muted">Categorie</Label>
             <Select value={form.category} onValueChange={(value) => {
               const nextCategory = value as PCCategory
               const nextModels = MODEL_OPTIONS_BY_CATEGORY[nextCategory]
@@ -178,43 +178,43 @@ export function PCFormModal({ open, onOpenChange, editingPC, selectedSite, onSub
                 model: nextModels.some((option) => option.value === current.model) ? current.model : '',
               }))
             }}>
-              <SelectTrigger className="h-12 rounded-2xl border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="h-12 rounded-2xl border-border bg-surface text-text-primary"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {PC_CATEGORIES.map((item) => <SelectItem key={item} value={item}>{PC_CATEGORY_LABELS[item]}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-[0.24em] text-slate-400">Statut</Label>
+            <Label className="text-xs uppercase tracking-[0.24em] text-text-muted">Statut</Label>
             <Select value={form.status} onValueChange={(value) => setForm((current) => ({ ...current, status: value as PCStatus }))}>
-              <SelectTrigger className={cn('h-12 rounded-2xl border-white/10 bg-white/5 text-white', activeTheme.ring)}><SelectValue /></SelectTrigger>
+              <SelectTrigger className={cn('h-12 rounded-2xl border-border bg-surface text-text-primary', activeTheme.ring)}><SelectValue /></SelectTrigger>
               <SelectContent>
                 {PC_STATUSES.map((item) => <SelectItem key={item} value={item}>{PC_STATUS_LABELS[item]}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="pc-site" className="text-xs uppercase tracking-[0.24em] text-slate-400">Site</Label>
-            <Input id="pc-site" value={form.site} onChange={(event) => setForm((current) => ({ ...current, site: event.target.value }))} className="h-12 rounded-2xl border-white/10 bg-white/5 text-white" required />
+            <Label htmlFor="pc-site" className="text-xs uppercase tracking-[0.24em] text-text-muted">Site</Label>
+            <Input id="pc-site" value={form.site} onChange={(event) => setForm((current) => ({ ...current, site: event.target.value }))} className="h-12 rounded-2xl border-border bg-surface text-text-primary" required />
           </div>
           {isSentStatus && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="pc-sent-to" className="text-xs uppercase tracking-[0.24em] text-slate-400">Envoye vers</Label>
-                <Input id="pc-sent-to" value={form.sentTo} onChange={(event) => setForm((current) => ({ ...current, sentTo: event.target.value }))} className="h-12 rounded-2xl border-white/10 bg-white/5 text-white" />
+                <Label htmlFor="pc-sent-to" className="text-xs uppercase tracking-[0.24em] text-text-muted">Envoye vers</Label>
+                <Input id="pc-sent-to" value={form.sentTo} onChange={(event) => setForm((current) => ({ ...current, sentTo: event.target.value }))} className="h-12 rounded-2xl border-border bg-surface text-text-primary" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="pc-sent-recipient" className="text-xs uppercase tracking-[0.24em] text-slate-400">Destinataire</Label>
-                <Input id="pc-sent-recipient" value={form.sentRecipient} onChange={(event) => setForm((current) => ({ ...current, sentRecipient: event.target.value }))} className="h-12 rounded-2xl border-white/10 bg-white/5 text-white" />
+                <Label htmlFor="pc-sent-recipient" className="text-xs uppercase tracking-[0.24em] text-text-muted">Destinataire</Label>
+                <Input id="pc-sent-recipient" value={form.sentRecipient} onChange={(event) => setForm((current) => ({ ...current, sentRecipient: event.target.value }))} className="h-12 rounded-2xl border-border bg-surface text-text-primary" />
               </div>
             </>
           )}
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="pc-notes" className="text-xs uppercase tracking-[0.24em] text-slate-400">Notes</Label>
-            <textarea id="pc-notes" value={form.notes} onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))} className={cn('min-h-[130px] w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:ring-2', activeTheme.ring)} />
+            <Label htmlFor="pc-notes" className="text-xs uppercase tracking-[0.24em] text-text-muted">Notes</Label>
+            <textarea id="pc-notes" value={form.notes} onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))} className={cn('min-h-[130px] w-full rounded-2xl border border-border bg-surface px-4 py-3 text-sm text-text-primary outline-none transition focus:ring-2', activeTheme.ring)} />
           </div>
           <DialogFooter className="md:col-span-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="h-11 rounded-2xl border-white/10 bg-white/5 text-white hover:bg-white/10">Annuler</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="h-11 rounded-2xl border-border bg-surface text-text-primary hover:bg-bg-elevated">Annuler</Button>
             <Button type="submit" loading={isSaving} className={cn('h-11 rounded-2xl', activeTheme.button)}>
               {editingPC ? 'Enregistrer les modifications' : 'Creer le PC'}
             </Button>
