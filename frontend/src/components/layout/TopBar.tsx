@@ -40,8 +40,8 @@ const routeTitles: Record<string, string> = {
   '/parametres': 'Paramètres',
 }
 
-// Regex pour détecter un UUID
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+// Regex pour détecter un CUID ou UUID
+const ID_REGEX = /^[a-zA-Z0-9_-]{20,40}$/i
 
 export function TopBar() {
   const location = useLocation()
@@ -50,7 +50,7 @@ export function TopBar() {
   const { toggle, alertCount, setMobileOpen } = useSidebarStore()
 
   // Extraire l'ID article si on est sur /articles/:id
-  const articleDetailMatch = location.pathname.match(/^\/articles\/([0-9a-f-]{36})$/i)
+  const articleDetailMatch = location.pathname.match(/^\/articles\/([a-zA-Z0-9_-]+)$/i)
   const articleId = articleDetailMatch?.[1] ?? null
 
   // Récupérer le nom de l'article si nécessaire
@@ -83,8 +83,8 @@ export function TopBar() {
     const segments = location.pathname.split('/').filter(Boolean)
     if (segments.length === 0) return []
     return segments.map((segment) => {
-      // Si c'est un UUID et qu'on a le nom de l'article, l'afficher
-      if (UUID_REGEX.test(segment) && articleData?.article?.name) {
+      // Si c'est un ID (UUID ou CUID) et qu'on a le nom de l'article, l'afficher
+      if (ID_REGEX.test(segment) && articleData?.article?.name) {
         return articleData.article.name
       }
       const title = routeTitles[`/${segment}`]
