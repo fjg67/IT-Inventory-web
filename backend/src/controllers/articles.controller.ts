@@ -314,10 +314,13 @@ export const updateArticle = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
+    // Extraction des champs qui n'appartiennent pas au modèle Article
+    const { siteId, initialStock, ...updateData } = parsed.data;
+
     // Mise à jour de l'article
     const updatedArticle = await prisma.article.update({
       where: { id },
-      data: parsed.data,
+      data: updateData,
       include: {
         stocks: {
           include: { site: true },
