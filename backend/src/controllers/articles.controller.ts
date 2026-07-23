@@ -217,6 +217,11 @@ export const createArticle = async (req: Request, res: Response): Promise<void> 
 
     const { siteId, initialStock, ...articleData } = parsed.data;
 
+    // Convertir les chaînes vides en null pour les champs uniques optionnels
+    if (articleData.barcode === '') {
+      articleData.barcode = null;
+    }
+
     // Cr\u00e9ation de l'article avec les stocks initiaux
     const article = await prisma.article.create({
       data: {
@@ -316,6 +321,11 @@ export const updateArticle = async (req: Request, res: Response): Promise<void> 
 
     // Extraction des champs qui n'appartiennent pas au modèle Article
     const { siteId, initialStock, ...updateData } = parsed.data;
+
+    // Convertir les chaînes vides en null pour les champs uniques optionnels
+    if (updateData.barcode === '') {
+      updateData.barcode = null;
+    }
 
     // Mise à jour de l'article
     const updatedArticle = await prisma.article.update({
