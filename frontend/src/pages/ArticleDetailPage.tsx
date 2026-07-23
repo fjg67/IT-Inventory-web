@@ -83,9 +83,13 @@ import { MovementSuccessCelebration } from '@/components/articles/MovementSucces
 
 function getArticleImageUrl(imageUrl: string): string {
   if (imageUrl.startsWith('http')) return imageUrl
-  if (imageUrl.startsWith('/uploads/')) return `http://localhost:3001${imageUrl}`
-  if (imageUrl.startsWith('uploads/')) return `http://localhost:3001/${imageUrl}`
-  return `http://localhost:3001/${imageUrl.replace(/^\/+/, '')}`
+  
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
+  const backendBaseUrl = apiUrl.replace(/\/api\/?$/, '')
+  
+  if (imageUrl.startsWith('/uploads/')) return `${backendBaseUrl}${imageUrl}`
+  if (imageUrl.startsWith('uploads/')) return `${backendBaseUrl}/${imageUrl}`
+  return `${backendBaseUrl}/${imageUrl.replace(/^\/+/, '')}`
 }
 
 

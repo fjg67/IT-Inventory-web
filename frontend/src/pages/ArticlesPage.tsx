@@ -284,9 +284,14 @@ function getBrandIcon(brand: string | null): string {
 
 function getArticleImageUrl(imageUrl: string): string {
   if (imageUrl.startsWith('http')) return imageUrl
-  if (imageUrl.startsWith('/uploads/')) return `http://localhost:3001${imageUrl}`
-  if (imageUrl.startsWith('uploads/')) return `http://localhost:3001/${imageUrl}`
-  return `http://localhost:3001/${imageUrl.replace(/^\/+/, '')}`
+  
+  // Utiliser l'URL de base configurée (VITE_API_URL) ou fallback sur localhost
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
+  const backendBaseUrl = apiUrl.replace(/\/api\/?$/, '')
+  
+  if (imageUrl.startsWith('/uploads/')) return `${backendBaseUrl}${imageUrl}`
+  if (imageUrl.startsWith('uploads/')) return `${backendBaseUrl}/${imageUrl}`
+  return `${backendBaseUrl}/${imageUrl.replace(/^\/+/, '')}`
 }
 
 const ARTICLE_IMAGE_FALLBACK =
