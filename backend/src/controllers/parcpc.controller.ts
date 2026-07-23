@@ -107,15 +107,43 @@ export const createPC = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const pc = await prisma.pC.create({
-      data: {
-        ...parsed.data,
-        status: parsed.data.status ?? DEFAULT_STATUS,
-        sentTo: parsed.data.sentTo || null,
-        sentRecipient: parsed.data.sentRecipient || null,
-        notes: parsed.data.notes || null,
-      },
+    // Récupérer les sites actifs pour les stocks
+    const sites = await prisma.site.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true },
     });
+    
+    const targetSite = sites.find(s => s.name === parsed.data.site) || sites[0];
+
+    const [article, pc] = await prisma.$transaction([
+      prisma.article.create({
+        data: {
+          reference: parsed.data.asset,
+          name: parsed.data.hostname,
+          category: 'Informatique',
+          articleType: 'PC',
+          sousType: parsed.data.category,
+          brand: parsed.data.model,
+          emplacement: parsed.data.site,
+          description: `Ajouté depuis Parc PC.\nStatus: ${parsed.data.status ?? DEFAULT_STATUS}\nNotes: ${parsed.data.notes || ''}`,
+          stocks: {
+            create: sites.map((s) => ({
+              siteId: s.id,
+              quantity: s.id === targetSite?.id ? 1 : 0,
+            })),
+          },
+        },
+      }),
+      prisma.pC.create({
+        data: {
+          ...parsed.data,
+          status: parsed.data.status ?? DEFAULT_STATUS,
+          sentTo: parsed.data.sentTo || null,
+          sentRecipient: parsed.data.sentRecipient || null,
+          notes: parsed.data.notes || null,
+        },
+      })
+    ]);
 
     await createAuditLog({
       action: 'CREATE_PC',
