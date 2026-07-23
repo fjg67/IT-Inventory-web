@@ -47,6 +47,12 @@ const getArticleNeedle = (article: ArticleLike): string =>
 
 export const isPcArticle = (article: ArticleLike): boolean => {
   const haystack = getArticleNeedle(article)
+
+  // Exclure les accessoires qui pourraient contenir des mots-clés de PC
+  if (haystack.includes('alimentation') || haystack.includes('chargeur')) {
+    return false
+  }
+
   return (
     haystack.includes('pc portable') ||
     haystack.includes('portable siege') ||

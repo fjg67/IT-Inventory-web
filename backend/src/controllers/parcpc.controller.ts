@@ -9,11 +9,6 @@ import { isPcArticle, toPCRecordFromArticle } from '../utils/pcClassification';
 const DEFAULT_STATUS = 'disponible';
 
 const bootstrapParcPCFromArticles = async (): Promise<void> => {
-  const existingCount = await prisma.pC.count();
-  if (existingCount > 0) {
-    return;
-  }
-
   const articles = await prisma.article.findMany({
     where: { isArchived: false },
     select: {
