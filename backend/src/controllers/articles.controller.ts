@@ -219,7 +219,7 @@ export const createArticle = async (req: Request, res: Response): Promise<void> 
 
     // Convertir les chaînes vides en null pour les champs uniques optionnels
     if (articleData.barcode === '') {
-      articleData.barcode = null;
+      (articleData as any).barcode = null;
     }
 
     // Cr\u00e9ation de l'article avec les stocks initiaux
@@ -324,7 +324,7 @@ export const updateArticle = async (req: Request, res: Response): Promise<void> 
 
     // Convertir les chaînes vides en null pour les champs uniques optionnels
     if (updateData.barcode === '') {
-      updateData.barcode = null;
+      (updateData as any).barcode = null;
     }
 
     // Mise à jour de l'article
