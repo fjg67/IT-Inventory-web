@@ -518,7 +518,7 @@ export default function ArticleDetailPage() {
 
                   whileTap={{ scale: 0.95 }}
 
-                  onClick={() => navigate('/articles')}
+                  onClick={() => navigate('/articles', { state: { editArticle: article } })}
 
                   className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-elevated backdrop-blur-md text-text-primary hover:bg-surface-elevated transition-all border border-border"
 

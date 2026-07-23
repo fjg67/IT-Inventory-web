@@ -1,7 +1,7 @@
 // Page Articles — liste complète avec filtres, pagination, création et modification
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
@@ -312,6 +312,7 @@ const ARTICLE_IMAGE_FALLBACK =
 export default function ArticlesPage() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
+  const location = useLocation()
   const queryClient = useQueryClient()
   const { canWriteInventory } = useAuth()
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -328,6 +329,15 @@ export default function ArticlesPage() {
       setSearchParams({}, { replace: true })
     }
   }, [searchParams, setSearchParams])
+
+  // Ouvrir la modale d'édition si demandé depuis la page détail
+  useEffect(() => {
+    if (location.state?.editArticle && canWriteInventory) {
+      setEditingArticle(location.state.editArticle)
+      setFormOpen(true)
+      navigate(location.pathname + location.search, { replace: true, state: {} })
+    }
+  }, [location.state, location.pathname, location.search, navigate, canWriteInventory])
 
   // État des filtres et de la pagination
   const [filters, setFilters] = useState<ArticleFilters>({
